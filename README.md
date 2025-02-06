@@ -7,7 +7,7 @@
 1. Clone the repo
 
 ```bash
-git clone https://github.com/FatimaGhazzawi/42-minishell.git minishell
+git clone https://github.com/hadyawayda/minishell.git minishell
 ```
 
 <br>
