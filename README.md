@@ -36,4 +36,4 @@ make
 
 <br>
 
-5. Enjoy :)
+5. Enjoy! :)
