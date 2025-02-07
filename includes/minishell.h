@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 23:09:17 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2024/09/28 20:12:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/08 00:59:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ typedef struct s_ast_node {
     };
 } t_ast_node;
 
-// typedef struct nodee
-// {
-// 	int				data;
-// 	struct nodee	*next;
-// 	struct nodee	*previous;
-// }					t_node;
+typedef struct tree
+{
+	int				data;
+	struct tree     *left;
+	struct tree     *right;
+}					t_node;
 
 void				ft_echo(char **splitted);
 void				ft_pwd(void);
