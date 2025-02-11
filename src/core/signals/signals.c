@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 05:58:57 by hawayda           #+#    #+#             */
-/*   Updated: 2024/09/27 04:57:49 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/11 14:05:28 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 void	handle_sigint(int sig)
 {

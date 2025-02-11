@@ -1,40 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   cloner.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 01:17:49 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/11 15:55:09 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/11 15:31:32 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/11 16:59:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../core.h"
 
-void	ft_strcopy(char *dest, char *src)
+t_env	*clone_env(char **envp)
 {
-	if (dest == NULL || src == NULL)
-		return ;
-	while (*src)
+	int		i;
+	t_env	*head;
+	t_env	*current;
+	t_env	*new_node;
+
+	head = NULL;
+	current = NULL;
+	i = 0;
+	while (envp[i])
 	{
-		*dest = *src;
-		dest++;
-		src++;
+		new_node = parse_env_entry(envp[i]);
+		if (!new_node)
+			return (NULL);
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		i++;
 	}
-	*dest = '\0';
-}
-void	ft_strcat(char *dest, char *source)
-{
-	if (dest == NULL || source == NULL)
-		return ;
-	while (*dest)
-		dest++;
-	while (*source)
-	{
-		*dest = *source;
-		dest++;
-		source++;
-	}
-	*dest = '\0';
+	return (head);
 }

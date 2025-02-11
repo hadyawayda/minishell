@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   initializer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 03:13:29 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2024/09/26 23:31:30 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/11 15:31:57 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/11 18:22:58 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../core.h"
 
-// shou l fkra?
-// 3elme 3elmik
-void	ft_exit(void)
+t_env	*create_default_env(void)
 {
-	exit(0);
+	t_env	*head;
+
+	head = create_env_node("SHLVL", "1");
+	head = create_env_node("PWD", "1");
+	head = create_env_node("PATH", "1");
+	if (!head)
+		return (NULL);
+	return (head);
 }

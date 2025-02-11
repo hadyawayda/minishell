@@ -1,40 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 01:17:49 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/11 15:55:09 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/11 17:41:46 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/11 17:41:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../core.h"
 
-void	ft_strcopy(char *dest, char *src)
+void	free_env(t_env *env)
 {
-	if (dest == NULL || src == NULL)
-		return ;
-	while (*src)
+	t_env	*temp;
+
+	while (env)
 	{
-		*dest = *src;
-		dest++;
-		src++;
+		temp = env;
+		env = env->next;
+		free(temp->key);
+		free(temp->value);
+		free(temp);
 	}
-	*dest = '\0';
-}
-void	ft_strcat(char *dest, char *source)
-{
-	if (dest == NULL || source == NULL)
-		return ;
-	while (*dest)
-		dest++;
-	while (*source)
-	{
-		*dest = *source;
-		dest++;
-		source++;
-	}
-	*dest = '\0';
 }

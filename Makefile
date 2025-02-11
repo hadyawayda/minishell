@@ -7,22 +7,29 @@ LIBFT =			$(LIBFT_DIR)/libft.a
 PRINTF_DIR =	includes/ft_printf
 PRINTF =		$(PRINTF_DIR)/libftprintf.a
 
-HELPERS	=		src/helpers/ft_split.c \
-				src/helpers/ft_split_helper.c
-				# src/helpers/maintester.c \
+SRC =			src/main.c \
 
-BUILT_INS = 	src/builtins/ft_echo.c \
-				src/builtins/ft_pwd.c \
-				src/builtins/ft_exit.c \
-				src/builtins/ft_cd.c \
+CORE =			src/core/environment_variables/cleaner.c \
+				src/core/environment_variables/cloner.c \
+				src/core/environment_variables/helpers.c \
+				src/core/environment_variables/initializer.c \
+				src/core/shell_loop/loop.c \
+				src/core/program/program.c \
+				src/core/program/cleaner.c \
+				src/core/signals/signals.c \
 
-SIGNALS = 		src/signals/signals.c \
+# HELPERS	=		src/helpers/ft_split.c \
+				src/helpers/ft_split_helper.c \
+				src/helpers/maintester.c
+
+PARSER = 		src/parser/parser.c \
+				
+
+SIGNALS = 		
 				
 UTILS = 		src/utils/utils1.c \
 
-SRC =			src/main.c \
-
-OBJS =			$(SRC:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(BUILT_INS:.c=.o) $(UTILS:.c=.o)
+OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
 
 all :			$(NAME)
 

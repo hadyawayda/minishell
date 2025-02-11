@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:19:16 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2024/09/27 01:36:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/11 13:55:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@
 // 	free(tokens);
 // 	return (0);
 // }
-int	main(void)
-{
-	char **tokens;
-	// // int		i;
-	char *str;
-	// str = "cd Home";
-	str = "echo -n -n  \">>       file.tt\n |\n  \\\"ju\\\"grep|a < b >> w > \"";
-	// 	"| a \"pa\n\"|\"|ttern\" \n";
-	tokens = ft_split_charset(str);
-	ft_echo(tokens);
-	// ft_cd(str);
-}
+// int	main(void)
+// {
+// 	char **tokens;
+// 	// // int		i;
+// 	char *str;
+// 	// str = "cd Home";
+// 	str = "echo -n -n  \">>       file.tt\n |\n  \\\"ju\\\"grep|a < b >> w > \"";
+// 	// 	"| a \"pa\n\"|\"|ttern\" \n";
+// 	tokens = ft_split_charset(str);
+// 	ft_echo(tokens);
+// 	// ft_cd(str);
+// }
