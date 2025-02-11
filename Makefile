@@ -11,8 +11,11 @@ SRC =			src/main.c \
 
 CORE =			src/core/environment_variables/cleaner.c \
 				src/core/environment_variables/cloner.c \
+				src/core/environment_variables/export_helper.c \
 				src/core/environment_variables/helpers.c \
 				src/core/environment_variables/initializer.c \
+				src/core/environment_variables/list_env.c \
+				src/core/environment_variables/list_export.c \
 				src/core/shell_loop/loop.c \
 				src/core/program/program.c \
 				src/core/program/cleaner.c \

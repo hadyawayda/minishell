@@ -1,4 +1,4 @@
-#include "core.h"
+#include "../core.h"
 
 void	list_env(t_env *env)
 {

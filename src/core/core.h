@@ -10,6 +10,9 @@ void				free_env(t_env *env);
 void				minishell(char **env);
 void				shell_loop(t_shell *shell);
 void				free_shell(t_shell *shell);
+void				list_export(t_env *env);
+void				list_env(t_env *env);
+void				sort_env_list(t_env **env);
 
 t_env				*clone_env(char **envp);
 t_env				*create_default_env(void);
