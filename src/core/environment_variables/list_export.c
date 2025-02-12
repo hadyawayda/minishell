@@ -48,6 +48,11 @@ void	list_export(t_env *env)
 	sort_env_list(&sorted_env);
 	while (sorted_env)
 	{
+		if (ft_strcmp(sorted_env->key, "_") == 0)
+		{
+			sorted_env = sorted_env->next;
+			continue ;
+		}
 		printf("declare -x %s", sorted_env->key);
 		if (sorted_env->value)
 			printf("=\"%s\"", sorted_env->value);
