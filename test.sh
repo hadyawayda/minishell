@@ -1,5 +1,5 @@
 make re
 
-valgrind --leak-check=full --show-leak-kinds=all ./minishell
+valgrind --leak-check=full --show-leak-kinds=all ./michel
 
 make fclean

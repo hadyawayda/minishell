@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:57:01 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 18:41:33 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 01:27:55 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	shell_loop(t_shell *shell)
 
 	while (!shell->exit_requested)
 	{
-		input = readline("\033[0;32mMinishell >\033[0m ");
+		input = readline("\033[0;32mMichel >\033[0m ");
 		if (!input)
 		{
 			ft_printf("exit\n");
@@ -45,8 +45,6 @@ void	shell_loop(t_shell *shell)
 			break ;
 		}
 		add_history(input);
-		// print_env();
-		// print_export();
 		parser(shell, input);
 		free(input);
 	}

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/12 04:38:50 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 01:22:35 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,21 @@ void	parser(t_shell *shell, char *input)
 {
 	char	*expanded_input;
 
+	// char **args;
 	if (!input)
 		return ;
-	expanded_input = expand_variables(input, shell->env);
-	printf("expanded_input: %s\n", expanded_input);
+	if (!ft_strchr(input, '$'))
+		expanded_input = ft_strdup(input);
+	else
+		expanded_input = expand_variables(input, shell->env);
+	// args = ft_split(expanded_input, ' ');
+	printf("%s\n", expanded_input);
 	if (ft_strcmp(expanded_input, "env") == 0)
 		list_env(shell->env);
 	else if (ft_strcmp(expanded_input, "export") == 0)
 		list_export(shell->env);
-	free(expanded_input);
+	if (expanded_input)
+		free(expanded_input);
 }
 
 // t_ast_node	*parse_input(char *input)

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 14:21:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 18:28:10 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 00:03:52 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ t_shell	*init_shell(char **envp)
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
-    if (envp[0])
-        shell->env = clone_env(envp);
-    else
-        shell->env = create_default_env();
+	if (envp[0])
+		shell->env = clone_env(envp);
+	else
+		shell->env = create_default_env();
 	shell->exit_requested = 0;
 	shell->last_exit_status = 0;
 	return (shell);

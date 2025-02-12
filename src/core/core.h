@@ -1,12 +1,24 @@
-#include "../../includes/minishell.h"
-#include "../parser/parser.h"
-#include <stdlib.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   core.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/13 01:41:19 by hawayda          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef CORE_H
 # define CORE_H
 
-char                *expand_variables(char *input, t_env *env);
+# include "../../includes/minishell.h"
+# include "../parser/parser.h"
+# include <stdlib.h>
+# include <string.h>
+
+char				*expand_variables(char *input, t_env *env);
 
 void				free_env(t_env *env);
 void				minishell(char **env);
@@ -20,5 +32,6 @@ t_env				*clone_env(char **envp);
 t_env				*create_default_env(void);
 t_env				*create_env_node(char *key, char *value);
 t_env				*parse_env_entry(char *env_entry);
+t_env				*clone_env_list(t_env *env);
 
 #endif

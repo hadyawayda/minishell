@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:20:27 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 17:39:52 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 01:08:26 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "../../core.h"
 
 t_env	*create_env_node(char *key, char *value)
 {

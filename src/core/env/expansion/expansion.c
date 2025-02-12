@@ -6,18 +6,21 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 04:19:12 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/12 04:38:08 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 01:09:10 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "../../core.h"
 
 char	*get_env_value(t_env *env, char *key)
 {
 	while (env)
 	{
-		if (strcmp(env->key, key) == 0)
-			return (env->value);
+		if (ft_strcmp(env->key, key) == 0)
+			if (env->value)
+				return (env->value);
+			else
+				return ("");
 		env = env->next;
 	}
 	return ("");
@@ -35,8 +38,8 @@ char	*expand_variables(char *input, t_env *env)
 
 	i = 0;
 	j = 0;
-	len = strlen(input);
-	result = (char *)malloc(len * 2);
+	len = ft_strlen(input);
+	result = (char *)malloc(4096);
 	if (!result)
 		return (NULL);
 	while (input[i])
@@ -44,13 +47,21 @@ char	*expand_variables(char *input, t_env *env)
 		if (input[i] == '$' && (i == 0 || input[i - 1] != '\\'))
 		{
 			start = ++i;
-			while (input[i] && (isalnum(input[i]) || input[i] == '_'))
+			while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
 				i++;
-			var_name = strndup(&input[start], i - start);
+			if (i == start)
+			{
+				result[j++] = '$';
+				continue ;
+			}
+			var_name = ft_strndup(&input[start], i - start);
 			var_value = get_env_value(env, var_name);
 			free(var_name);
-			strcpy(&result[j], var_value);
-			j += strlen(var_value);
+			if (var_value)
+			{
+				ft_strcpy(&result[j], var_value);
+				j += ft_strlen(var_value);
+			}
 		}
 		else
 		{

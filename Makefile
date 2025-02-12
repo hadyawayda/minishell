@@ -1,4 +1,4 @@
-NAME =			minishell
+NAME =			michel
 CC =			gcc
 AR =			ar rcs
 CFLAGS =		-g
@@ -9,14 +9,16 @@ PRINTF =		$(PRINTF_DIR)/libftprintf.a
 
 SRC =			src/main.c \
 
-CORE =			src/core/environment_variables/cleaner.c \
-				src/core/environment_variables/cloner.c \
-				src/core/environment_variables/expansion.c \
-				src/core/environment_variables/export_helper.c \
-				src/core/environment_variables/helpers.c \
-				src/core/environment_variables/initializer.c \
-				src/core/environment_variables/list_env.c \
-				src/core/environment_variables/list_export.c \
+CORE =			src/core/env/expansion/expansion.c \
+				src/core/env/getters/list_env.c \
+				src/core/env/getters/list_export.c \
+				src/core/env/getters/merge_sort.c \
+				src/core/env/initialization/cleaner.c \
+				src/core/env/initialization/cloners.c \
+				src/core/env/initialization/helpers.c \
+				src/core/env/initialization/initializer.c \
+				src/core/env/setters/setter.c \
+				src/core/env/setters/unset.c \
 				src/core/shell_loop/loop.c \
 				src/core/program/program.c \
 				src/core/program/cleaner.c \

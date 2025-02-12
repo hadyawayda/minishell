@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 01:17:49 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/12 23:41:05 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/13 01:09:55 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/13 01:11:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../core.h"
 
-void	ft_strcat(char *dest, char *source)
+void	unset_env_variable(t_env **env, char *key)
 {
-	if (dest == NULL || source == NULL)
-		return ;
-	while (*dest)
-		dest++;
-	while (*source)
+	t_env	*current;
+	t_env	*prev;
+
+	current = *env;
+	prev = NULL;
+	while (current)
 	{
-		*dest = *source;
-		dest++;
-		source++;
+		if (strcmp(current->key, key) == 0)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				*env = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
 	}
-	*dest = '\0';
 }

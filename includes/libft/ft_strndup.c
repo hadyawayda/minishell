@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initializer.c                                      :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 15:31:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 18:22:58 by hawayda          ###   ########.fr       */
+/*   Created: 2024/06/11 16:43:24 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/02/12 23:45:24 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "libft.h"
 
-t_env	*create_default_env(void)
+char	*ft_strndup(const char *s, size_t n)
 {
-	t_env	*head;
+	size_t	i;
+	size_t	len;
+	char	*dup;
 
-	head = create_env_node("SHLVL", "1");
-	head = create_env_node("PWD", "1");
-	head = create_env_node("PATH", "1");
-	if (!head)
+	len = 0;
+	while (s[len] && len < n)
+		len++;
+	dup = (char *)malloc((len + 1) * sizeof(char));
+	if (!dup)
 		return (NULL);
-	return (head);
+	i = 0;
+	while (i < len)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }

@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   initializer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 01:17:49 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/12 23:41:05 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/11 15:31:57 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/13 01:07:59 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../core.h"
 
-void	ft_strcat(char *dest, char *source)
+t_env	*create_default_env(void)
 {
-	if (dest == NULL || source == NULL)
-		return ;
-	while (*dest)
-		dest++;
-	while (*source)
-	{
-		*dest = *source;
-		dest++;
-		source++;
-	}
-	*dest = '\0';
+	t_env	*head;
+
+	head = create_env_node("SHLVL", "1");
+	head = create_env_node("PWD", "1");
+	head = create_env_node("PATH", "1");
+	if (!head)
+		return (NULL);
+	return (head);
 }

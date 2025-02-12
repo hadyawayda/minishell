@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   list_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 17:41:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 17:41:51 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/13 00:03:06 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/13 01:16:08 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "../../core.h"
 
-void	free_env(t_env *env)
+void	list_env(t_env *env)
 {
-	t_env	*temp;
-
 	while (env)
 	{
-		temp = env;
+		if (env->value)
+			ft_printf("%s=%s\n", env->key, env->value);
 		env = env->next;
-		free(temp->key);
-		free(temp->value);
-		free(temp);
 	}
 }
