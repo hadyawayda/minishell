@@ -6,6 +6,8 @@
 #ifndef CORE_H
 # define CORE_H
 
+char                *expand_variables(char *input, t_env *env);
+
 void				free_env(t_env *env);
 void				minishell(char **env);
 void				shell_loop(t_shell *shell);

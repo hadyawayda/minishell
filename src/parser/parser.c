@@ -6,25 +6,40 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 19:52:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/12 04:38:50 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../core/core.h"
 #include "parser.h"
 
+// void	parser(t_shell *shell, char *input)
+// {
+// 	if (!input)
+// 		return ;
+// 	if (ft_strcmp(input, "env") == 0)
+// 	{
+// 		list_env(shell->env);
+// 	}
+// 	else if (ft_strcmp(input, "export") == 0)
+// 	{
+// 		list_export(shell->env);
+// 	}
+// }
+
 void	parser(t_shell *shell, char *input)
 {
+	char	*expanded_input;
+
 	if (!input)
 		return ;
-	if (ft_strcmp(input, "env") == 0)
-	{
+	expanded_input = expand_variables(input, shell->env);
+	printf("expanded_input: %s\n", expanded_input);
+	if (ft_strcmp(expanded_input, "env") == 0)
 		list_env(shell->env);
-	}
-	else if (ft_strcmp(input, "export") == 0)
-	{
+	else if (ft_strcmp(expanded_input, "export") == 0)
 		list_export(shell->env);
-	}
+	free(expanded_input);
 }
 
 // t_ast_node	*parse_input(char *input)
