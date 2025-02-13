@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 01:09:55 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 03:11:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 04:00:02 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	unset_env_variable(t_env **env, char *key)
 	prev = NULL;
 	while (current)
 	{
-		if (strcmp(current->key, key) == 0)
+		if (ft_strcmp(current->key, key) == 0)
 		{
 			if (prev)
 				prev->next = current->next;

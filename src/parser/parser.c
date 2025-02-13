@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 03:41:49 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 04:13:02 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 // 	}
 // }
 
+// modify the parser to print nothing when using unset and not print a new line when expanding an unset env variable
 void	parser(t_shell *shell, char *input)
 {
 	char	*expanded_input;
@@ -72,7 +73,6 @@ void	parser(t_shell *shell, char *input)
 			while (args[i])
 			{
 				unset_env_variable(&(shell->env), args[i]);
-				printf("unsetting %s\n", args[i]);
 				i++;
 			}
 		}
