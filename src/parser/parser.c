@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 03:29:42 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 03:41:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,6 @@
 // 		list_export(shell->env);
 // 	}
 // }
-
-int	env_list_contains(t_env *env, char *key)
-{
-	if (!env)
-		return (0);
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (1);
-		env = env->next;
-	}
-	return (0);
-}
-
-void	add_env_variable(t_env **env, char *key, char *value)
-{
-	t_env	*new_node;
-
-	new_node = create_env_node(key, value);
-	if (!new_node)
-		return ;
-	new_node->next = *env;
-	*env = new_node;
-}
 
 void	parser(t_shell *shell, char *input)
 {

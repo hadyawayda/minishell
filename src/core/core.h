@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 02:48:17 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 03:45:55 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 
 char				*expand_variables(char *input, t_env *env);
 
+char				*get_env_value(t_env *env, char *key);
+
+int					env_list_contains(t_env *env, char *key);
+
 void				free_env(t_env *env);
 void				minishell(char **env);
 void				shell_loop(t_shell *shell);
@@ -28,6 +32,8 @@ void				list_export(t_env *env);
 void				list_env(t_env *env);
 void				sort_env_list(t_env **env);
 void				unset_env_variable(t_env **env, char *key);
+void				add_env_variable(t_env **env, char *key, char *value);
+void				update_env_variable(t_env **env, char *key, char *value);
 
 t_env				*clone_env(char **envp);
 t_env				*create_default_env(void);

@@ -17,6 +17,7 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/env/initialization/cloners.c \
 				src/core/env/initialization/helpers.c \
 				src/core/env/initialization/initializer.c \
+				src/core/env/setters/helpers.c \
 				src/core/env/setters/setter.c \
 				src/core/env/setters/unset.c \
 				src/core/shell_loop/loop.c \
