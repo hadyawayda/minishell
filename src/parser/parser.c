@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 01:22:35 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/13 03:29:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,84 @@
 // 	}
 // }
 
+int	env_list_contains(t_env *env, char *key)
+{
+	if (!env)
+		return (0);
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (1);
+		env = env->next;
+	}
+	return (0);
+}
+
+void	add_env_variable(t_env **env, char *key, char *value)
+{
+	t_env	*new_node;
+
+	new_node = create_env_node(key, value);
+	if (!new_node)
+		return ;
+	new_node->next = *env;
+	*env = new_node;
+}
+
 void	parser(t_shell *shell, char *input)
 {
 	char	*expanded_input;
+	char	**args;
+	int		i;
 
-	// char **args;
+	if (!input || !shell)
+		return ;
+	i = 1;
 	if (!input)
 		return ;
 	if (!ft_strchr(input, '$'))
 		expanded_input = ft_strdup(input);
 	else
 		expanded_input = expand_variables(input, shell->env);
-	// args = ft_split(expanded_input, ' ');
+	if (!expanded_input)
+		return ;
+	args = ft_split_charset(expanded_input, " ");
+	if (!args)
+	{
+		free(expanded_input);
+		return ;
+	}
 	printf("%s\n", expanded_input);
-	if (ft_strcmp(expanded_input, "env") == 0)
-		list_env(shell->env);
-	else if (ft_strcmp(expanded_input, "export") == 0)
-		list_export(shell->env);
+	if (args[0])
+	{
+		if (ft_strcmp(expanded_input, "env") == 0)
+			list_env(shell->env);
+		else if (ft_strcmp(expanded_input, "export") == 0)
+		{
+			if (args[i] && args[i + 1])
+			{
+				if (env_list_contains(shell->env, args[i]) == 0)
+					add_env_variable(&(shell->env), args[i], args[i + 1]);
+				else
+					printf("variable %s already exists\n", args[i]);
+			}
+			else
+				list_export(shell->env);
+		}
+		else if (ft_strcmp(args[0], "unset") == 0)
+		{
+			while (args[i])
+			{
+				unset_env_variable(&(shell->env), args[i]);
+				printf("unsetting %s\n", args[i]);
+				i++;
+			}
+		}
+	}
 	if (expanded_input)
 		free(expanded_input);
+	if (args)
+		free_string_array(args);
 }
 
 // t_ast_node	*parse_input(char *input)

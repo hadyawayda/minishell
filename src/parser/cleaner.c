@@ -1,38 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 01:09:55 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 03:11:12 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/13 02:45:14 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../core.h"
+#include "parser.h"
 
-void	unset_env_variable(t_env **env, char *key)
+void	free_string_array(char **array)
 {
-	t_env	*current;
-	t_env	*prev;
+	int i;
 
-	current = *env;
-	prev = NULL;
-	while (current)
+	i = 0;
+	while (array[i])
 	{
-		if (strcmp(current->key, key) == 0)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*env = current->next;
-			free(current->key);
-			free(current->value);
-			free(current);
-			return ;
-		}
-		prev = current;
-		current = current->next;
+		free(array[i]);
+		i++;
 	}
+	free(array);
 }

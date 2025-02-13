@@ -29,6 +29,7 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/helpers/maintester.c
 
 PARSER = 		src/parser/parser.c \
+				src/parser/cleaner.c \
 				
 
 SIGNALS = 		
