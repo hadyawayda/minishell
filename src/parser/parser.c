@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 04:13:02 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 02:00:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void	parser(t_shell *shell, char *input)
 	char	*expanded_input;
 	char	**args;
 	int		i;
+	char	*key;
+	char	*value;
+	char	*equal_sign;
 
 	if (!input || !shell)
-		return ;
-	i = 1;
-	if (!input)
 		return ;
 	if (!ft_strchr(input, '$'))
 		expanded_input = ft_strdup(input);
@@ -46,41 +46,60 @@ void	parser(t_shell *shell, char *input)
 	if (!expanded_input)
 		return ;
 	args = ft_split_charset(expanded_input, " ");
-	if (!args)
+	if (!args || !args[0])
 	{
 		free(expanded_input);
 		return ;
 	}
 	printf("%s\n", expanded_input);
-	if (args[0])
+	if (ft_strcmp(args[0], "env") == 0)
+		list_env(shell->env);
+	else if (ft_strcmp(args[0], "export") == 0)
 	{
-		if (ft_strcmp(expanded_input, "env") == 0)
-			list_env(shell->env);
-		else if (ft_strcmp(expanded_input, "export") == 0)
+		if (!args[1])
+			list_export(shell->env);
+		else
 		{
-			if (args[i] && args[i + 1])
-			{
-				if (env_list_contains(shell->env, args[i]) == 0)
-					add_env_variable(&(shell->env), args[i], args[i + 1]);
-				else
-					printf("variable %s already exists\n", args[i]);
-			}
-			else
-				list_export(shell->env);
-		}
-		else if (ft_strcmp(args[0], "unset") == 0)
-		{
+			i = 1;
 			while (args[i])
 			{
-				unset_env_variable(&(shell->env), args[i]);
+				equal_sign = ft_strchr(args[i], '=');
+				if (equal_sign)
+				{
+					*equal_sign = '\0';
+					key = args[i];
+					value = equal_sign + 1;
+					if (value[0] == '"' && value[ft_strlen(value) - 1] == '"')
+					{
+						value[ft_strlen(value) - 1] = '\0';
+						value++;
+					}
+					if (!is_valid_varname(key))
+						printf("minishell: export: `%s=%s': not a valid identifier\n",
+							key, value);
+					else
+						add_env_variable(&(shell->env), key, value);
+					*equal_sign = '=';
+				}
+				else if (!is_valid_varname(args[i]))
+					printf("minishell: export: `%s': not a valid identifier\n",
+						args[i]);
 				i++;
 			}
 		}
 	}
-	if (expanded_input)
-		free(expanded_input);
-	if (args)
-		free_string_array(args);
+	else if (ft_strcmp(args[0], "unset") == 0)
+	{
+		i = 1;
+		while (args[i])
+		{
+			unset_env_variable(&(shell->env), args[i]);
+			printf("unsetting %s\n", args[i]);
+			i++;
+		}
+	}
+	free(expanded_input);
+	free_string_array(args);
 }
 
 // t_ast_node	*parse_input(char *input)
