@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 03:44:01 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 04:14:44 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <string.h>
 
-char				*expand_variables(char *input, t_env *env);
+char				*expand_variables(char *input, t_shell *shell);
 
 char				*get_env_value(t_env *env, char *key);
 

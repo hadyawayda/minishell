@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 02:00:45 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 04:14:21 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	parser(t_shell *shell, char *input)
 	if (!ft_strchr(input, '$'))
 		expanded_input = ft_strdup(input);
 	else
-		expanded_input = expand_variables(input, shell->env);
+		expanded_input = expand_variables(input, shell);
 	if (!expanded_input)
 		return ;
 	args = ft_split_charset(expanded_input, " ");
