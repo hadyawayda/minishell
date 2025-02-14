@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:14:44 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 04:53:27 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CORE_H
 
 # include "../../includes/minishell.h"
-# include "../parser/parser.h"
+# include "../lexer/lexer.h"
 # include <stdlib.h>
 # include <string.h>
 

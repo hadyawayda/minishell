@@ -6,12 +6,13 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 04:19:12 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:14:54 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 04:44:31 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../core.h"
 
+// H<3N
 char	*get_env_value(t_env *env, char *key)
 {
 	if (!key || !env)
