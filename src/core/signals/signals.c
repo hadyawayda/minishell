@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 05:58:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 14:05:28 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 03:49:59 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,22 @@
 
 void	handle_sigint(int sig)
 {
-	(void)sig; // Suppress unused parameter warning
-	// Print a new line to clear current input and prompt again
+	(void)sig;
 	ft_printf("\n");
-	rl_replace_line("", 0); // Clear the line
-	rl_on_new_line();       // Move to a new line
-	rl_redisplay();         // Redisplay the prompt
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 void	setup_signal_handlers(void)
 {
 	struct sigaction	sa;
 
-	// Handle SIGINT (Ctrl + C)
 	memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = handle_sigint; // Set the handler function
-	sigemptyset(&sa.sa_mask);      // Don't block any other signals
+	sa.sa_handler = handle_sigint;
+	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
-	// Automatically restart interrupted system calls
-	sigaction(SIGINT, &sa, NULL); // Set the handler for SIGINT
-	// Ignore SIGQUIT (Ctrl + \)
-	sa.sa_handler = SIG_IGN;       // Ignore the signal
-	sigaction(SIGQUIT, &sa, NULL); // Set the handler for SIGQUIT
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }
