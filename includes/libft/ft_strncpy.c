@@ -1,26 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 21:17:07 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/16 03:00:07 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/16 03:08:47 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lexer.h"
+#include "libft.h"
 
-void	free_string_array(char **array)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (array[i])
+	if (n == 0)
+		return (dest);
+	if (n > ft_strlen(src))
+		n = ft_strlen(src);
+	if (!dest)
+		return (NULL);
+	if (!src)
+		return (dest);
+	while (i < n && src[i])
 	{
-		free(array[i]);
+		dest[i] = src[i];
 		i++;
 	}
-	free(array);
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }

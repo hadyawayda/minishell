@@ -6,12 +6,12 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:14:21 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/14 21:16:38 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core/core.h"
-#include "parser.h"
+#include "../../core/core.h"
+#include "../lexer.h"
 
 // void	parser(t_shell *shell, char *input)
 // {

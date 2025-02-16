@@ -1,26 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 21:17:07 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/16 03:12:32 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/16 03:13:36 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lexer.h"
+#include "libft.h"
 
-void	free_string_array(char **array)
+int	ft_isspace(int c)
 {
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r');
 }

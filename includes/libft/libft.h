@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/13 23:06:19 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/16 03:13:44 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int					ft_strcmp(char *s1, char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 int					ft_lstsize(t_list *lst);
+int					ft_isspace(int c);
 
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char				*ft_strchr(const char *s, int c);
@@ -58,6 +59,7 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_itoa(int n);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strtok(char *str, const char *delim);
+char				*ft_strncpy(char *dest, const char *src, size_t n);
 
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);

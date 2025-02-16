@@ -29,8 +29,9 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/helpers/ft_split_helper.c \
 				src/helpers/maintester.c
 
-PARSER = 		src/parser/parser.c \
-				src/parser/cleaner.c \
+PARSER = 		src/lexer/parser/parser.c \
+				src/lexer/parser/cleaner.c \
+				src/lexer/tokenizer/tokenization.c \
 				
 
 SIGNALS = 		

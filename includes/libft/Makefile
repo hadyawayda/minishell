@@ -11,6 +11,7 @@ SRCS =		ft_atoi.c \
 			ft_isascii.c \
 			ft_isdigit.c \
 			ft_isprint.c \
+			ft_isspace.c \
 			ft_itoa.c \
 			ft_lstadd_front_bonus.c \
 			ft_lstlast_bonus.c \
@@ -43,6 +44,7 @@ SRCS =		ft_atoi.c \
 			ft_strlen.c \
 			ft_strmapi.c \
 			ft_strncmp.c \
+			ft_strncpy.c \
 			ft_strndup.c \
 			ft_strnstr.c \
 			ft_strrchr.c \
@@ -51,7 +53,7 @@ SRCS =		ft_atoi.c \
 			ft_substr.c \
 			ft_tolower.c \
 			ft_toupper.c \
-	
+
 OBJS =		$(SRCS:.c=.o)
 
 all: $(NAME)
