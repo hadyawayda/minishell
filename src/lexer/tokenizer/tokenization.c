@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/17 02:41:47 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/17 04:58:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #define MAX_TOKENS 4096
 #define MAX_TOKEN_SIZE 1024
+
+char	*expand_variable(const char *input);
 
 char	*substr(const char *src, int start, int end)
 {
@@ -41,6 +43,7 @@ int	parse_quote(const char *input, char **tokens, int *i, int *j, int merge)
 	char	quote;
 	char	*new_token;
 	char	*temp;
+	char	*expanded;
 
 	quote = input[*i];
 	start = ++(*i);
@@ -53,6 +56,12 @@ int	parse_quote(const char *input, char **tokens, int *i, int *j, int merge)
 	}
 	new_token = substr(input, start, *i);
 	(*i)++;
+	if (quote == '"' && ft_strchr(new_token, '$'))
+	{
+		expanded = expand_variable(new_token);
+		free(new_token);
+		new_token = expanded;
+	}
 	if (merge && *j > 0 && !ft_isspace(input[*i - (strlen(new_token) + 2)]))
 	{
 		temp = ft_strjoin(tokens[*j - 1], new_token);
@@ -192,7 +201,6 @@ void	tokenizer(char *input)
 	char	*expanded_input;
 
 	expanded_input = expand_variable(input);
-	printf("Expanded input: [%s]\n", expanded_input);
 	tokens = tokenize(expanded_input);
 	free(expanded_input);
 	if (tokens)
@@ -204,43 +212,3 @@ void	tokenizer(char *input)
 		free(tokens);
 	}
 }
-
-// token_t	*tokenize(char *input)
-// {
-// 	token_t	*head;
-// 	token_t	*current;
-// 	int		i;
-// 	int		start;
-
-// 	head = NULL;
-// 	current = NULL;
-// 	i = 0;
-// 	start = 0;
-// 	while (input[i])
-// 	{
-// 		while (input[i] == ' ' || input[i] == '\t')
-// 			i++;
-// 		if (input[i] == '|' || input[i] == '>' || input[i] == '<')
-// 		{
-// 			start = i;
-// 			if (input[i] == '>' && input[i + 1] == '>')
-// 				i++;
-// 			if (input[i] == '<' && input[i + 1] == '<')
-// 				i++;
-// 			add_token(&head, ft_strndup(input + start, i - start + 1),
-// 				TOKEN_OPERATOR);
-// 			i++;
-// 			continue ;
-// 		}
-// 		start = i;
-// 		while (input[i] && input[i] != ' ' && input[i] != '|' && input[i] != '>'
-// 			&& input[i] != '<')
-// 			i++;
-// 		if (i > start)
-// 		{
-// 			add_token(&head, ft_strndup(input + start, i - start),
-// TOKEN_ARGUMENT);
-// 		}
-// 	}
-// 	return (head);
-// }

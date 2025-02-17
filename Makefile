@@ -1,5 +1,5 @@
 NAME =			michel
-CC =			gcc
+CC =			cc
 AR =			ar rcs
 CFLAGS =		-g
 LIBFT_DIR =		includes/libft

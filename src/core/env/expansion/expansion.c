@@ -6,13 +6,12 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 04:19:12 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:44:31 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/17 21:57:36 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../core.h"
 
-// H<3N
 char	*get_env_value(t_env *env, char *key)
 {
 	if (!key || !env)
@@ -20,10 +19,12 @@ char	*get_env_value(t_env *env, char *key)
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
+		{
 			if (env->value)
 				return (env->value);
 			else
 				return ("");
+		}
 		env = env->next;
 	}
 	return ("");

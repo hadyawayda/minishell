@@ -1,3 +1,0 @@
-./minishell "export nathan=amazing"
-./minishell "unset nathan"
-./minishell "$nathan"

@@ -3,8 +3,8 @@ SRCS =			ft_printf.c
 OBJS =			$(SRCS:.c=.o)
 LIBFT_DIR =		../libft
 LIBFT = 		$(LIBFT_DIR)/libft.a
-CC =			gcc
-CFLAGS =		-Wall -Wextra -Werror -L $(LIBFT)
+CC =			cc
+CFLAGS =		-Wall -Wextra -Werror # -L $(LIBFT)
 AR =			ar rcs
 
 all:			$(NAME)
