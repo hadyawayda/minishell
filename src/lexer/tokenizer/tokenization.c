@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/16 05:10:10 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/17 02:41:47 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,27 @@ void	parse_operator(const char *input, char **tokens, int *i, int *j)
 	*i += op_len;
 }
 
-void	parse_word(const char *input, char **tokens, int *i, int *j)
+void	parse_word(const char *input, char **tokens, int *i, int *j, int merge)
 {
-	int	start;
+	int		start;
+	char	*new_token;
+	char	*temp;
 
 	start = *i;
 	while (input[*i] && !ft_isspace(input[*i]) && input[*i] != '|'
 		&& input[*i] != '&' && input[*i] != '<' && input[*i] != '>'
 		&& input[*i] != '\'' && input[*i] != '"')
 		(*i)++;
-	tokens[(*j)++] = substr(input, start, *i);
+	new_token = substr(input, start, *i);
+	if (merge && *j > 0 && !ft_isspace(input[*i - ft_strlen(new_token)]))
+	{
+		temp = ft_strjoin(tokens[*j - 1], new_token);
+		free(tokens[*j - 1]);
+		free(new_token);
+		tokens[*j - 1] = temp;
+	}
+	else
+		tokens[(*j)++] = new_token;
 }
 
 char	**tokenize(const char *input)
@@ -96,6 +107,7 @@ char	**tokenize(const char *input)
 	int		i;
 	int		j;
 	int		merge;
+	char	*expanded;
 
 	tokens = malloc(sizeof(char *) * MAX_TOKENS);
 	if (!tokens)
@@ -117,7 +129,7 @@ char	**tokenize(const char *input)
 			|| input[i] == '>')
 			parse_operator(input, tokens, &i, &j);
 		else
-			parse_word(input, tokens, &i, &j);
+			parse_word(input, tokens, &i, &j, merge);
 	}
 	tokens[j] = NULL;
 	return (tokens);
@@ -135,14 +147,54 @@ void	print_tokens(char **tokens)
 	}
 }
 
-int	main(void)
+char	*expand_variable(const char *input)
+{
+	int i, start;
+	char *result, *var_name, *var_value, *temp;
+	result = ft_strdup("");
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'')
+		{
+			start = i++;
+			while (input[i] && input[i] != '\'')
+				i++;
+			result = ft_strjoin_and_free(result, substr(input, start, i + 1));
+			i++;
+		}
+		else if (input[i] == '$' && input[i + 1] && (ft_isalnum(input[i + 1])
+				|| input[i + 1] == '_'))
+		{
+			start = ++i;
+			while (ft_isalnum(input[i]) || input[i] == '_')
+				i++;
+			var_name = substr(input, start, i);
+			var_value = getenv(var_name);
+			temp = var_value ? ft_strdup(var_value) : ft_strdup("");
+			result = ft_strjoin_and_free(result, temp);
+			free(var_name);
+		}
+		else
+		{
+			temp = substr(input, i, i + 1);
+			result = ft_strjoin_and_free(result, temp);
+			i++;
+		}
+	}
+	return (result);
+}
+
+void	tokenizer(char *input)
 {
 	char	**tokens;
 	int		i;
+	char	*expanded_input;
 
-	char input[] = "/bin/ec'ho' 'a'    'asd' | grep Hello \
-		&& cat<input.txt >> output.txt ";
-	tokens = tokenize(input);
+	expanded_input = expand_variable(input);
+	printf("Expanded input: [%s]\n", expanded_input);
+	tokens = tokenize(expanded_input);
+	free(expanded_input);
 	if (tokens)
 	{
 		print_tokens(tokens);
@@ -151,7 +203,6 @@ int	main(void)
 			free(tokens[i++]);
 		free(tokens);
 	}
-	return (0);
 }
 
 // token_t	*tokenize(char *input)

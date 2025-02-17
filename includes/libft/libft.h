@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/16 03:13:44 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/17 02:39:21 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ char				*ft_itoa(int n);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strtok(char *str, const char *delim);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
+char				*ft_strjoin_and_free(char *s1, char *s2);
 
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);

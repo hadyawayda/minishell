@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:54:01 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/16 22:16:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ typedef struct s_token
 
 void				parser(t_shell *shell, char *input);
 void				free_string_array(char **array);
+void				tokenizer(char *input);
 
 #endif
