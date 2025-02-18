@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:30:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/18 19:38:37 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	parse_quote(const char *input, char **tokens, int *i, int *j, int merge)
 	}
 	else
 		tokens[(*j)++] = new_token;
-	free(new_token);
 	return (0);
 }
 

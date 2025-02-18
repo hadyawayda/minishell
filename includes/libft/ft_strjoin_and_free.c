@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 04:49:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/17 02:39:10 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/18 19:40:00 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 	}
 	result[len1 + len2] = '\0';
 	free(s1);
+	free(s2);
 	return (result);
 }
