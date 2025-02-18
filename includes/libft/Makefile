@@ -1,5 +1,5 @@
 NAME =		libft.a
-CC =		cc
+CC =		gcc
 CFLAGS =	-Wall -Wextra -Werror
 RM =		@rm -f
 
@@ -52,6 +52,7 @@ SRCS =		ft_atoi.c \
 			ft_strtok.c \
 			ft_strtrim.c \
 			ft_substr.c \
+			ft_substring.c \
 			ft_tolower.c \
 			ft_toupper.c \
 

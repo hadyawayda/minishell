@@ -1,5 +1,5 @@
 NAME =			michel
-CC =			cc
+CC =			gcc
 AR =			ar rcs
 CFLAGS =		-g
 LIBFT_DIR =		includes/libft
@@ -31,7 +31,10 @@ CORE =			src/core/env/expansion/expansion.c \
 
 PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/parser/cleaner.c \
+				src/lexer/tokenizer/expansion.c \
 				src/lexer/tokenizer/tokenization.c \
+				src/lexer/tokenizer/parsers.c \
+				src/lexer/tokenizer/helpers.c \
 				
 
 SIGNALS = 		
