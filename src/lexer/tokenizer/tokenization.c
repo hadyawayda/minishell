@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/19 04:37:45 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 01:30:18 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ char	**tokenize(const char *input)
 	int		j;
 	int		merge;
 
-	tokens = malloc(sizeof(char *) * MAX_TOKENS);
-	if (!tokens)
-		return (NULL);
 	i = 0;
 	j = 0;
 	merge = 0;
+	tokens = malloc(sizeof(char *) * MAX_TOKENS);
+	if (!tokens)
+		return (NULL);
 	while (input[i] != '\0' && j < MAX_TOKENS - 1)
 	{
 		skip_whitespace(input, &i);
@@ -72,11 +72,13 @@ void	tokenizer(char *input)
 {
 	char	**tokens;
 	int		i;
-	char	*expanded_input;
 
-	expanded_input = expand_variable(input);
+	char *expanded_input = strdup(input);
+		// Ensure expanded_input is initialized
+	if (!expanded_input)
+		return ;
 	tokens = tokenize(expanded_input);
-	free(expanded_input);
+	free(expanded_input); // Free only allocated memory
 	if (tokens)
 	{
 		print_tokens(tokens);

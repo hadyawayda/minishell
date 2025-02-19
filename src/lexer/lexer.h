@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/19 05:04:10 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 01:29:43 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int					quote_parser(const char *input, char **tokens, int *i,
 						int *j, int *merge);
 
 char				*expand_variable(const char *input);
+char				*ft_strjoin_char(char *s1, char c);
 
 void				parser(t_shell *shell, char *input);
 void				free_string_array(char **array);

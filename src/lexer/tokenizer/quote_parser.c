@@ -6,217 +6,166 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/19 05:04:04 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 01:50:15 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-// Helper function to join string with single char
-char	*ft_strjoin_char(char *s1, char c)
-{
-	char	*result;
-	size_t	len;
-
-	len = ft_strlen(s1);
-	result = malloc(len + 2); // +1 for new char, +1 for null terminator
-	if (!result)
-		return (NULL);
-	ft_strcpy(result, s1);
-	result[len] = c;
-	result[len + 1] = '\0';
-	return (result);
-}
-
-char	*expand_variable1(const char *str)
-{
-	char	*result;
-	char	*value;
-	char	*var_name;
-	int		i;
-	int		start;
-	char	*temp;
-
-	result = ft_strdup(""); // Initialize with empty string
-	if (!result)
-		return (NULL);
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$' && str[i + 1] && !ft_isspace(str[i + 1]))
-		{
-			i++;
-			start = i;
-			// Find the end of the variable name
-			while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-				i++;
-			// Extract variable name
-			var_name = ft_substring(str, start, i);
-			if (!var_name)
-			{
-				free(result);
-				return (NULL);
-			}
-			// Get value from environment
-			value = getenv(var_name);
-			free(var_name);
-			// Append value or empty string if not found
-			if (value)
-			{
-				temp = ft_strjoin(result, value);
-				free(result);
-				if (!temp)
-					return (NULL);
-				result = temp;
-			}
-			continue ;
-		}
-		// Append regular character
-		temp = ft_strjoin_char(result, str[i]);
-		free(result);
-		if (!temp)
-			return (NULL);
-		result = temp;
-		i++;
-	}
-	return (result);
-}
-// Helper function to check if we're at the start of a variable
-static int	is_variable_start(char c, char next_c)
-{
-	return (c == '$' && next_c && !ft_isspace(next_c));
-}
-
-// Helper function to check if character is valid in a variable name
-static int	is_valid_var_char(char c)
-{
-	return (ft_isalnum(c) || c == '_');
-}
-
-// Extract and expand variable name
-static char	*extract_variable(const char *str, int *pos)
-{
-	int		i;
-	char	*var_name;
-	char	*value;
-
-	int start = *pos + 1; // Skip the $
-	i = start;
-	while (str[i] && is_valid_var_char(str[i]))
-		i++;
-	var_name = ft_substring(str, start, i);
-	if (!var_name)
-		return (NULL);
-	value = getenv(var_name);
-	free(var_name);
-	*pos = i - 1; // Update position to end of variable name
-	return (value ? ft_strdup(value) : ft_strdup(""));
-}
-
-// Append string to builder with proper memory management
-static int	append_to_builder(char **builder, const char *str)
-{
-	char	*temp;
-
-	temp = ft_strjoin(*builder, str);
-	free(*builder);
-	if (!temp)
-		return (-1);
-	*builder = temp;
-	return (0);
-}
-
-// Handle variable expansion within quotes
-static int	handle_variable_expansion(t_parser_state *state, const char *input)
-{
-	char	*expanded;
-	int		result;
-
-	if (!is_variable_start(input[state->i], input[state->i + 1]))
-		return (0);
-	expanded = extract_variable(input, &state->i);
-	if (!expanded)
-		return (-1);
-	result = append_to_builder(&state->builder, expanded);
-	free(expanded);
-	return (result);
-}
-
-// Process a single character in the parser
-static int	process_char(t_parser_state *state, const char *input)
-{
-	char	*temp;
-
-	// Handle variable expansion
-	if (input[state->i] == '$' && (!state->in_quotes
-			|| state->quote_type == '"'))
-	{
-		return (handle_variable_expansion(state, input));
-	}
-	// Handle regular character
-	temp = ft_strjoin_char(state->builder, input[state->i]);
-	free(state->builder);
-	if (!temp)
-		return (-1);
-	state->builder = temp;
-	return (0);
-}
-
 int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 {
-	t_parser_state state = {.in_quotes = 0, .quote_type = '\0',
-		.builder = ft_strdup(""), .i = *i};
+	char	buffer[4096];
+	int		buf_index;
+	int		var_start;
+	char	*var_name;
+	char	*expanded;
+	size_t	len;
 
-	if (!state.builder)
-		return (-1);
-
-	// Set initial quote state
-	state.quote_type = input[state.i];
-	state.in_quotes = 1;
-	state.i++;
-
-	// Process characters until end of quote or string
-	while (input[state.i])
+	buf_index = 0;
+	int in_quote = 0;    // 0 means “not in quotes”
+	char quote_type = 0; // Will be ' or "
+	// Parse characters until we either finish this token or run out of string
+	while (input[*i])
 	{
-		if (input[state.i] == state.quote_type)
+		// 1) If not in quotes and see a ' or ", enter quote mode
+		if (!in_quote && (input[*i] == '\'' || input[*i] == '"'))
 		{
-			state.in_quotes = 0;
+			in_quote = 1;
+			quote_type = input[*i];
+			(*i)++; // Skip the opening quote
+		}
+		// 2) If in quotes and see the matching quote, exit quote mode
+		else if (in_quote && input[*i] == quote_type)
+		{
+			in_quote = 0;
+			quote_type = 0;
+			(*i)++; // Skip the closing quote
+			// If we see a delimiter or end-of-string, token ends here
+			if (!input[*i] || ft_isdelimiter(input[*i]))
+				break ;
+		}
+		// 3) If we’re not in quotes and see a delimiter, token ends
+		else if (!in_quote && ft_isdelimiter(input[*i]))
+		{
 			break ;
 		}
-
-		if (process_char(&state, input) < 0)
+		// 4) Check for variable expansion if we’re either outside quotes or in double quotes
+		//    Single quotes do NOT expand.
+		else if ((quote_type == '"' || !in_quote) && input[*i] == '$')
 		{
-			free(state.builder);
-			return (-1);
+			(*i)++;
+			var_start = *i;
+			while (input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
+				(*i)++;
+			// If no var name, treat '$' literally (e.g. "$" or "$?")
+			if (var_start == *i)
+			{
+				buffer[buf_index++] = '$';
+				continue ;
+			}
+			var_name = ft_substring(input, var_start - 1, *i);
+			if (!var_name)
+				return (-1);
+			expanded = expand_variable(var_name);
+			free(var_name);
+			if (!expanded)
+			{
+				expanded = strdup(""); // Avoid NULL
+				if (!expanded)
+					return (-1);
+			}
+			len = strlen(expanded);
+			// Check for buffer overflow
+			if ((buf_index + (int)len) >= (int)sizeof(buffer))
+			{
+				free(expanded);
+				return (-1); // Too big for our static buffer
+			}
+			strcpy(&buffer[buf_index], expanded);
+			buf_index += (int)len;
+			free(expanded);
 		}
-		state.i++;
+		// 5) Otherwise just copy the character into our current token buffer
+		else
+		{
+			buffer[buf_index++] = input[*i];
+			(*i)++;
+		}
 	}
-
-	// Check for unterminated quotes
-	if (state.in_quotes)
+	// If we exit and are still in quotes => unclosed quote
+	if (in_quote)
 	{
-		printf("Error: Unterminated quote\n");
-		free(state.builder);
+		ft_printf("unclosed quote\n");
+		return (-1); // Caller can print “unclosed quote” error
+	}
+	buffer[buf_index] = '\0';
+	// Store this completed token
+	tokens[*j] = strdup(buffer);
+	if (!tokens[*j])
 		return (-1);
-	}
-
-	state.i++; // Move past closing quote
-
-	// Handle token merging for adjacent quotes
-	if (*merge && *j > 0)
-	{
-		char *temp = ft_strjoin(tokens[*j - 1], state.builder);
-		free(tokens[*j - 1]);
-		free(state.builder);
-		if (!temp)
-			return (-1);
-		tokens[*j - 1] = temp;
-	}
-	else
-	{
-		tokens[(*j)++] = state.builder;
-	}
-
-	*i = state.i;
+	(*j)++;
+	*merge = 1; // Means we merged characters into one token
 	return (0);
 }
+
+// char	*append_char(char *str, char c)
+// {
+// 	char	*new_str;
+// 	int		len;
+
+// 	len = (str) ? ft_strlen(str) : 0;
+// 	new_str = malloc(len + 2);
+// 	if (!new_str)
+// 		return (NULL);
+// 	if (str)
+// 	{
+// 		ft_strcpy(new_str, str);
+// 		free(str);
+// 	}
+// 	new_str[len] = c;
+// 	new_str[len + 1] = '\0';
+// 	return (new_str);
+// }
+
+// int	handle_variable(t_parser_state *state, const char *input,
+// char **builder)
+// {
+// 	char	*expanded;
+// 	char	*temp;
+
+// 	if (input[state->i] == '$' && (!state->in_quotes
+// 			|| state->quote_type == '"'))
+// 	{
+// 		expanded = expand_variable(input + state->i);
+// 		if (!expanded)
+// 			return (-1);
+// 		temp = ft_strjoin(*builder ? *builder : "", expanded);
+// 		free(expanded);
+// 		if (*builder)
+// 			free(*builder);
+// 		*builder = temp;
+// 		while (input[state->i] && !ft_isdelimiter(input[state->i])
+// 			&& input[state->i] != '\'' && input[state->i] != '"')
+// 			state->i++;
+// 		state->i--;
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
+// int	handle_quotes(t_parser_state *state, const char *input)
+// {
+// 	if (!state->in_quotes)
+// 	{
+// 		state->in_quotes = 1;
+// 		state->quote_type = input[state->i];
+// 		return (1);
+// 	}
+// 	else if (input[state->i] == state->quote_type)
+// 	{
+// 		state->in_quotes = 0;
+// 		state->quote_type = '\0';
+// 		return (1);
+// 	}
+// 	return (0);
+// }

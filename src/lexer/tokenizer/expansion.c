@@ -6,50 +6,124 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:59:45 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 00:24:17 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-char	*expand_variable(const char *input)
+char	*ft_strjoin_char(char *s1, char c)
 {
+	char	*result;
+	size_t	len;
+
+	len = ft_strlen(s1);
+	result = malloc(len + 2);
+	if (!result)
+		return (NULL);
+	ft_strcpy(result, s1);
+	result[len] = c;
+	result[len + 1] = '\0';
+	return (result);
+}
+
+char	*expand_variable(const char *str)
+{
+	char	*result;
+	char	*value;
+	char	*var_name;
+	char	*temp;
+
 	int i, start;
-	char *result, *var_name, *var_value, *temp;
-	result = ft_strdup("");
+	result = ft_strdup(""); // Initialize with empty string
+	if (!result)
+		return (NULL);
 	i = 0;
-	while (input[i])
+	while (str[i])
 	{
-		if (input[i] == '\'')
+		// Detect variable expansion
+		if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i
+				+ 1] == '_'))
 		{
-			start = i++;
-			while (input[i] && input[i] != '\'')
-				i++;
-			result = ft_strjoin_and_free(result, ft_substring(input, start, i
-						+ 1));
 			i++;
-		}
-		else if (input[i] == '$' && input[i + 1] && (ft_isalnum(input[i + 1])
-				|| input[i + 1] == '_'))
-		{
-			start = ++i;
-			while (ft_isalnum(input[i]) || input[i] == '_')
+			start = i;
+			while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 				i++;
-			var_name = ft_substring(input, start, i);
-			var_value = getenv(var_name);
-			if (!var_value)
-				temp = ft_strdup("");
-			else
-				temp = ft_strdup(var_value);
-			result = ft_strjoin_and_free(result, temp);
+			var_name = ft_substring(str, start, i);
+			if (!var_name)
+			{
+				free(result);
+				return (NULL);
+			}
+			value = getenv(var_name);
 			free(var_name);
+			temp = ft_strjoin(result, value ? value : "");
+				// Ensuring expansion doesn't return NULL
+			free(result);
+			result = temp;
+			continue ;
 		}
-		else
+		// Append regular character
+		temp = ft_strjoin_char(result, str[i]);
+		free(result);
+		result = temp;
+		i++;
+	}
+	return (result);
+}
+
+char	*expand_variable1(const char *str)
+{
+	int		i;
+	int		start;
+	char	*result;
+	char	*var_name;
+	char	*value;
+	char	*temp;
+
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i + 1] && !ft_isspace(str[i + 1]))
 		{
-			temp = ft_substring(input, i, i + 1);
-			result = ft_strjoin_and_free(result, temp);
 			i++;
+			start = i;
+			while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+				i++;
+			var_name = ft_substring(str, start, i);
+			if (!var_name)
+			{
+				free(result);
+				return (NULL);
+			}
+			value = getenv(var_name);
+			free(var_name);
+			if (value)
+			{
+				temp = ft_strjoin(result, value);
+				free(result);
+				if (!temp)
+					return (NULL);
+				result = temp;
+			}
+			else
+			{
+				temp = ft_strdup(result);
+				free(result);
+				if (!temp)
+					return (NULL);
+			}
+			continue ;
 		}
+		temp = ft_strjoin_char(result, str[i]);
+		free(result);
+		if (!temp)
+			return (NULL);
+		result = temp;
+		i++;
 	}
 	return (result);
 }
