@@ -33,8 +33,10 @@ PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/parser/cleaner.c \
 				src/lexer/tokenizer/expansion.c \
 				src/lexer/tokenizer/tokenization.c \
-				src/lexer/tokenizer/parsers.c \
 				src/lexer/tokenizer/helpers.c \
+				src/lexer/tokenizer/operator_parser.c \
+				src/lexer/tokenizer/quote_parser.c \
+				src/lexer/tokenizer/word_parser.c \
 				
 
 SIGNALS = 		

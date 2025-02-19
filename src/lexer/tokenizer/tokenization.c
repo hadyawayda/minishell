@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:25:44 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/19 04:12:05 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,39 @@ char	**tokenize(const char *input)
 	int		i;
 	int		j;
 	int		merge;
-	char	*expanded;
 
 	tokens = malloc(sizeof(char *) * MAX_TOKENS);
 	if (!tokens)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (input[i] && j < MAX_TOKENS - 1)
+	merge = 0;
+	while (input[i] != '\0' && j < MAX_TOKENS - 1)
 	{
 		skip_whitespace(input, &i);
 		if (!input[i])
 			break ;
-		merge = (j > 0 && i > 0 && !ft_isspace(input[i - 1]));
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			if (parse_quote(input, tokens, &i, &j, merge) == -1)
-				return (free(tokens), NULL);
+			if (quote_parser(input, tokens, &i, &j, &merge) == -1)
+			{
+				while (j > 0)
+					free(tokens[--j]);
+				free(tokens);
+				return (NULL);
+			}
 		}
 		else if (input[i] == '|' || input[i] == '&' || input[i] == '<'
 			|| input[i] == '>')
-			parse_operator(input, tokens, &i, &j);
+		{
+			operator_parser(input, tokens, &i, &j);
+			merge = 0;
+		}
 		else
-			parse_word(input, tokens, &i, &j, merge);
+		{
+			word_parser(input, tokens, &i, &j, merge);
+			merge = 0;
+		}
 	}
 	tokens[j] = NULL;
 	return (tokens);

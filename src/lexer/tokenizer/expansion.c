@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:30:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/18 19:59:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ char	*expand_variable(const char *input)
 				i++;
 			var_name = ft_substring(input, start, i);
 			var_value = getenv(var_name);
-			temp = var_value ? ft_strdup(var_value) : ft_strdup("");
+			if (!var_value)
+				temp = ft_strdup("");
+			else
+				temp = ft_strdup(var_value);
 			result = ft_strjoin_and_free(result, temp);
 			free(var_name);
 		}

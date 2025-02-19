@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:25:58 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/19 02:58:16 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,18 @@ typedef struct s_token
 	struct s_token	*next;
 }					token_t;
 
-int					parse_quote(const char *input, char **tokens, int *i,
-						int *j, int merge);
+int					quote_parser(const char *input, char **tokens, int *i,
+						int *j, int *merge);
 
 char				*expand_variable(const char *input);
 
 void				parser(t_shell *shell, char *input);
 void				free_string_array(char **array);
 void				tokenizer(char *input);
-void				parse_operator(const char *input, char **tokens, int *i,
-						int *j);
-void				parse_word(const char *input, char **tokens, int *i, int *j,
-						int merge);
 void				skip_whitespace(const char *input, int *i);
+void				operator_parser(const char *input, char **tokens, int *i,
+						int *j);
+void				word_parser(const char *input, char **tokens, int *i,
+						int *j, int merge);
 
 #endif
