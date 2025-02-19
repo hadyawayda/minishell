@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/19 02:58:16 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/19 05:04:10 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 # define MAX_TOKENS 4096
 
 # include "../core/core.h"
+
+typedef struct s_parser_state
+{
+	int				in_quotes;
+	char			quote_type;
+	char			*builder;
+	int				i;
+}					t_parser_state;
 
 typedef enum e_quote
 {

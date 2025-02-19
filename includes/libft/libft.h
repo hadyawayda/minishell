@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/18 19:22:26 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/19 04:22:52 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 int					ft_lstsize(t_list *lst);
 int					ft_isspace(int c);
+int					ft_isdelimiter(char c);
 
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char				*ft_strchr(const char *s, int c);
