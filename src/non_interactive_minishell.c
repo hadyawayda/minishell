@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   program.c                                          :+:      :+:    :+:   */
+/*   non_interactive_minishell.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 14:21:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 03:56:47 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/20 03:40:29 by hawayda           #+#    #+#             */
+/*   Updated: 2025/02/20 03:51:46 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "core/core.h"
 
-void	minishell(char **envp)
+int	main(int ac, char **av, char **envp)
 {
-	t_shell	*shell;
-
-	shell = init_shell(envp);
-	if (!shell)
-	{
-		perror("minishell: failed to initialize");
-		return ;
-	}
-	setup_signal_handlers();
-	shell_loop(shell);
-	free_shell(shell);
-	rl_clear_history();
+	(void)ac;
+	(void)av;
+	non_interactive_minishell(av, envp);
+	return (0);
 }
-
-// free(input);
-// free_env_list(env_cpy);
-// rl_free_line_state();
-// rl_cleanup_after_signal();
-// history_truncate_file(NULL, 0);

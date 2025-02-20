@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 01:50:15 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 03:02:20 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 		}
 		// 3) If we’re not in quotes and see a delimiter, token ends
 		else if (!in_quote && ft_isdelimiter(input[*i]))
-		{
 			break ;
-		}
 		// 4) Check for variable expansion if we’re either outside quotes or in double quotes
 		//    Single quotes do NOT expand.
 		else if ((quote_type == '"' || !in_quote) && input[*i] == '$')
@@ -77,10 +75,7 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 			len = strlen(expanded);
 			// Check for buffer overflow
 			if ((buf_index + (int)len) >= (int)sizeof(buffer))
-			{
-				free(expanded);
-				return (-1); // Too big for our static buffer
-			}
+				return (free(expanded), -1); // Too big for our static buffer
 			strcpy(&buffer[buf_index], expanded);
 			buf_index += (int)len;
 			free(expanded);

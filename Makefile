@@ -1,4 +1,5 @@
 NAME =			michel
+TEST_BIN =		minishell_test
 CC =			gcc
 AR =			ar rcs
 CFLAGS =		-g
@@ -21,8 +22,9 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/env/setters/setter.c \
 				src/core/env/setters/unset.c \
 				src/core/shell_loop/loop.c \
-				src/core/program/program.c \
 				src/core/program/cleaner.c \
+				src/core/program/initializer.c \
+				src/core/program/program.c \
 				src/core/signals/signals.c \
 
 # HELPERS	=		src/helpers/ft_split.c \
@@ -43,13 +45,23 @@ SIGNALS =
 				
 UTILS = 		src/utils/utils1.c \
 
+TEST_SRC =		src/non_interactive_minishell.c \
+				src/core/non_interactive_minishell/program.c \
+
 OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
+
+TEST_OBJS =		$(TEST_SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
 
 all :			$(NAME)
 
 $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
 				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $(NAME) -lreadline
 # $(CC) $(OBJS) -lreadline -LLibft -lft -o ${NAME}
+
+test:			$(TEST_BIN)
+
+$(TEST_BIN) :	$(TEST_OBJS) $(LIBFT) $(PRINTF)
+				@$(CC) $(CFLAGS) $(TEST_OBJS) $(LIBFT) $(PRINTF) -o $(TEST_BIN) -lreadline
 
 $(LIBFT):
 				@make --no-print-directory -C $(LIBFT_DIR)
@@ -70,4 +82,10 @@ fclean:			clean
 				@make --no-print-directory fclean -C $(LIBFT_DIR)
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
+tclean:			clean
+				@rm -f $(TEST_BIN) $(BONUS)
+				@make --no-print-directory fclean -C $(LIBFT_DIR)
+				@make --no-print-directory fclean -C $(PRINTF_DIR)
+
 re :			fclean all
+te :			tclean test

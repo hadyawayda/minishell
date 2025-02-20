@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 01:30:18 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 04:10:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	print_tokens(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
-		printf("Token %d: [%s]\n", i, tokens[i]);
+		printf("%s\n", tokens[i]);
 		i++;
 	}
 }
@@ -72,9 +72,10 @@ void	tokenizer(char *input)
 {
 	char	**tokens;
 	int		i;
+	char	*expanded_input;
 
-	char *expanded_input = strdup(input);
-		// Ensure expanded_input is initialized
+	expanded_input = strdup(input);
+	// Ensure expanded_input is initialized
 	if (!expanded_input)
 		return ;
 	tokens = tokenize(expanded_input);

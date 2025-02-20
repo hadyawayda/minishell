@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 04:53:27 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/20 03:57:08 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ void				add_env_variable(t_env **env, char *key, char *value);
 void				update_env_variable(t_env **env, char *key, char *value);
 void				add_or_update_env_variable(t_env **env, char *key, char *value);
 void				setup_signal_handlers(void);
+void				non_interactive_minishell(char **av, char **envp);
 
 t_env				*clone_env(char **envp);
 t_env				*create_default_env(void);
 t_env				*create_env_node(char *key, char *value);
 t_env				*parse_env_entry(char *env_entry);
 t_env				*clone_env_list(t_env *env);
+t_shell				*init_shell(char **envp);
 
 #endif
