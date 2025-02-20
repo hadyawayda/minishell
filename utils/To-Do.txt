@@ -1,0 +1,13 @@
+Tokenizer:
+1. Expand variables in tokenizer (under which conditions? Only when space seperated or enclosed in double quotes right?).
+2. Limit expansions to only command names and their options and arguments and file names (redirections and operators and command options (only when variables are set with the - character in the env variable i.e. export var1="-l") should not be supported at all).
+
+Tester:
+Create makefile for tester and multiple folders for each module
+Create files for non interactive minishell that are plug and play (i.e. you give it the path of the code files in your directories for the looper and it replaces it and processes the outputs, what we can do is replace the main.c file with another that imports the minishell.h header file and )
+Process multiple cases at once using a loop
+Parse valgrind output and check for leaks etc...
+Process multiple lines of code
+
+Project Structure:
+Fix #include "../core.h" in the main.c to include minishell.h instead and then minishell.h will then include core.h, and then replace core.h in all files with minishell.h I guess? Or maybe we can keep it to core.h for the core module for example?
