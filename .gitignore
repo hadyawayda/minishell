@@ -56,6 +56,7 @@ dkms.conf
 # Directories
 .vscode/
 tester/
+utils/
 
 # Testing Scripts
 *.sh

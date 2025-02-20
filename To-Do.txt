@@ -1,8 +1,0 @@
-Tokenizer:
-1. Expand variables in tokenizer (under which conditions? Only when space seperated or enclosed in double quotes right?).
-2. Limit expansions to only command names and their options and arguments and file names (redirections and operators and command options (only when variables are set with the - character in the env variable i.e. export var1="-l") should not be supported at all).
-
-Tester:
-Process multiple cases at once using a loop
-Parse valgrind output and check for leaks etc...
-Process multiple lines of code

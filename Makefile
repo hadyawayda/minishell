@@ -82,10 +82,10 @@ fclean:			clean
 				@make --no-print-directory fclean -C $(LIBFT_DIR)
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
-tclean:			clean
+tclean:			clean fclean
 				@rm -f $(TEST_BIN) $(BONUS)
 				@make --no-print-directory fclean -C $(LIBFT_DIR)
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
 re :			fclean all
-te :			tclean test
+te :			fclean tclean test
