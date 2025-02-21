@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 01:29:43 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/21 04:27:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ char				*ft_strjoin_char(char *s1, char c);
 void				parser(t_shell *shell, char *input);
 void				free_string_array(char **array);
 void				tokenizer(char *input);
-void				skip_whitespace(const char *input, int *i);
+int					skip_whitespace(const char *input, int *i);
 void				operator_parser(const char *input, char **tokens, int *i,
 						int *j);
 void				word_parser(const char *input, char **tokens, int *i,
-						int *j, int merge);
+						int *j, int *merge);
 
 #endif

@@ -6,13 +6,14 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 02:56:06 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 01:47:37 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/21 04:43:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-void	word_parser(const char *input, char **tokens, int *i, int *j, int merge)
+void	word_parser(const char *input, char **tokens, int *i, int *j,
+		int *merge)
 {
 	int		start;
 	char	*new_token;
@@ -34,7 +35,7 @@ void	word_parser(const char *input, char **tokens, int *i, int *j, int merge)
 		new_token = expanded;
 	}
 	// Only merge if there's no delimiter between tokens
-	if (merge && *j > 0)
+	if (*merge == 1 && *j > 0)
 	{
 		temp = ft_strjoin(tokens[*j - 1], new_token);
 		free(tokens[*j - 1]);
@@ -43,4 +44,9 @@ void	word_parser(const char *input, char **tokens, int *i, int *j, int merge)
 	}
 	else
 		tokens[(*j)++] = new_token;
+	if (input[*i] && !ft_isdelimiter(input[*i]))
+	{
+		*merge = 1;
+		printf("minishell: syntax error near unexpected token `%d'\n", *merge);
+	}
 }

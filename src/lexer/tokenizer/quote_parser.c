@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 03:02:20 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/21 04:40:53 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,49 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 		// 1) If not in quotes and see a ' or ", enter quote mode
 		if (!in_quote && (input[*i] == '\'' || input[*i] == '"'))
 		{
-			in_quote = 1;
+			// printf("in %s, ascii of current char %c of index %d: %d\n",
+			// input,
+				// 	input[*i], *i, input[*i]);
+				in_quote = 1;
 			quote_type = input[*i];
 			(*i)++; // Skip the opening quote
 		}
 		// 2) If in quotes and see the matching quote, exit quote mode
 		else if (in_quote && input[*i] == quote_type)
 		{
-			in_quote = 0;
+			// printf("in %s, ascii of current char %c of index %d: %d\n",
+			// input,
+				// 	input[*i], *i, input[*i]);
+				in_quote = 0;
 			quote_type = 0;
 			(*i)++; // Skip the closing quote
-			// If we see a delimiter or end-of-string, token ends here
+					// If we see a delimiter or end-of-string, token ends here
+					// printf("in %s, ascii of current char %c of index %d:
+					// %d\n",
+					// input,
+			// 	input[*i], *i, input[*i]);
 			if (!input[*i] || ft_isdelimiter(input[*i]))
 				break ;
 		}
 		// 3) If we’re not in quotes and see a delimiter, token ends
 		else if (!in_quote && ft_isdelimiter(input[*i]))
-			break ;
+		{
+			// printf("in %s, ascii of current char %c of index %d: %d\n",
+			// input,
+				// 	input[*i], *i, input[*i]);
+				break ;
+		}
 		// 4) Check for variable expansion if we’re either outside quotes or in double quotes
 		//    Single quotes do NOT expand.
 		else if ((quote_type == '"' || !in_quote) && input[*i] == '$')
 		{
-			(*i)++;
+			// printf("in %s, ascii of current char %c of index %d: %d\n",
+			input,
+				// 	input[*i], *i, input[*i]);
+				(*i)++;
 			var_start = *i;
-			while (input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
+			while (input[*i] != '\0' && (ft_isalnum(input[*i])
+					|| input[*i] == '_'))
 				(*i)++;
 			// If no var name, treat '$' literally (e.g. "$" or "$?")
 			if (var_start == *i)
@@ -61,7 +80,8 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 				buffer[buf_index++] = '$';
 				continue ;
 			}
-			var_name = ft_substring(input, var_start - 1, *i);
+			// prepend the $ sign to the variable name
+			var_name = ft_strjoin("$", ft_substring(input, var_start, *i));
 			if (!var_name)
 				return (-1);
 			expanded = expand_variable(var_name);
@@ -76,14 +96,17 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 			// Check for buffer overflow
 			if ((buf_index + (int)len) >= (int)sizeof(buffer))
 				return (free(expanded), -1); // Too big for our static buffer
-			strcpy(&buffer[buf_index], expanded);
+			ft_strcpy(&buffer[buf_index], expanded);
 			buf_index += (int)len;
 			free(expanded);
 		}
 		// 5) Otherwise just copy the character into our current token buffer
 		else
 		{
-			buffer[buf_index++] = input[*i];
+			// printf("in %s, ascii of current char %c of index %d: %d\n",
+			input,
+				// 	input[*i], *i, input[*i]);
+				buffer[buf_index++] = input[*i];
 			(*i)++;
 		}
 	}
@@ -99,7 +122,7 @@ int	quote_parser(const char *input, char **tokens, int *i, int *j, int *merge)
 	if (!tokens[*j])
 		return (-1);
 	(*j)++;
-	*merge = 1; // Means we merged characters into one token
+	*merge = (input[*i] && !ft_isdelimiter(input[*i]));
 	return (0);
 }
 

@@ -23,3 +23,6 @@ echo "'"$USER
 echo "'""'""'""'"$USER
 echo $USER"'"
 echo $USER"'""'""'""'"
+echo $USER"a"
+echo $USER'a'
+echo $USER"$USER"

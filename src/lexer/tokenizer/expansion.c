@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/20 00:24:17 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/21 01:53:00 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ char	*expand_variable(const char *str)
 	char	*value;
 	char	*var_name;
 	char	*temp;
+	int		i;
+	int		start;
 
-	int i, start;
 	result = ft_strdup(""); // Initialize with empty string
 	if (!result)
 		return (NULL);
@@ -58,7 +59,7 @@ char	*expand_variable(const char *str)
 			value = getenv(var_name);
 			free(var_name);
 			temp = ft_strjoin(result, value ? value : "");
-				// Ensuring expansion doesn't return NULL
+			// Ensuring expansion doesn't return NULL
 			free(result);
 			result = temp;
 			continue ;
