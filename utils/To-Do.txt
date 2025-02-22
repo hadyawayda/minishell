@@ -11,3 +11,54 @@ Process multiple lines of code
 
 Project Structure:
 Fix #include "../core.h" in the main.c to include minishell.h instead and then minishell.h will then include core.h, and then replace core.h in all files with minishell.h I guess? Or maybe we can keep it to core.h for the core module for example?
+
+Fix the following tokenizer cases:
+c2r6s1% bash
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME*
+/home/hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME
+/home/hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME*
+/home/hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $hola*
+execute.sh includes Makefile michel README.md src tester test.sh utils
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo *
+execute.sh includes Makefile michel README.md src tester test.sh utils
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $hola*
+execute.sh includes Makefile michel README.md src tester test.sh utils
+hawayda@c2r6s1:~/Desktop/github/minishell$ *
+execute.sh: command not found
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo *
+execute.sh includes Makefile michel README.md src tester test.sh utils
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME"
+HOME
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME
+> "
+HOME
+
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME
+"
+HOME
+
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''
+ hawayda 
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER
+ hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo ''$USER
+hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo $USER
+hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''    $USER
+ hawayda  hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''     $USER
+ hawayda  hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''  $USER
+ hawayda  hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
+ hawayda  hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''$USER
+ hawayda hawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER''$USER
+ hawaydahawayda
+hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
+ hawayda  hawayda
