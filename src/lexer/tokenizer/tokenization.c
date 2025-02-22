@@ -6,33 +6,27 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/21 04:39:06 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/02/22 03:11:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-int	is_operator_char(char c)
-{
-	if (c == '|' || c == '&' || c == '<' || c == '>')
-		return (1);
-	return (0);
-}
-
 char	**tokenize(const char *input)
 {
 	char	**tokens;
+	char	*current_token;
 	int		i;
 	int		j;
-	int		merge;
-	int		w;
 
 	i = 0;
 	j = 0;
-	merge = 0;
 	tokens = malloc(sizeof(char *) * MAX_TOKENS);
 	if (!tokens)
 		return (NULL);
+	current_token = ft_strdup("");
+	if (!current_token)
+		return (free(tokens), NULL);
 	while (input[i] != '\0' && j < MAX_TOKENS - 1)
 	{
 		skip_whitespace(input, &i);
@@ -40,19 +34,27 @@ char	**tokenize(const char *input)
 			break ;
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			if (quote_parser(input, tokens, &i, &j, &merge) == -1)
-			{
-				while (j > 0)
-					free(tokens[--j]);
-				free(tokens);
-				return (NULL);
-			}
+			if (quote_parser(input, &i, &current_token) == -1)
+				return (free_tokens(tokens, j), free(current_token), NULL);
 		}
 		else if (is_operator_char(input[i]))
-			operator_parser(input, tokens, &i, &j);
-		else
-			word_parser(input, tokens, &i, &j, &merge);
+			operator_parser(input, &i, tokens, &j);
+		else if (!ft_isdelimiter(input[i]))
+			word_parser(input, &i, &current_token);
+		if (ft_isdelimiter(input[i]) || is_operator_char(input[i])
+			|| input[i] == '\0')
+		{
+			if (current_token[0] != '\0')
+			{
+				tokens[j++] = ft_strdup(current_token);
+				free(current_token);
+				current_token = ft_strdup("");
+			}
+		}
 	}
+	if (current_token[0] != '\0' && j < MAX_TOKENS - 1)
+		tokens[j++] = ft_strdup(current_token);
+	free(current_token);
 	tokens[j] = NULL;
 	return (tokens);
 }

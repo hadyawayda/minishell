@@ -58,7 +58,7 @@ $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
 				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $(NAME) -lreadline
 # $(CC) $(OBJS) -lreadline -LLibft -lft -o ${NAME}
 
-test:			$(TEST_BIN)
+tester:			$(TEST_BIN)
 
 $(TEST_BIN) :	$(TEST_OBJS) $(LIBFT) $(PRINTF)
 				@$(CC) $(CFLAGS) $(TEST_OBJS) $(LIBFT) $(PRINTF) -o $(TEST_BIN) -lreadline
@@ -88,4 +88,4 @@ tclean:			clean fclean
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
 re :			fclean all
-te :			fclean tclean test
+te :			fclean tclean tester

@@ -98,36 +98,23 @@ do
 
   # Print results with colors
   if $overall_pass; then
-    echo -e "=== Test #$test_index ${GREEN}(ok)${RESET} ==="
+    echo -e "${GREEN}Test #$test_index${RESET}   Command:  [${cmd}]"
   else
-    echo -e "=== Test #$test_index ${RED}(fail)${RESET} ==="
+    echo -e "${RED}Test #$test_index${RESET}   Command:  [${cmd}]"
   fi
-
-  echo -e "Command:      [${cmd}]"
 
   # Line 1
   if $pass_line1; then
-    echo -e "Line1: ${GREEN}PASS${RESET} (expected: [${exp_line1}], actual: [${actual_line1}])"
+    echo -e "${GREEN}Line1:${RESET}     Expected: [${GREEN}${exp_line1}${RESET}] Actual: [${GREEN}${actual_line1}${RESET}]"
   else
-    echo -e "Line1: ${RED}FAIL${RESET}"
-    echo -e "       Expected: [${exp_line1}]"
-    echo -e "       Actual:   [${actual_line1}]"
+    echo -e "${RED}Line1:${RESET}     Expected: [${GREEN}${exp_line1}${RESET}],  Actual: [${RED}${actual_line1}${RESET}]"
   fi
 
   # Line 2
   if $pass_line2; then
-    echo -e "Line2: ${GREEN}PASS${RESET} (expected: [${exp_line2}], actual: [${actual_line2}])"
+    echo -e "${GREEN}Line2:${RESET}     Expected: [${GREEN}${exp_line2}${RESET}] Actual: [${GREEN}${actual_line2}${RESET}]"
   else
-    echo -e "Line2: ${RED}FAIL${RESET}"
-    echo -e "       Expected: [${exp_line2}]"
-    echo -e "       Actual:   [${actual_line2}]"
-  fi
-
-  # If both lines pass, show a nice overall PASS
-  if $overall_pass; then
-    echo -e "Overall: ${GREEN}PASS${RESET}"
-  else
-    echo -e "Overall: ${RED}FAIL${RESET}"
+    echo -e "${RED}Line2:${RESET}     Expected: [${GREEN}${exp_line2}${RESET}],  Actual: [${RED}${actual_line2}${RESET}]"
   fi
 
   echo
