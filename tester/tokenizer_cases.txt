@@ -30,3 +30,6 @@ echo $
 echo $""
 echo "$"""
 echo $"HOME"
+echo a b c
+echo $"HOME"
+echo $"HOME"

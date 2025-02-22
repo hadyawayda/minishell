@@ -62,3 +62,12 @@ hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER''$USER
  hawaydahawayda
 hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
  hawayda  hawayda
+
+ hawayda@c2r6s1:~/Desktop/github/minishell$ << a cat
+> asd
+> asd
+> sd
+> a
+asd
+asd
+sd

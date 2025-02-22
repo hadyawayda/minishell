@@ -93,3 +93,8 @@ echo
 
 echo
 HOME
+
+echo
+a
+b
+c
