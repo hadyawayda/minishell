@@ -1,0 +1,225 @@
+$> echo,"
+$>"
+$> echo -n,$>
+$> echo Hola,"Hola
+$>"
+$> echoHola,"bash: echoHola: command not found
+$>"
+$> echo-nHola,"bash: echo-nHola: command not found
+$>"
+$> echo -n Hola,Hola$>
+"$> echo ""-n"" Hola",Hola$>
+$> echo -nHola,"-nHola
+$>"
+$> echo Hola -n,"Hola -n
+$>"
+$> echo Hola Que Tal,"Hola Que Tal
+$>"
+$> echo         Hola,"Hola
+$>"
+$> echo    Hola     Que    Tal,"Hola Que Tal
+$>"
+$> echo      \n hola,"n hola
+$>"
+"$> echo ""         "" | cat -e","         $
+$>"
+$> echo           | cat -e,"$
+$>"
+"$> """"''echo hola""""'''' que""""'' tal""""''","hola que tal
+$>"
+$> echo -n -n,$>
+$> echo -n -n Hola Que,Hola Que$>
+$> echo -p,"-p
+$>"
+$> echo -nnnnn,$>
+$> echo -n -nnn -nnnn,$>
+$> echo -n-nnn -nnnn,"-n-nnn -nnnn
+$>"
+$> echo -n -nnn hola -nnnn,hola -nnnn$>
+$> echo -n -nnn-nnnn,-nnn-nnnn$>
+$> echo --------n,"--------n
+$>"
+$> echo -nnn --------n,--------n$>
+$> echo -nnn -----nn---nnnn,-----nn---nnnn$>
+$> echo -nnn --------nnnn,--------nnnn$>
+$> echo $,"$
+$>"
+$> echo $?,"0
+$>"
+$> echo $?$,"0$
+$>"
+$> echo $? | echo $? | echo $?,"0
+$>"
+$> echo $:$= | cat -e,"$:$=$
+$>"
+"$> echo "" $ "" | cat -e"," $ $
+$>"
+$> echo ' $ ' | cat -e," $ $
+$>"
+$> echo $HOME,"/home/vietdu91
+$>"
+$> echo \$HOME,"$HOME
+$>"
+$> echo my shit terminal is [$TERM],"my shit terminal is [xterm-256color]
+$>"
+$> echo my shit terminal is [$TERM4,"my shit terminal is [
+$>"
+$> echo my shit terminal is [$TERM4],"my shit terminal is []
+$>"
+$> echo $UID,"1000
+$>"
+$> echo $HOME9,"
+$>"
+$> echo $9HOME,"HOME
+$>"
+$> echo $HOME%,"/home/vietdu91%
+$>"
+$> echo $UID$HOME,"1000/home/vietdu91%
+$>"
+$> echo Le path de mon HOME est $HOME,"Le path de mon HOME est /home/vietdu91
+$>"
+$> echo $USER$var\$USER$USER\$USERtest$USER,"vietdu91$USERvietdu91$USERtestvietdu91
+$>"
+$> echo $hola*,"
+$>"
+$> echo -nnnn $hola,$>
+$> echo > <,"bash: syntax error near unexpected token `<'
+$>"
+$> echo | |,"bash: syntax error near unexpected token `|'
+$>"
+$> EechoE,"bash: EechoE: command not found
+$>"
+$> .echo.,"bash: .echo.: command not found
+$>"
+$> >echo>,"bash: syntax error near unexpected token `newline'
+$>"
+$> <echo<,"bash: syntax error near unexpected token `newline'
+$>"
+$> >>echo>>,"bash: syntax error near unexpected token `newline'
+$>"
+$> |echo|,"bash: syntax error near unexpected token `|'
+$>"
+$> |echo -n hola,"bash: syntax error near unexpected token `|'
+$>"
+$> echo *,"crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c
+$>"
+$> echo '*',"*
+$>"
+$> echo D*,"Docs Dockers Drawings
+$>"
+$> echo *Z,"*Z
+$>"
+$> echo *t hola,"crashtest.c test.c hola
+$>"
+$> echo *t,"crashtest.c test.c
+$>"
+$> echo $*,"
+$>"
+$> echo hola*hola *,"hola*hola crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c
+$>"
+$> echo $hola*,"crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c
+$>"
+$> echo $HOME*,"/home/vietdu91
+$>"
+"$> echo $""""","
+$>"
+"$> echo ""$""""""","$
+$>"
+$> echo '$''',"$
+$>"
+"$> echo $""HOME""","HOME
+$>"
+$> echo $''HOME,"HOME
+$>"
+"$> echo $""""HOME","HOME
+$>"
+"$> echo ""$HO""ME","ME
+$>"
+$> echo '$HO'ME,"$HOME
+$>"
+"$> echo ""$HO""""ME""","ME
+$>"
+$> echo '$HO''ME',"$HOME
+$>"
+"$> echo ""'$HO''ME'""","''ME'
+$>"
+"$> echo """"$HOME","/home/vietdu91
+$>"
+"$> echo """" $HOME"," /home/vietdu91
+$>"
+$> echo ''$HOME,"/home/vietdu91
+$>"
+$> echo '' $HOME," /home/vietdu91
+$>"
+"$> echo $""HO""""ME""","HOME
+$>"
+$> echo $'HO''ME',"HOME
+$>"
+$> echo $'HOME',"HOME
+$>"
+"$> echo ""$""HOME","$HOME
+$>"
+$> echo $=HOME,"$=HOME
+$>"
+"$> echo $""HOLA""","HOLA
+$>"
+$> echo $'HOLA',"HOLA
+$>"
+$> echo $DONTEXIST Hola,"Hola
+$>"
+"$> echo ""hola""","hola
+$>"
+$> echo 'hola',"hola
+$>"
+$> echo ''hola'',"hola
+$>"
+$> echo ''h'o'la'',"hola
+$>"
+"$> echo ""''h'o'la''""","'h'o'la''
+$>"
+"$> echo ""'""h'o'la""'""","hola'
+$>"
+"$> echo""'hola'""","bash: echo'hola': command not found
+$>"
+"$> echo ""'hola'""","'hola'
+$>"
+"$> echo '""hola""'","""hola""
+$>"
+"$> echo '''ho""''''l""a'''","ho""l""a
+$>"
+"$> echo hola""""""""""""""""""""""""","hola
+$>"
+"$> echo hola""''''''''''""","hola''''''''''
+$>"
+$> echo hola'''''''''''',"hola
+$>"
+"$> echo hola'""""""""""""""""""""'","hola""""""""""""""""""""
+$>"
+"$> e""cho hola""","bash: echo hola: command not found
+$>"
+$> e'cho hola',"bash: echo hola: command not found
+$>"
+"$> echo ""hola     "" | cat -e","hola     $
+$>"
+"$> echo """"hola","hola
+$>"
+"$> echo """" hola"," hola
+$>"
+"$> echo """"             hola"," hola
+$>"
+"$> echo """"hola","hola
+$>"
+"$> echo """" hola"," hola
+$>"
+"$> echo hola""""bonjour","holabonjour
+$>"
+"$> ""e""'c'ho 'b'""o""nj""o""'u'r","bonjour
+$>"
+"$> """"e""'c'ho 'b'""o""nj""o""'u'r""","bash: e'c'ho 'b'onjo'u'r: command not found
+$>"
+"$> echo ""$DONTEXIST""Makefile","Makefile
+$>"
+"$> echo ""$DONTEXIST""""Makefile""","Makefile
+$>"
+"$> echo ""$DONTEXIST"" ""Makefile"""," Makefile
+$>"
