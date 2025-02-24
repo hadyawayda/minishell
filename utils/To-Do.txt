@@ -71,3 +71,16 @@ hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
 asd
 asd
 sd
+
+
+echo e*
+execute.sh
+
+echo e *
+e execute.sh includes Makefile README.md r.sh src tester utils
+
+echo D *
+D execute.sh includes Makefile README.md r.sh src tester utils
+
+echo D*
+D*
