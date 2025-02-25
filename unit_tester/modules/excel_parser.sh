@@ -21,9 +21,11 @@ convert_excel_to_csv() {
     # Define custom delimiter
     local delimiter="ǂ"  # Change this if needed
     
+    rm -f "test_files/${base_name}_input.csv" "test_files/${base_name}_output.csv"
+    
     # Extract to temporary regular CSVs first
-    in2csv "$input_file" | csvcut -c 1 > "${base_name}_temp1.csv"
-    in2csv "$input_file" | csvcut -c 2 > "${base_name}_temp2.csv"
+    in2csv "$input_file" | csvcut -c 1 > "test_files/${base_name}_temp1.csv"
+    in2csv "$input_file" | csvcut -c 2 > "test_files/${base_name}_temp2.csv"
     
     # Use Python to properly handle the CSV structure and add delimiters
     python3 -c "
@@ -31,14 +33,14 @@ import csv
 import sys
 
 # Process column 1
-with open('${base_name}_temp1.csv', 'r', newline='') as infile, open('${base_name}_input.csv', 'w') as outfile:
+with open('test_files/${base_name}_temp1.csv', 'r', newline='') as infile, open('test_files/${base_name}_input.csv', 'w') as outfile:
     reader = csv.reader(infile)
     for row in reader:
         value = row[0] if row else ''
         outfile.write(value + '${delimiter}' + '\n')
 
 # Process column 2
-with open('${base_name}_temp2.csv', 'r', newline='') as infile, open('${base_name}_output.csv', 'w') as outfile:
+with open('test_files/${base_name}_temp2.csv', 'r', newline='') as infile, open('test_files/${base_name}_output.csv', 'w') as outfile:
     reader = csv.reader(infile)
     for row in reader:
         value = row[0] if row else ''
@@ -46,11 +48,11 @@ with open('${base_name}_temp2.csv', 'r', newline='') as infile, open('${base_nam
     " 
     
     # Clean up temporary files
-    rm "${base_name}_temp1.csv" "${base_name}_temp2.csv"
+    rm "test_files/${base_name}_temp1.csv" "test_files/${base_name}_temp2.csv"
     
     echo "Done."
-    echo "  - ${base_name}_input.csv (column 1, rows delimited with '$delimiter')"
-    echo "  - ${base_name}_output.csv (column 2, rows delimited with '$delimiter')"
+    echo "  - test_files/${base_name}_input.csv (column 1, rows delimited with '$delimiter')"
+    echo "  - test_files/${base_name}_output.csv (column 2, rows delimited with '$delimiter')"
 }
 
 # If the script is executed directly (not sourced), run the function with all args.
