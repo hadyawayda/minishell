@@ -2,15 +2,29 @@
 
 execute_test_cases() {
   echo "Executing test cases..."
-  local csv_file="$1"
-  local valgrind_enabled="$2"
+  local input_csv="$1"
+  local output_csv="$2"
+  local valgrind_enabled="$3"
   local test_index=1
   local passed_tests=0
   local total_tests=0
 
-  # Read test cases from CSV and execute directly
-  while IFS=, read -r test_input expected_output; do
+  # Open both input and output files
+  exec 3< "$input_csv"
+  exec 4< "$output_csv"
+
+  while IFS= read -r test_input <&3 && IFS= read -r expected_output <&4; do
     ((total_tests++))
+
+    # Remove `$>` prefix from the input
+    test_input="${test_input#\$> }"
+    test_input="${test_input#\"}"  # Remove leading double quote if exists
+    test_input="${test_input%\"}"  # Remove trailing double quote if exists
+
+    # Remove trailing `$>` from expected output
+    expected_output="${expected_output%\$>}"
+    expected_output="${expected_output#\"}"  # Remove leading double quote if exists
+    expected_output="${expected_output%\"}"  # Remove trailing double quote if exists
 
     # Run minishell and capture output
     actual_output=$(echo "$test_input" | ./minishell 2>&1)
@@ -55,7 +69,10 @@ execute_test_cases() {
 
     echo
     ((test_index++))
-  done < "$csv_file"
+  done
+
+  exec 3<&-  # Close input file
+  exec 4<&-  # Close output file
 
   echo -e "${GREEN}All done.${RESET}"
   echo -e "Passed ${GREEN}${passed_tests}${RESET} out of ${total_tests} tests."

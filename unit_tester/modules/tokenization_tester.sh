@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-source ./excel_parser.sh
-source ./test_executor.sh
-
 # Run Tokenization Tests
 run_tokenization_tests() {
     while true; do
@@ -38,21 +35,22 @@ run_tokenization_tests() {
             *) echo "Invalid option." ; continue ;;
         esac
 
-        csv_file="${file%.xlsx}.csv"
-		
+        input_csv="${file%.xlsx}_input.csv"
+        output_csv="${file%.xlsx}_output.csv"
+
         # Convert Excel to CSV (if needed)
-        if [[ ! -f "$csv_file" ]]; then
+        if [[ ! -f "$input_csv" || ! -f "$output_csv" ]]; then
             convert_excel_to_csv "$file"
         fi
 
-        # Check again if CSV exists before proceeding
-        if [[ ! -f "$csv_file" ]]; then
-            echo -e "${RED}Error: CSV file '$csv_file' does not exist after conversion.${NC}"
+        # Check if CSV files exist before proceeding
+        if [[ ! -f "$input_csv" || ! -f "$output_csv" ]]; then
+            echo -e "${RED}Error: CSV files '$input_csv' or '$output_csv' do not exist after conversion.${NC}"
             continue
         fi
 
-		# Execute test cases using external function
-        execute_test_cases "$csv_file" "$VALGRIND_ENABLED"
+        # Run test cases with input and output CSVs
+        execute_test_cases "$input_csv" "$output_csv" "$VALGRIND_ENABLED"
     done
 }
 

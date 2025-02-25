@@ -6,6 +6,7 @@ source ./modules/tokenization_tester.sh
 source ./modules/settings_menu.sh
 source ./modules/excel_parser.sh
 source ./modules/valgrind_tester.sh
+source ./modules/test_execution.sh
 
 # Load Configuration
 CONFIG_FILE="./tester_config.ini"
