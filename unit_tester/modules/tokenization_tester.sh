@@ -57,7 +57,7 @@ run_tokenization_tests() {
 tokenization_tester_menu() {
 	echo "Running Tokenization tests..."
     while true; do
-        # clear
+        clear
         echo -e "${BLUE}----- Tokenization Tester -----${NC}"
         echo -e "${GREEN}1) Run tokenization tests"
         echo -e "2) Set tokenization file path"

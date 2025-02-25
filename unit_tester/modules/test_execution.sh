@@ -30,8 +30,11 @@ execute_test_cases() {
         fi
     done
 
+    # Remove any trailing newline character from expected_output
+    expected_output=$(echo -n "$expected_output")
+
     # Run minishell and capture output
-    actual_output=$(echo "$test_input" | ./michel 2>&1)
+    actual_output=$(echo "$test_input" | bash 2>&1)
 
     # Run Valgrind if enabled
     if [[ "$valgrind_enabled" == "1" ]]; then

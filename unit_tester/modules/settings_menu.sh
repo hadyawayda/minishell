@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# add option to toggle running all tests within the same instance or exit after each test
+
 # Settings Menu
 settings_menu() {
     while true; do
