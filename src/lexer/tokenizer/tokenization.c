@@ -6,13 +6,13 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/22 03:11:54 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/03/03 19:15:24 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-char	**tokenize(const char *input)
+char	**token_builder(const char *input)
 {
 	char	**tokens;
 	char	*current_token;
@@ -77,7 +77,7 @@ void	tokenizer(char *input)
 	int		i;
 	char	*expanded_input;
 
-	tokens = tokenize(input);
+	tokens = token_builder(input);
 	if (tokens)
 	{
 		print_tokens(tokens);
