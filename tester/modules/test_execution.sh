@@ -33,8 +33,12 @@ execute_test_cases() {
     # Remove any trailing newline character from expected_output
     expected_output=$(echo -n "$expected_output")
 
-    # Run minishell and capture output
+    # Run minishell and capture output (uncomment second line to override with actualy minishell output)
     actual_output=$(echo "$test_input" | bash 2>&1)
+    # actual_output=$(echo "$test_input" | ../michel 2>&1)
+
+    # Comment the next line to disable the actual bash output and use the one from the excel file
+    expected_output=$(echo "$test_input" | bash 2>&1)
 
     # Run Valgrind if enabled
     if [[ "$valgrind_enabled" == "1" ]]; then

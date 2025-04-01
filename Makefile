@@ -45,8 +45,8 @@ SIGNALS =
 				
 UTILS = 		src/utils/utils1.c \
 
-TEST_SRC =		src/non_interactive_minishell.c \
-				src/core/non_interactive_minishell/program.c \
+TEST_SRC =		src/non_interactive_minishell/non_interactive_minishell.c \
+				src/non_interactive_minishell/program.c \
 
 OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
 

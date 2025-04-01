@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../core.h"
+#include "../core/core.h"
 
 void	non_interactive_processor(t_shell *shell, char **av)
 {

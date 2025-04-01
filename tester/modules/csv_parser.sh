@@ -17,6 +17,18 @@ convert_excel_to_csv() {
     local input_file="$1"
     local base_name
     base_name=$(basename "$input_file" .xlsx)
+
+    # CHeck if the input file exists
+    if [[ ! -f "$input_file" ]]; then
+        echo -e "${RED}Error: File '$input_file' not found.${ORANGE}"
+        return 1
+    fi
+    
+    # Check if the input file is an Excel file
+    if [[ "$input_file" != *.xlsx ]]; then
+        echo -e "${RED}Error: File '$input_file' is not an Excel file.${ORANGE}"
+        return 1
+    fi
     
     # Define custom delimiter
     local delimiter="ǂ"  # Change this if needed
@@ -29,6 +41,7 @@ convert_excel_to_csv() {
     
     # Use Python to properly handle the CSV structure and add delimiters
     python3 -c "
+    
 import csv
 import sys
 
@@ -50,9 +63,10 @@ with open('test_files/${base_name}_temp2.csv', 'r', newline='') as infile, open(
     # Clean up temporary files
     rm "test_files/${base_name}_temp1.csv" "test_files/${base_name}_temp2.csv"
     
-    echo "Done."
+    echo -e "Done."
     echo "  - test_files/${base_name}_input.csv (column 1, rows delimited with '$delimiter')"
     echo "  - test_files/${base_name}_output.csv (column 2, rows delimited with '$delimiter')"
+    echo -e
 }
 
 # If the script is executed directly (not sourced), run the function with all args.
