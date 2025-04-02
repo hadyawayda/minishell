@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/02/19 04:22:52 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/03/31 21:56:03 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void				*ft_memcpy(void *dest, const void *src, size_t n);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 void				ft_lstadd_front(t_list **lst, t_list *new);
 void				ft_strcpy(char *dest, char *src);
+void				ft_strcat(char *dest, char *source);
 
 size_t				ft_strlen(const char *s);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);

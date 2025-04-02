@@ -38,7 +38,7 @@ run_test_case() {
 
 run_all_cases() {
 	local test_dir="test_files"
-	local files=("$test_dir"/tokenization_*.xlsx)
+	local files=("$test_dir"/tokenization/tokenization_*.xlsx)
 
 	if [[ ${#files[@]} -eq 0 ]]; then
 		echo -e "${RED}No tokenization test files found in '$test_dir'.${NC}"

@@ -58,6 +58,9 @@ run_all_test_cases() {
         echo -e "${CYAN}Running test file: $file${NC}"
         run_test_case "$file"
     done
+
+	echo -e
+	read -rsp "Press any key to return to the menu..." ;
 }
 
 minishell_tester_menu() {

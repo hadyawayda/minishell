@@ -1,13 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 01:17:49 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/03/31 21:59:00 by hawayda          ###   ########.fr       */
+/*   Created: 2025/03/31 21:52:35 by hawayda           #+#    #+#             */
+/*   Updated: 2025/03/31 21:52:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "libft.h"
+
+void	ft_strcat(char *dest, char *source)
+{
+	if (dest == NULL || source == NULL)
+		return ;
+	while (*dest)
+		dest++;
+	while (*source)
+	{
+		*dest = *source;
+		dest++;
+		source++;
+	}
+	*dest = '\0';
+}
