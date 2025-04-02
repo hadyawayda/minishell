@@ -5,12 +5,16 @@ run_all_tokenization_cases () {
 	#########################
 	# Configuration
 	#########################
-	cd ..
-	make te
-	cd tester
+	
 	INPUT_FILE="test_files/tokenization_tester/tokenizer_cases.txt"
 	EXPECTED_FILE="test_files/tokenization_tester/tokenizer_cases_expected_output.txt"
 	MINISHELL="../minishell_test"  # Adjust if your binary name differs
+	
+	if [[ ! -x "$MINISHELL" ]]; then
+		cd ..
+		make te
+		cd tester
+	fi
 
 	# ANSI color codes
 	RESET="\033[0m"
@@ -57,7 +61,7 @@ run_all_tokenization_cases () {
 	# Try to skip one blank line (if it exists) so the next test doesn't consume it
 	# If there's no blank line, it won't hurt—just stops if there's text or EOF.
 	read -r maybe_blank <&4
-	if [[ -n "$maybe_blank" ]]; then
+	# if [[ -n "$maybe_blank" ]]; then
 	# That wasn't an empty line; we "consumed" something that
 	# might be your next test's first line. 
 	# So we put it back into the stream for the next read.
@@ -69,10 +73,10 @@ run_all_tokenization_cases () {
 	# If you'd rather not do any pushback logic, 
 	# comment out this block and ensure your expected file truly has a blank line 
 	# after every two lines of expected output.
-	echo "$maybe_blank" > .line_tmp
-	exec 4< <(cat .line_tmp; cat "$EXPECTED_FILE" | tail -n +$(($(grep -nxF "$maybe_blank" "$EXPECTED_FILE" | cut -d: -f1)+1)))
+	# echo "$maybe_blank" > .line_tmp
+	# exec 4< <(cat .line_tmp; cat "$EXPECTED_FILE" | tail -n +$(($(grep -nxF "$maybe_blank" "$EXPECTED_FILE" | cut -d: -f1)+1)))
 	# This hack reopens FD 4 with the line reinserted.
-	fi
+	# fi
 
 	((total_tests++))
 
@@ -100,9 +104,9 @@ run_all_tokenization_cases () {
 
 	# Print results with colors
 	if $overall_pass; then
-	echo -e "${GREEN}Test #$test_index${RESET}   Command:  [${cmd}]"
+	echo -e "${GREEN} Test #$test_index${RESET}   Command:  [${cmd}]"
 	else
-	echo -e "${RED}Test #$test_index${RESET}   Command:  [${cmd}]"
+	echo -e "${RED} Test #$test_index${RESET}   Command:  [${cmd}]"
 	fi
 
 	# Line 1
@@ -128,6 +132,10 @@ run_all_tokenization_cases () {
 
 	echo -e "${GREEN}All done.${RESET}"
 	echo -e "Passed ${GREEN}${passed_tests}${RESET} out of ${total_tests} tests."
+
+	echo -e
+	read -n 1 -rsp "Press any key to continue"
+
 	cd ..
 	make tclean
 }

@@ -15,15 +15,12 @@ run_test_case() {
 	
 	# Check if conversion was successful
 	if [[ $? -ne 0 ]]; then
-		echo -e "${Green}Press any key to continue..."
-		read -rp "" ;
 		return 1
 	fi
 
 	# Check if CSV files exist before proceeding
 	if [[ ! -f "$input_csv" || ! -f "$output_csv" ]]; then
 		echo -e "${RED}Error: CSV files '$input_csv' or '$output_csv' do not exist after conversion.${ORANGE}"
-		read -rp "Press any key to continue..." ;
 		return 1
 	fi
 
@@ -37,9 +34,25 @@ run_test_case() {
 	if [[ $? -ne 0 ]]; then
 		echo -e "${RED}Error: Failed to remove temporary files.${NC}"
 	fi
+}
 
-	echo -e
-	read -rp "Press any key to continue..." ;
+run_all_cases() {
+	local test_dir="test_files"
+	local files=("$test_dir"/tokenization_*.xlsx)
+
+	if [[ ${#files[@]} -eq 0 ]]; then
+		echo -e "${RED}No tokenization test files found in '$test_dir'.${NC}"
+		read -rsp "Press any key to continue..." ; echo
+		return
+	fi
+
+	for file in "${files[@]}"; do
+		echo -e "${BLUE}Running test case:${NC} $file"
+		run_test_case "$file"
+
+		echo -e
+		read -rsp "Press any key to continue to next case..." ; echo
+	done
 }
 
 run_tokenization_tests() {
@@ -63,7 +76,9 @@ run_tokenization_tests() {
 		read -rp "Select an option: " choice
 
 		case $choice in
-			a) echo -e "${BLUE}Running all test cases...${GREEN}" ;;
+			a) echo -e "${BLUE}Running all test cases...${GREEN}"
+				 run_all_cases
+      	 continue ;;
 			1) file="test_files/tokenization_echo.xlsx" ;;
 			2) file="test_files/tokenization_dollar_expansion.xlsx" ;;
 			3) file="test_files/tokenization_quotations.xlsx" ;;
@@ -80,6 +95,9 @@ run_tokenization_tests() {
 		esac
 
 		run_test_case "$file"
+
+		echo -e
+		read -rsp "Press any key to continue..." ;
 	done
 }
 
@@ -87,8 +105,8 @@ tokenization_tester_menu() {
 	while true; do
 		clear
 		echo -e "${BLUE}----- Tokenization Tester -----${NC}"
-		echo -e "${GREEN}a) ${CYAN}Run All Cases"
-		echo -e "${GREEN}1) Run tokenization tests (old version)"
+		echo -e "${GREEN}a) ${CYAN}Run All Cases (old version)"
+		echo -e "${GREEN}1) Run partial tests"
 		echo -e "2) Set tokenization file path"
 		echo -e "3) Set token struct header path${NC}"
 		echo -e "${ORANGE}f) Return to Main Menu${GREEN}"

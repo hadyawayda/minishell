@@ -63,9 +63,6 @@ with open('test_files/${base_name}_temp2.csv', 'r', newline='') as infile, open(
     # Clean up temporary files
     rm "test_files/${base_name}_temp1.csv" "test_files/${base_name}_temp2.csv"
     
-    echo -e "Done."
-    echo "  - test_files/${base_name}_input.csv (column 1, rows delimited with '$delimiter')"
-    echo "  - test_files/${base_name}_output.csv (column 2, rows delimited with '$delimiter')"
     echo -e
 }
 

@@ -37,9 +37,27 @@ run_test_case() {
     if [[ $? -ne 0 ]]; then
         echo -e "${RED}Error: Failed to remove temporary files.${NC}"
     fi
+}
 
-    echo -e
-    read -rp "Press any key to continue..." ;
+run_all_test_cases() {
+    local dir="test_files"
+    
+    if [[ ! -d "$dir" ]]; then
+        echo -e "${RED}Error: Directory '$dir' not found.${NC}"
+        return 1
+    fi
+
+    local files=("$dir"/*.xlsx)
+
+    if [[ ${#files[@]} -eq 0 ]]; then
+        echo -e "${ORANGE}No .xlsx test files found in $dir.${NC}"
+        return 1
+    fi
+
+    for file in "${files[@]}"; do
+        echo -e "${CYAN}Running test file: $file${NC}"
+        run_test_case "$file"
+    done
 }
 
 minishell_tester_menu() {
@@ -63,7 +81,9 @@ minishell_tester_menu() {
         read -rp "Select an option: " choice
         
         case $choice in
-            a)echo -e "${BLUE}Running all test cases..." ;;
+            a) echo -e "${BLUE}Running all test cases..."
+                run_all_test_cases
+                continue ;;
             1) file="test_files/echo.xlsx" ;;
             2) file="test_files/dollar_expansion.xlsx" ;;
             3) file="test_files/quotations.xlsx" ;;
@@ -80,5 +100,8 @@ minishell_tester_menu() {
         esac
         
         run_test_case "$file"
+
+        echo -e
+        read -rsp "Press any key to return to the menu..." ;
     done
 }
