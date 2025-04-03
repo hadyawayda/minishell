@@ -6,8 +6,8 @@ run_all_tokenization_cases () {
 	# Configuration
 	#########################
 	
-	INPUT_FILE="test_files/tokenization_tester/tokenizer_cases.txt"
-	EXPECTED_FILE="test_files/tokenization_tester/tokenizer_cases_expected_output.txt"
+	INPUT_FILE="test_files/tokenization/tokenizer_cases.txt"
+	EXPECTED_FILE="test_files/tokenization/tokenizer_cases_expected_output.txt"
 	MINISHELL="../minishell_test"  # Adjust if your binary name differs
 	
 	if [[ ! -x "$MINISHELL" ]]; then

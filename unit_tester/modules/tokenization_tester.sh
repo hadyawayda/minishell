@@ -79,17 +79,17 @@ run_tokenization_tests() {
 			a) echo -e "${BLUE}Running all test cases...${GREEN}"
 				 run_all_cases
       	 continue ;;
-			1) file="test_files/tokenization_echo.xlsx" ;;
-			2) file="test_files/tokenization_dollar_expansion.xlsx" ;;
-			3) file="test_files/tokenization_quotations.xlsx" ;;
-			4) file="test_files/tokenization_piping.xlsx" ;;
-			5) file="test_files/tokenization_redirections.xlsx" ;;
-			6) file="test_files/tokenization_and_or.xlsx" ;;
-			7) file="test_files/tokenization_wildcard.xlsx" ;;
-			8) file="test_files/tokenization_export_env.xlsx" ;;
-			9) file="test_files/tokenization_exit_status.xlsx" ;;
-			10) file="test_files/tokenization_signals.xlsx" ;;
-			11) file="test_files/tokenization_complex_cases.xlsx" ;;
+			1) file="test_files/tokenization/tokenization_echo.xlsx" ;;
+			2) file="test_files/tokenization/tokenization_dollar_expansion.xlsx" ;;
+			3) file="test_files/tokenization/tokenization_quotations.xlsx" ;;
+			4) file="test_files/tokenization/tokenization_piping.xlsx" ;;
+			5) file="test_files/tokenization/tokenization_redirections.xlsx" ;;
+			6) file="test_files/tokenization/tokenization_and_or.xlsx" ;;
+			7) file="test_files/tokenization/tokenization_wildcard.xlsx" ;;
+			8) file="test_files/tokenization/tokenization_export_env.xlsx" ;;
+			9) file="test_files/tokenization/tokenization_exit_status.xlsx" ;;
+			10) file="test_files/tokenization/tokenization_signals.xlsx" ;;
+			11) file="test_files/tokenization/tokenization_complex_cases.xlsx" ;;
 			f) break ;;
 			*) echo "Invalid option." ; continue ;;
 		esac

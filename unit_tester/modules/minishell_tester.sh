@@ -47,7 +47,7 @@ run_all_test_cases() {
         return 1
     fi
 
-    local files=("$dir"/*.xlsx)
+    local files=("$dir"/all.xlsx)
 
     if [[ ${#files[@]} -eq 0 ]]; then
         echo -e "${ORANGE}No .xlsx test files found in $dir.${NC}"
@@ -66,9 +66,9 @@ run_all_test_cases() {
 minishell_tester_menu() {
     while true; do
         clear
-        echo -e "${BLUE}----- Minishell Tester -----${NC}"
-        echo -e "${GREEN}a) Run All Cases"
-        echo -e "1) Echo Cases"
+        echo -e "${BLUE}----- Minishell Tester -----${GREEN}"
+        echo -e "a) ${CYAN}Run All Cases"
+        echo -e "${GREEN}1) Echo Cases"
         echo -e "2) \$ expansions"
         echo -e "3) Quotations"
         echo -e "4) Piping"
@@ -87,17 +87,17 @@ minishell_tester_menu() {
             a) echo -e "${BLUE}Running all test cases..."
                 run_all_test_cases
                 continue ;;
-            1) file="test_files/echo.xlsx" ;;
-            2) file="test_files/dollar_expansion.xlsx" ;;
-            3) file="test_files/quotations.xlsx" ;;
-            4) file="test_files/piping.xlsx" ;;
-            5) file="test_files/redirections.xlsx" ;;
-            6) file="test_files/and_or.xlsx" ;;
-            7) file="test_files/wildcard.xlsx" ;;
-            8) file="test_files/export_env.xlsx" ;;
-            9) file="test_files/exit_status.xlsx" ;;
-            10) file="test_files/signals.xlsx" ;;
-            11) file="test_files/complex_cases.xlsx" ;;
+            1) file="test_files/program/echo.xlsx" ;;
+            2) file="test_files/program/dollar_expansion.xlsx" ;;
+            3) file="test_files/program/quotations.xlsx" ;;
+            4) file="test_files/program/piping.xlsx" ;;
+            5) file="test_files/program/redirections.xlsx" ;;
+            6) file="test_files/program/and_or.xlsx" ;;
+            7) file="test_files/program/wildcard.xlsx" ;;
+            8) file="test_files/program/export_env.xlsx" ;;
+            9) file="test_files/program/exit_status.xlsx" ;;
+            10) file="test_files/program/signals.xlsx" ;;
+            11) file="test_files/program/complex_cases.xlsx" ;;
             f) break ;;
             *) echo "Invalid option." ; continue ;;
         esac
