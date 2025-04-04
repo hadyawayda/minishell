@@ -1,7 +1,8 @@
 NAME =		libft.a
 CC =		gcc
-CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-Wall -Wextra -Werror -Ilibft/includes
 RM =		@rm -f
+SRCDIR =	src
 
 SRCS =		ft_atoi.c \
 			ft_bzero.c \
@@ -56,22 +57,22 @@ SRCS =		ft_atoi.c \
 			ft_substr.c \
 			ft_substring.c \
 			ft_tolower.c \
-			ft_toupper.c \
+			ft_toupper.c
 
-OBJS =		$(SRCS:.c=.o)
+OBJS = $(addprefix $(SRCDIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)
 
-$(NAME):	$(OBJS)
-			@ar rcs $(NAME) $(OBJS)
+$(NAME): $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 
-%.o:		%.c
-			@$(CC) $(CFLAGS) -c $< -o $@
+$(SRCDIR)/%.o: $(SRCDIR)/%.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-			$(RM) $(OBJS)
+	$(RM) $(OBJS)
 
-fclean:		clean
-			$(RM) $(NAME)
+fclean: clean
+	$(RM) $(NAME)
 
-re:			fclean all
+re: fclean all

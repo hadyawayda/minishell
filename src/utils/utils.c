@@ -6,11 +6,11 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:09:26 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/04 19:25:46 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/04 20:18:28 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/utils.h"
+#include "../../includes/minishell.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -36,3 +36,4 @@ char **split_input(char *input) {
     args[i] = NULL;
     return args;
 }
+

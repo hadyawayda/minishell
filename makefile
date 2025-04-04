@@ -10,7 +10,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibft
 
 # Libraries
-LIBFT = libft/libft.a
+LIBFT = libft/includes/libft.a
 LIBS = -Llibft -lft -lreadline
 
 # Final executable
@@ -38,4 +38,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
