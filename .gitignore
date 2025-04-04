@@ -37,6 +37,7 @@
 *.hex
 minishell
 michel
+minishell_test
 
 # Debug files
 *.dSYM/
