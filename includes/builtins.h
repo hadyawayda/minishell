@@ -1,31 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 11:04:57 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/02 21:36:44 by nabbas           ###   ########.fr       */
+/*   Created: 2025/04/02 11:05:08 by nabbas            #+#    #+#             */
+/*   Updated: 2025/04/02 21:39:12 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#ifndef BUILTINS_H
+#define BUILTINS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-// Function Prototypes
-void start_shell(char *envp[]); 
-int is_builtin(char *command);
-int execute_builtin(char **args, char *envp[]);
-int execute_command(char **args);
-char **split_input(char *input);
+void process_echo(char **args);
+int process_cd(char **args, char *envp[]); // Declare cd function
 
 #endif

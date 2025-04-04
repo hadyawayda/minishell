@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 11:04:57 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/02 21:36:44 by nabbas           ###   ########.fr       */
+/*   Created: 2025/04/02 11:05:16 by nabbas            #+#    #+#             */
+/*   Updated: 2025/04/02 11:05:18 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <stddef.h>
 
-// Function Prototypes
-void start_shell(char *envp[]); 
-int is_builtin(char *command);
-int execute_builtin(char **args, char *envp[]);
-int execute_command(char **args);
-char **split_input(char *input);
+size_t ft_strlen(const char *s);
+int ft_strncmp(const char *s1, const char *s2, size_t n);
 
 #endif
