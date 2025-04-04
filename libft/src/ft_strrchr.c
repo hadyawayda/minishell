@@ -5,33 +5,37 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 11:35:45 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/26 16:25:20 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/14 07:25:33 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<string.h>
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len] != '\0')
-		len++;
-	return (len);
-}
+#include "../includes/libft.h"
 
 char	*ft_strrchr(const char *s, int c)
 {
-	const char	*str;
+	unsigned char	nc;
+	size_t			i;
+	size_t			last_pos;
 
-	str = s + ft_strlen(s);
-	while (str >= s)
+	i = 0;
+	last_pos = (size_t)-1;
+	nc = (unsigned char)c;
+	while (s[i] != '\0')
 	{
-		if (*str == (char)c)
-			return ((char *)str);
-		str--;
+		if (s[i] == nc)
+		{
+			last_pos = i;
+		}
+		i++;
 	}
-	return (NULL);
+	if (nc == '\0')
+	{
+		return ((char *)&s[i]);
+	}
+	else if (last_pos == (size_t)-1)
+	{
+		return (NULL);
+	}
+	return ((char *)&s[last_pos]);
 }

@@ -5,17 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 11:06:32 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:22:39 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/17 14:43:40 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
 		return (1);
-	else
-		return (0);
+	return (0);
 }

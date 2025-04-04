@@ -5,38 +5,24 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/13 12:32:25 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:21:19 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/14 07:26:40 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy(char *dest, char const *src, size_t n)
 {
 	size_t	i;
-	size_t	src_len;
-	size_t	copy_len ;
 
 	i = 0;
-	src_len = 0;
-	while (src[src_len] != '\0')
-	{
-		src_len++;
-	}
-	copy_len = 0;
-	if (size > 0)
-	{
-		copy_len = size - 1;
-	}
-	while (i < copy_len && src[i] != '\0')
-	{
-		dst[i] = src[i];
+	while (*(src + i))
 		i++;
-	}
-	if (size > 0)
-	{
-		dst[i] = '\0';
-	}
-	return (src_len);
+	if (!n)
+		return (i);
+	while (--n && *src)
+		*dest++ = *src++;
+	*dest = '\0';
+	return (i);
 }

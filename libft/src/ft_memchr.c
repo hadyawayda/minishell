@@ -5,29 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 13:18:32 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:22:16 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/11 10:14:37 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	unsigned char	*str ;
-	size_t			i;
+	const unsigned char	*a;
+	size_t				i;
+	unsigned char		b;
 
-	str = (unsigned char *)s;
 	i = 0;
+	a = (const unsigned char *)s;
+	b = (unsigned char )c;
 	while (i < n)
 	{
-		if (str[i] == (unsigned char)c)
-		{
-			return ((char *)(str + i));
-		}
+		if (a[i] == b)
+			return ((void *)(a + i));
 		i++;
 	}
-	if (*str != c)
-		return (NULL);
 	return (NULL);
 }

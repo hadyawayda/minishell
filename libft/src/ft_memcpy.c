@@ -5,24 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 17:42:07 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:22:05 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/10 15:52:00 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
+	char	*a;
+	char	*b;
 
-	if (!dst && !src)
-		return (0);
 	i = 0;
+	a = (char *)dest;
+	b = (char *)src;
 	while (i < n)
 	{
-		((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
+		a[i] = b[i];
 		i++;
 	}
-	return (dst);
+	return ((void *)a);
 }

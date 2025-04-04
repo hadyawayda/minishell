@@ -5,24 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 17:21:58 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:23:09 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/10 15:35:47 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
-void	*ft_bzero(void *s, size_t	n)
+void	ft_bzero(void *s, size_t n)
 {
-	char		*p ;
-	size_t		i;
+	size_t	i;
+	char	*a;
 
-	p = s;
 	i = 0;
+	a = (char *)s;
 	while (i < n)
 	{
-		p[i] = 0;
+		a[i] = '\0';
 		i++;
 	}
-	return (s);
 }

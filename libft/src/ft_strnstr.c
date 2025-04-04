@@ -5,30 +5,31 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 19:45:42 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:21:02 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/11 11:39:30 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
-char	*ft_strnstr(const char *haystack, const char *needle, size_t n)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
+	size_t	i;
 	size_t	j;
 
-	if (!*needle)
-		return ((char *)haystack);
-	while (*haystack && n > 0)
+	i = 0;
+	if (*little == '\0')
+		return ((char *)big);
+	while (i < len && big[i] != '\0')
 	{
 		j = 0;
-		while (*(haystack + j) == *(needle + j) && *(needle + j) && j < n)
+		while (big[i + j] == little[j] && i + j < len)
 		{
+			if (little[j + 1] == '\0')
+				return ((char *)&big[i]);
 			j++;
 		}
-		if (!*(needle + j))
-			return ((char *)haystack);
-		haystack++;
-		n--;
+		i++;
 	}
-	return (NULL);
+	return (0);
 }

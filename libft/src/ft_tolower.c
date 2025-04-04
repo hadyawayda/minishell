@@ -5,18 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 10:51:02 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:20:48 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/14 07:24:32 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 int	ft_tolower(int c)
 {
-	if (c >= 'A' && c <= 'Z')
+	if (c >= 65 && c <= 90)
 	{
 		return (c + 32);
 	}
-	return (c);
+	else
+	{
+		return (c);
+	}
 }

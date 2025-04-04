@@ -5,18 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 12:27:26 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:22:45 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/14 07:22:55 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 int	ft_isalnum(int c)
 {
-	if ((c >= 'A' && c <= 'Z' ) || (c >= 'a' && c <= 'z')
-		|| (c >= '0' && c <= '9'))
+	if (ft_isalpha(c) || ft_isdigit(c))
+	{
 		return (1);
+	}
 	else
+	{
 		return (0);
+	}
 }

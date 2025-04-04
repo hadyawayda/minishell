@@ -5,26 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 23:38:52 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/26 23:39:15 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/13 07:20:52 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
-void	ft_putnbr_fd(int nb, int fd)
+void	ft_putnbr_fd(int n, int fd)
 {
-	if (nb == -2147483648)
-	{
-		write(fd, "-2147483648", 11);
-		return ;
-	}
-	if (nb < 0)
+	if (n == -2147483648)
 	{
 		ft_putchar_fd('-', fd);
-		nb = -nb;
+		ft_putchar_fd('2', fd);
+		n = 147483648;
 	}
-	if (nb > 9)
-		ft_putnbr_fd(nb / 10, fd);
-	ft_putchar_fd(nb % 10 + '0', fd);
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n *= -1;
+	}
+	if (n >= 10)
+	{
+		ft_putnbr_fd(n / 10, fd);
+		ft_putnbr_fd(n % 10, fd);
+	}
+	else
+	{
+		ft_putchar_fd(n + '0', fd);
+	}
 }

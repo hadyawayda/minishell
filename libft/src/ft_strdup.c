@@ -5,39 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/14 09:19:12 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:15:33 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/11 16:43:24 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h" 
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	char	*tmp;
-
-	tmp = dest;
-	while (*src != '\0')
-	{
-		*dest = *src;
-		dest++;
-		src++;
-	}
-	*dest = '\0';
-	return (tmp);
-}
+#include "../includes/libft.h"
 
 char	*ft_strdup(const char *s)
 {
-	size_t	len;
-	char	*duplicate;
+	int		i;
+	int		len;
+	char	*dest;
 
-	len = ft_strlen(s) + 1;
-	duplicate = (char *)malloc(len * sizeof(char));
-	if (duplicate == NULL)
-	{
+	i = 0;
+	len = ft_strlen(s);
+	dest = malloc(sizeof(char) * (len + 1));
+	if (dest == NULL)
 		return (NULL);
+	while (s[i])
+	{
+		dest[i] = s[i];
+		i++;
 	}
-	ft_strcpy(duplicate, s);
-	return (duplicate);
+	dest[i] = '\0';
+	return (dest);
 }

@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_puthex.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 08:34:37 by fel-ghaz          #+#    #+#             */
+/*   Created: 2024/06/22 22:14:40 by hawayda           #+#    #+#             */
 /*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+int	ft_puthex(unsigned long nb, char format)
 {
-	size_t	i;
-	size_t	j;
-	size_t	dst_len;
-	size_t	src_len;
+	char	*base;
+	int		length;
 
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (src_len + size);
-	i = dst_len;
-	j = 0;
-	while (src[j] && (i + 1) < size)
-	{
-		dst[i] = src[j];
-		i++;
-		j++;
-	}
-	dst[i] = '\0';
-	return (dst_len + src_len);
+	length = 0;
+	base = "0123456789abcdef";
+	if (format == 'X')
+		base = "0123456789ABCDEF";
+	if (nb >= 16)
+		length += ft_puthex(nb / 16, format);
+	length += ft_putchar(*(base + (nb % 16)));
+	return (length);
 }

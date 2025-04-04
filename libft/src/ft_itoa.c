@@ -5,51 +5,72 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 12:35:30 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/26 21:55:23 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/14 07:28:42 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
-static unsigned int	ft_sizeofchar(unsigned int n)
+static int	nbr_len(int nbr)
 {
-	unsigned int	size;
+	int	len;
 
-	size = 0;
-	if (n == 0)
-		size = 1;
-	while (n != 0)
+	len = 0;
+	if (nbr < 1)
+		len++;
+	while (nbr)
 	{
-		n = n / 10;
-		size++;
+		nbr /= 10;
+		len++;
 	}
-	return (size);
+	return (len);
+}
+
+static long long	abs_val(long long n)
+{
+	long long	nb;
+
+	nb = 1;
+	if (n < 0)
+		nb *= -n;
+	else
+		nb *= n;
+	return (nb);
+}
+
+static char	*str_new(size_t n)
+{
+	char	*str;
+
+	str = (char *)malloc(sizeof(char) * (n + 1));
+	if (!str)
+		return (NULL);
+	return (str);
 }
 
 char	*ft_itoa(int n)
 {
-	unsigned int	isntpos;
-	unsigned int	len;
-	unsigned int	npos;
-	char			*result;
+	unsigned int	nbr;
+	int				sign;
+	int				len;
+	char			*str;
 
-	isntpos = 0;
+	sign = 0;
 	if (n < 0)
-		isntpos = 1;
-	npos = -1 * n * (n < 0) + n * (n >= 0);
-	len = ft_sizeofchar(npos) + isntpos;
-	result = (char *)malloc(len + 1);
-	if (!result)
+		sign = 1;
+	len = nbr_len(n);
+	str = str_new(len);
+	if (!str)
 		return (NULL);
-	result[len--] = '\0';
-	while (npos > 9)
+	*(str + len) = '\0';
+	nbr = abs_val(n);
+	while (len--)
 	{
-		result[len--] = npos % 10 + '0';
-		npos = npos / 10;
+		*(str + len) = nbr % 10 + 48;
+		nbr /= 10;
 	}
-	result[len--] = npos % 10 + '0';
-	if (isntpos)
-		result[0] = '-';
-	return (result);
+	if (sign)
+		*(str) = 45;
+	return (str);
 }

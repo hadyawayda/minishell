@@ -5,37 +5,34 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/13 11:39:46 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/25 16:13:00 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/11 14:18:53 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:44:58 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 int	ft_atoi(const char *nptr)
 {
-	int	result ;
+	int	i;
 	int	sign;
+	int	result;
 
-	result = 0;
+	i = 0;
 	sign = 1;
-	while (*nptr == ' ' || (*nptr >= 9 && *nptr <= 13))
-		nptr++;
-	if (*nptr == '-' || *nptr == '+')
+	result = 0;
+	while (nptr[i] && (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13)))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
 	{
-		if (*nptr == '-')
-			sign = -1;
-		nptr++;
+		if (nptr[i] == '-')
+			sign *= -1;
+		i++;
 	}
-	while (*nptr != '\0')
+	while (nptr[i] != '\0' && nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		if (*nptr >= '0' && *nptr <= '9')
-		{	
-			result = result * 10 + (*nptr - '0');
-			nptr++;
-		}
-		else
-			return (sign * result);
+		result = result * 10 + (nptr[i] - '0');
+		i++;
 	}
-	return (sign * result);
+	return (result * sign);
 }

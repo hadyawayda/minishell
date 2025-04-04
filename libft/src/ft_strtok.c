@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_strtok.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 08:34:37 by fel-ghaz          #+#    #+#             */
+/*   Created: 2025/02/13 23:06:58 by hawayda           #+#    #+#             */
 /*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+char	*ft_strtok_r(char *str, const char *delim, char **next)
 {
-	size_t	i;
-	size_t	j;
-	size_t	dst_len;
-	size_t	src_len;
+	char	*token;
 
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (src_len + size);
-	i = dst_len;
-	j = 0;
-	while (src[j] && (i + 1) < size)
+	token = ft_strnstr(str, delim, ft_strlen(str));
+	if (token)
 	{
-		dst[i] = src[j];
-		i++;
-		j++;
+		*token = '\0';
+		*next = token + ft_strlen(delim);
 	}
-	dst[i] = '\0';
-	return (dst_len + src_len);
+	else
+	{
+		*next = NULL;
+	}
+	return (token);
+}
+
+char	*ft_strtok(char *str, const char *delim)
+{
+	char *token;
+
+	token = ft_strtok_r(str, delim, &str);
+	return (token);
 }

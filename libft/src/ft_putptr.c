@@ -1,36 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_putptr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/11 08:34:37 by fel-ghaz          #+#    #+#             */
+/*   Created: 2024/06/20 23:16:12 by hawayda           #+#    #+#             */
 /*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+static int	rec_print(unsigned long n, const char *base)
 {
-	size_t	i;
-	size_t	j;
-	size_t	dst_len;
-	size_t	src_len;
+	int	len;
 
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (src_len + size);
-	i = dst_len;
-	j = 0;
-	while (src[j] && (i + 1) < size)
+	len = 0;
+	if (n > (ft_strlen(base) - 1))
+		len += rec_print(n / ft_strlen(base), base);
+	len += ft_putchar(*(base + (n % ft_strlen(base))));
+	return (len);
+}
+
+int	ft_putptr(unsigned long long *ptr)
+{
+	unsigned long	n;
+	const char		*base;
+	int				len;
+
+	len = 0;
+	n = (unsigned long)ptr;
+	base = "0123456789abcdef";
+	if (ptr == NULL)
 	{
-		dst[i] = src[j];
-		i++;
-		j++;
+		ft_putstr("(nil)");
+		len += 5;
+		return (len);
 	}
-	dst[i] = '\0';
-	return (dst_len + src_len);
+	len = ft_putstr("0x");
+	len += rec_print(n, base);
+	return (len);
 }

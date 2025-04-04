@@ -5,37 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 10:44:35 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/29 16:44:09 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/13 08:07:10 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
-	int		i;
-	int		j;
+	int		l1;
+	char	*joined;
+	char	*start;
 
-	str = (char *) malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
+	l1 = ft_strlen(s1);
+	joined = (char *) malloc ((sizeof(char) * (l1 + ft_strlen(s2) + 1)));
+	if (!joined)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
-	{
-		str[j] = s1[i];
-		i++;
-		j++;
-	}
-	i = 0;
-	while (s2[i] != '\0')
-	{
-		str[j] = s2[i];
-		i++;
-		j++;
-	}
-	str[j] = '\0';
-	return (str);
+	start = joined;
+	while (*s1)
+		*joined++ = *s1++;
+	while (*s2)
+		*joined++ = *s2++;
+	*joined = '\0';
+	return (start);
 }

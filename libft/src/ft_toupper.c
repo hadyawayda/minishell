@@ -5,18 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/12 10:23:07 by nabbas            #+#    #+#             */
-/*   Updated: 2024/06/28 10:20:39 by nabbas           ###   ########.fr       */
+/*   Created: 2024/06/10 14:19:23 by fel-ghaz          #+#    #+#             */
+/*   Updated: 2025/04/04 19:45:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "../includes/libft.h"
 
 int	ft_toupper(int c)
 {
-	if (c >= 'a' && c <= 'z')
-	{
+	if (c >= 97 && c <= 122)
 		return (c - 32);
-	}
 	return (c);
 }
