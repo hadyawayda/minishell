@@ -68,17 +68,15 @@ minishell_tester_menu() {
         clear
         echo -e "${BLUE}----- Minishell Tester -----${GREEN}"
         echo -e "a) ${CYAN}Run All Cases"
-        echo -e "${GREEN}1) Echo Cases"
-        echo -e "2) \$ expansions"
-        echo -e "3) Quotations"
-        echo -e "4) Piping"
-        echo -e "5) Redirections"
-        echo -e "6) AND (&&) / OR (||)"
-        echo -e "7) Wildcard"
-        echo -e "8) Export / Env"
-        echo -e "9) Exit Status Handling"
-        echo -e "10) Signals Handling"
-        echo -e "11) Mix / Complex Cases${NC}"
+        echo -e "${GREEN}1) Echo & \$ & Quotation Cases"
+        echo -e "2) Piping"
+        echo -e "3) Redirections"
+        echo -e "4) AND (&&) / OR (||)"
+        echo -e "5) Wildcard"
+        echo -e "6) Export / Env"
+        echo -e "7) Exit Status Handling"
+        echo -e "8) Signals Handling"
+        echo -e "9) Mix / Complex Cases${NC}"
         echo -e "${ORANGE}f) Return to Main Menu${GREEN}"
         echo -e
         read -rp "Select an option: " choice
@@ -88,16 +86,14 @@ minishell_tester_menu() {
                 run_all_test_cases
                 continue ;;
             1) file="test_files/program/echo.xlsx" ;;
-            2) file="test_files/program/dollar_expansion.xlsx" ;;
-            3) file="test_files/program/quotations.xlsx" ;;
-            4) file="test_files/program/piping.xlsx" ;;
-            5) file="test_files/program/redirections.xlsx" ;;
-            6) file="test_files/program/and_or.xlsx" ;;
-            7) file="test_files/program/wildcard.xlsx" ;;
-            8) file="test_files/program/export_env.xlsx" ;;
-            9) file="test_files/program/exit_status.xlsx" ;;
-            10) file="test_files/program/signals.xlsx" ;;
-            11) file="test_files/program/complex_cases.xlsx" ;;
+            2) file="test_files/program/piping.xlsx" ;;
+            3) file="test_files/program/redirections.xlsx" ;;
+            4) file="test_files/program/and_or.xlsx" ;;
+            5) file="test_files/program/wildcard.xlsx" ;;
+            6) file="test_files/program/export_env.xlsx" ;;
+            7) file="test_files/program/exit_status.xlsx" ;;
+            8) file="test_files/program/signals.xlsx" ;;
+            9) file="test_files/program/complex_cases.xlsx" ;;
             f) break ;;
             *) echo "Invalid option." ; continue ;;
         esac

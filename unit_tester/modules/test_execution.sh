@@ -21,24 +21,40 @@ execute_test_cases() {
 
     # Read expected output, accumulating lines until `$>ǂ` delimiter is encountered
     expected_output=""
-    while IFS= read -r line <&4; do
-        if [[ "$line" == *"\$>ǂ" ]]; then
-            expected_output+="${line%\$>ǂ}"
-            break
-        else
-            expected_output+="$line"$'\n'  # Preserve multiline expected outputs
-        fi
-    done
+    # while IFS= read -r line <&4; do
+    #     if [[ "$line" == *"\$>ǂ" ]]; then
+    #         expected_output+="${line%\$>ǂ}"
+    #         break
+    #     else
+    #         expected_output+="$line"$'\n'  # Preserve multiline expected outputs
+    #     fi
+    # done
 
     # Remove any trailing newline character from expected_output
-    expected_output=$(echo -n "$expected_output")
-
-    # Run minishell and capture output (uncomment second line to override with actualy minishell output)
-    actual_output=$(echo "$test_input" | bash 2>&1)
-    # actual_output=$(echo "$test_input" | ../michel 2>&1)
-
+    # expected_output=$(echo -n "$expected_output")
     # Comment the next line to disable the actual bash output and use the one from the excel file
     expected_output=$(echo "$test_input" | bash 2>&1)
+
+    # Run minishell and capture output (uncomment second line to override with actualy minishell output)
+    # actual_output=$(echo "$test_input" | bash 2>&1)
+    # Strip minishell prompt from actual output (both leading & trailing prompts)
+    actual_output=$(echo "$test_input" | ../minishell 2>&1)
+    actual_output=$(
+      echo "$actual_output" \
+      | sed -E '
+        # 1) Remove ANSI color codes
+        s/\x1b\[[0-9;]*m//g;
+
+        # 2) Delete the first line, whatever it is
+        1d;
+
+        # 3) On each remaining line, remove "MiniHell>" and everything after
+        s/MiniHell>.*//
+      '
+    )
+
+
+    # actual_output=$(echo "$test_input" | ../michel 2>&1)
 
     # Run Valgrind if enabled
     if [[ "$valgrind_enabled" == "1" ]]; then

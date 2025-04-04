@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# set -euo pipefail
 
 # Load external scripts
 source ./modules/csv_parser.sh
@@ -29,6 +30,7 @@ ORANGE='\033[38;5;208m'
 BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 NC='\033[0m'
+
 # Uncomment the following line to enable flashy colors
 RED='\033[1;31m'
 GREEN="\033[1;32m"
