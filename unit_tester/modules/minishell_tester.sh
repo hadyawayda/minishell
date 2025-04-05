@@ -60,7 +60,7 @@ run_all_test_cases() {
     done
 
 	echo -e
-	read -rsp "Press any key to return to the menu..." ;
+	read -n 1 -rsp "Press any key to return to the menu..." ;
 }
 
 minishell_tester_menu() {
@@ -101,6 +101,6 @@ minishell_tester_menu() {
         run_test_case "$file"
 
         echo -e
-        read -rsp "Press any key to return to the menu..." ;
+		read -n 1 -rsp "Press any key to return to the menu..." ;
     done
 }

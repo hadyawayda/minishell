@@ -13,19 +13,26 @@ source ./modules/valgrind_tester.sh
 
 # Load Configuration
 CONFIG_FILE="./config/tester_config.ini"
+
 if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo "COMPARISON_METHOD=csv" > "$CONFIG_FILE"
-    echo "VALGRIND_ENABLED=0" >> "$CONFIG_FILE"
-    echo "EXCEL_FILE=tests.xlsx" >> "$CONFIG_FILE"
-    echo "CSV_FILE=tests.csv" >> "$CONFIG_FILE"
-    echo "BONUS_TESTING_ENABLED=0" >> "$CONFIG_FILE"
-	echo "PROGRAM_PROMPT=Minishell>" >> "$CONFIG_FILE"
+	while IFS='=' read -r key value; do
+        if [[ "$key" == "PROGRAM_PROMPT" ]]; then
+            PROGRAM_PROMPT="$value"
+        fi
+    done < "$CONFIG_FILE"
+    echo "COMPARISON_METHOD=\"csv\"" > "$CONFIG_FILE"
+    echo "VALGRIND_ENABLED=\"0\"" >> "$CONFIG_FILE"
+    echo "EXCEL_FILE=\"tests.xlsx\"" >> "$CONFIG_FILE"
+    echo "CSV_FILE=\"tests.csv\"" >> "$CONFIG_FILE"
+    echo "BONUS_TESTING_ENABLED=\"0\"" >> "$CONFIG_FILE"
+	echo "PROGRAM_PROMPT=\"Minishell>\"" >> "$CONFIG_FILE"
 fi
+
 source "$CONFIG_FILE"
 
 # Color Codes
 RED='\033[0;31m'
-GREEN='\033[0;32m'
+DIMMED_GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 ORANGE='\033[38;5;208m'
 BLUE='\033[1;34m'
@@ -42,8 +49,9 @@ echo -e "${GREEN}This script will help you test your Minishell implementation."
 echo -e "Please ensure you have the necessary test files in the correct format (refer to the README file for details)."
 
 if [[ -n "${PROGRAM_PROMPT}" ]]; then
-    echo -e "Using configured prompt: ${PROGRAM_PROMPT}"
-    echo -e "Press any key to continue...${NC}"
+    echo -e "Using pre-configured program prompt name: \\n\\n${CYAN}${PROGRAM_PROMPT}"
+	echo -e "\\n${GREEN}To change this, run the settings menu."
+    echo -e "\\n${CYAN}Press any key to continue..."
     read -n 1 -s
 else
     read -rp "Enter the program prompt name (e.g. 'Minishell>'): " PROGRAM_PROMPT
@@ -59,7 +67,7 @@ while true; do
     echo -e "3) Parsing & Tree Tester (Upcoming Feature)"
     echo -e "4) Settings (Upcoming Feature)"
     echo -e "${ORANGE}f) Exit${GREEN}"
-    echo -e
+    echo -e "${GREEN}"
     read -rp "Select an option: " choice
     case $choice in
         1) minishell_tester_menu ;;

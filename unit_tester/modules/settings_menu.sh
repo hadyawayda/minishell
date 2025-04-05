@@ -4,17 +4,16 @@
 
 # update_config_key KEY VALUE FILE
 # Replaces KEY=... line in FILE if it exists, or appends if it doesn't
-update_config_key() {
+function update_config_key() {
     local key="$1"
     local value="$2"
-    local file="$3"
-
-    if grep -q "^$key=" "$file"; then
-        # Replace existing line
-        sed -i "s|^$key=.*|$key=$value|" "$file"
+    local config_file="$3"
+    
+    # Use sed with quotes around the replacement value
+    if grep -q "^${key}=" "$config_file"; then
+        sed -i "s|^${key}=.*|${key}=\"${value}\"|" "$config_file"
     else
-        # Append the key/value
-        echo "$key=$value" >> "$file"
+        echo "${key}=\"${value}\"" >> "$config_file"
     fi
 }
 
@@ -23,13 +22,13 @@ settings_menu() {
     while true; do
         clear
         echo -e "${BLUE}----- Settings -----${NC}"
-        echo -e "${GREEN}1) Set Excel file for test cases (Current: $EXCEL_FILE)${NC}"
-        echo -e "${GREEN}2) Toggle Valgrind usage (Current: $VALGRIND_ENABLED)${NC}"
-        echo -e "${GREEN}3) Toggle comparison method (Current: $COMPARISON_METHOD)${NC}"
-        echo -e "${GREEN}4) Toggle bonus testing (Current: $BONUS_TESTING_ENABLED)${NC}"
-        echo -e "${GREEN}5) Set Program Prompt (Current: '$PROGRAM_PROMPT')${NC}"
-        echo -e "${ORANGE}f) Return to Main Menu${NC}"
-        echo -e
+        echo -e "${GREEN}1) Set Excel file for test cases (Current: ${BLUE}'$EXCEL_FILE'${GREEN})"
+        echo -e "2) Toggle Valgrind usage (Current: ${BLUE}'$VALGRIND_ENABLED'${GREEN})"
+        echo -e "${GREEN}3) Toggle comparison method (Current: ${BLUE}'$COMPARISON_METHOD'${GREEN})"
+        echo -e "${GREEN}4) Toggle bonus testing (Current: ${BLUE}'$BONUS_TESTING_ENABLED'${GREEN})"
+        echo -e "${GREEN}5) Set Program Prompt (Current: ${BLUE}'$PROGRAM_PROMPT'${GREEN})"
+        echo -e "${ORANGE}f) Return to Main Menu"
+        echo -e "${GREEN}"
         read -rp "Select an option: " choice
         case $choice in
             1)
@@ -49,7 +48,8 @@ settings_menu() {
                 update_config_key "BONUS_TESTING_ENABLED" "$BONUS_TESTING_ENABLED" "$CONFIG_FILE"
                 ;;
             5)
-                read -rp "Enter new Program Prompt (e.g. Minishell>): " PROGRAM_PROMPT
+				echo -ne "${BLUE}\\nEnter new Program Prompt (e.g. Minishell>): ${GREEN}"
+                read -r PROGRAM_PROMPT
                 update_config_key "PROGRAM_PROMPT" "$PROGRAM_PROMPT" "$CONFIG_FILE"
                 ;;
             f) break ;;
