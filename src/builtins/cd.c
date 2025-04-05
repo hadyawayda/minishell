@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/04 19:28:28 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/05 21:12:36 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@
 // Function to update environment variables (PWD and OLDPWD)
 void update_env_var(char *key, char *value, char **envp) {
     int i = 0;
-    size_t key_len = strlen(key);
+    size_t key_len = ft_strlen(key);
 
     while (envp[i]) {
-        if (strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=') {
+        if (ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=') {
+            // prohibited function snprintf
             snprintf(envp[i], 1024, "%s=%s", key, value);
             return;
         }
@@ -41,6 +42,7 @@ int process_cd(char **args) {
 
     // Handle too many arguments
     if (args[1] && args[2]) {
+        // prohibited function fprintf
         fprintf(stderr, "bash: cd: too many arguments\n");
         return 1;
     }
@@ -59,6 +61,7 @@ int process_cd(char **args) {
             return 1;
         }
     } else if (strcmp(args[1], "-") == 0) {
+        // wrong function getenv (leave it for now)
         target_dir = getenv("OLDPWD");
         if (!target_dir) {
             fprintf(stderr, "bash: cd: OLDPWD not set\n");

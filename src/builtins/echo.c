@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/02 13:15:09 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/05 21:07:53 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void process_echo(char **args) {
     // Print remaining arguments
     while (args[i]) {
         // Special case: Handle `echo \n hola`
-        if (strcmp(args[i], "\\n") == 0) {
+        if (ft_strcmp(args[i], "\\n") == 0) {
             if (!first_word) {
                 printf(" ");  // Ensure space before 'n'
             }

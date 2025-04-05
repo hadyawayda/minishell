@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:09:26 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/04 20:47:22 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/05 21:13:01 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ char **split_input(char *input) {
     }
 
     int i = 0;
-    char *token = ft_strtok(input, " \t\n");
+    char *token = strtok(input, " \t\n");
     while (token != NULL) {
         args[i++] = ft_strdup(token);
-        token = ft_strtok(NULL, " \t\n");
+        token = strtok(NULL, " \t\n");
     }
     args[i] = NULL;
     return args;
