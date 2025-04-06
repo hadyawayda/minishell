@@ -23,7 +23,7 @@ minishell_tester_menu() {
                 run_all_cases "program"
                 continue ;;
             1) file="test_files/program/echo.xlsx" ;;
-            2) file="test_files/program/piping.xlsx" ;;
+            2) file="test_files/all.xlsx" ;;
             3) file="test_files/program/redirections.xlsx" ;;
             4) file="test_files/program/and_or.xlsx" ;;
             5) file="test_files/program/wildcard.xlsx" ;;

@@ -14,7 +14,7 @@ convert_excel_to_csv() {
         exit 1
     fi
 
-	mkdir -p "test_files/converted_files"
+	mkdir -p "tester_files/converted_files"
 
     local input_file="$1"
     local base_name
@@ -35,14 +35,14 @@ convert_excel_to_csv() {
     # Define custom delimiter
     local delimiter="ǂ"  # Change this if needed
     
-    rm -f "test_files/converted_files/${base_name}_input.csv" \
-          "test_files/converted_files/${base_name}_output.csv" \
-          "test_files/converted_files/${base_name}_expected_input.csv" \
-          "test_files/converted_files/${base_name}_expected_output.csv"
+    rm -f "tester_files/converted_files/${base_name}_input.csv" \
+          "tester_files/converted_files/${base_name}_output.csv" \
+          "tester_files/converted_files/${base_name}_expected_input.csv" \
+          "tester_files/converted_files/${base_name}_expected_output.csv"
     
     # Extract to temporary regular CSVs first
-    in2csv "$input_file" | csvcut -c 1 > "test_files/converted_files/${base_name}_expected_input.csv"
-    in2csv "$input_file" | csvcut -c 2 > "test_files/converted_files/${base_name}_expected_output.csv"
+    in2csv "$input_file" | csvcut -c 1 > "tester_files/converted_files/${base_name}_expected_input.csv"
+    in2csv "$input_file" | csvcut -c 2 > "tester_files/converted_files/${base_name}_expected_output.csv"
     	
     # Use Python to properly handle the CSV structure and add delimiters
     python3 -c "
@@ -51,14 +51,14 @@ import csv
 import sys
 
 # Process column 1
-with open('test_files/converted_files/${base_name}_expected_input.csv', 'r', newline='') as infile, open('test_files/converted_files/${base_name}_input.csv', 'w') as outfile:
+with open('tester_files/converted_files/${base_name}_expected_input.csv', 'r', newline='') as infile, open('tester_files/converted_files/${base_name}_input.csv', 'w') as outfile:
     reader = csv.reader(infile)
     for row in reader:
         value = row[0] if row else ''
         outfile.write(value + '${delimiter}' + '\n')
 
 # Process column 2
-with open('test_files/converted_files/${base_name}_expected_output.csv', 'r', newline='') as infile, open('test_files/converted_files/${base_name}_output.csv', 'w') as outfile:
+with open('tester_files/converted_files/${base_name}_expected_output.csv', 'r', newline='') as infile, open('tester_files/converted_files/${base_name}_output.csv', 'w') as outfile:
     reader = csv.reader(infile)
     for row in reader:
         value = row[0] if row else ''
@@ -66,7 +66,7 @@ with open('test_files/converted_files/${base_name}_expected_output.csv', 'r', ne
     " 
     
     # Clean up temporary files
-    rm "test_files/converted_files/${base_name}_expected_input.csv" "test_files/converted_files/${base_name}_expected_output.csv"
+    rm "tester_files/converted_files/${base_name}_expected_input.csv" "tester_files/converted_files/${base_name}_expected_output.csv"
     
     echo -e
 }
