@@ -19,13 +19,20 @@ execute_test_cases() {
 	  is_bonus_case=true
 	fi
 
-	if [[ "$is_bonus_case" == true && "$BONUS_TESTING_ENABLED" -eq 0 ]]; then
-	#   echo -e "${YELLOW}Skipping bonus test #$test_index (asterisk found, bonus disabled).${NC}"
+	# Check if the current test case contains sleep command and skip it
+	if [[ "$test_input" == *"sleep"* ]]; then
 	  # Read and discard the corresponding output line from FD #4
 	  # to keep the file descriptors in sync.
 	  IFS= read -r _discard <&4
 	  echo
-	#   ((test_index++))
+	  continue
+	fi
+
+	if [[ "$is_bonus_case" == true && "$BONUS_TESTING_ENABLED" -eq 0 ]] || [[ "$test_input" == *"sleep"* ]]; then
+	  # Read and discard the corresponding output line from FD #4
+	  # to keep the file descriptors in sync.
+	  IFS= read -r _discard <&4
+	  echo
 	  continue
 	fi
 

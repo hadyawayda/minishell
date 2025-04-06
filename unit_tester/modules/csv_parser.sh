@@ -14,9 +14,7 @@ convert_excel_to_csv() {
         exit 1
     fi
 
-	if [[ ! -d "test_files/converted_files" ]]; then
-		mkdir test_files/converted_files
-	fi
+	mkdir -p "test_files/converted_files"
 
     local input_file="$1"
     local base_name
@@ -37,7 +35,10 @@ convert_excel_to_csv() {
     # Define custom delimiter
     local delimiter="ǂ"  # Change this if needed
     
-    rm -f "test_files/converted_files/${base_name}_input.csv" "test_files/converted_files/${base_name}_output.csv"
+    rm -f "test_files/converted_files/${base_name}_input.csv" \
+          "test_files/converted_files/${base_name}_output.csv" \
+          "test_files/converted_files/${base_name}_expected_input.csv" \
+          "test_files/converted_files/${base_name}_expected_output.csv"
     
     # Extract to temporary regular CSVs first
     in2csv "$input_file" | csvcut -c 1 > "test_files/converted_files/${base_name}_expected_input.csv"
