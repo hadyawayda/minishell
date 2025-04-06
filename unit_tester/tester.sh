@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
 # set -euo pipefail
 
+# ===============================
+# Global path definitions
+# ===============================
+# 1. ROOT_DIR: minishell/
+ROOT_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
+# 2. TESTER_DIR: minishell/unit_tester/
+TESTER_DIR="$ROOT_DIR/unit_tester"
+# 3. MODULES_DIR: minishell/unit_tester/modules/
+MODULES_DIR="$TESTER_DIR/modules"
+# 4. TEST_FILES_DIR: minishell/unit_tester/test_files/
+TEST_FILES_DIR="$TESTER_DIR/test_files"
+# 5. TESTER_FILES_DIR: minishell/unit_tester/tester_files/
+TESTER_FILES_DIR="$TESTER_DIR/tester_files"
+# 6. CONVERTED_FILES_DIR: minishell/unit_tester/tester_files/converted_files/
+CONVERTED_FILES_DIR="$TESTER_FILES_DIR/converted_files"
+# 7. EXECUTION_DIR: minishell/unit_tester/tester_files/execution/
+EXECUTION_DIR="$TESTER_FILES_DIR/execution"
+# 8. PROGRAM_TEST_DIR: minishell/unit_tester/test_files/program/
+PROGRAM_TEST_DIR="$TEST_FILES_DIR/program"
+# 9. TOKENIZATION_TEST_DIR: minishell/unit_tester/test_files/tokenization/
+TOKENIZATION_TEST_DIR="$TEST_FILES_DIR/tokenization"
+
 # Load external scripts
 source ./modules/case_tester.sh
 source ./modules/csv_parser.sh

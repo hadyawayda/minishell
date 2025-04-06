@@ -61,7 +61,7 @@ execute_test_cases() {
 	# Run minishell and capture output (uncomment second line to override with actualy minishell output)
 	# actual_output=$(echo "$test_input" | bash 2>&1)
 
-	actual_output=$(echo "$test_input" | ../minishell 2>&1)
+	actual_output=$(echo "$test_input" | ../../../minishell 2>&1)
 
 	# Strip minishell prompt from actual output (both leading & trailing prompts) 
 	# And remove ANSI color codes & partial lines
