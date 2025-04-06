@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 run_test_case() {
+	clear
+
     local file="$1"
     local filename_base=$(basename "$file" .xlsx)
 
