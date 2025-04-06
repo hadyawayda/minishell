@@ -29,10 +29,12 @@ settings_menu() {
         echo -e "${GREEN}5) Set Program Prompt (Current: ${BLUE}'$PROGRAM_PROMPT'${GREEN})"
         echo -e "${ORANGE}f) Return to Main Menu"
         echo -e "${GREEN}"
-        read -rp "Select an option: " choice
+        read -n 1 -rp "Select an option: " choice
+		
         case $choice in
             1)
-                read -rp "Enter path to Excel file: " EXCEL_FILE
+				echo -ne "${BLUE}\\n\\nEnter path to Excel file: ${GREEN}"
+                read -r
                 update_config_key "EXCEL_FILE" "$EXCEL_FILE" "$CONFIG_FILE"
                 ;;
             2)
@@ -48,7 +50,7 @@ settings_menu() {
                 update_config_key "BONUS_TESTING_ENABLED" "$BONUS_TESTING_ENABLED" "$CONFIG_FILE"
                 ;;
             5)
-				echo -ne "${BLUE}\\nEnter new Program Prompt (e.g. Minishell>): ${GREEN}"
+				echo -ne "${BLUE}\\n\\nEnter new Program Prompt (e.g. Minishell>): ${GREEN}"
                 read -r PROGRAM_PROMPT
                 update_config_key "PROGRAM_PROMPT" "$PROGRAM_PROMPT" "$CONFIG_FILE"
                 ;;

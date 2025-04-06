@@ -2,6 +2,7 @@
 # set -euo pipefail
 
 # Load external scripts
+source ./modules/case_tester.sh
 source ./modules/csv_parser.sh
 source ./modules/minishell_tester.sh
 source ./modules/parsing_tester.sh
@@ -68,7 +69,7 @@ while true; do
     echo -e "4) Settings (Upcoming Feature)"
     echo -e "${ORANGE}f) Exit${GREEN}"
     echo -e "${GREEN}"
-    read -rp "Select an option: " choice
+    read -n 1 -rp "Select an option: " choice
     case $choice in
         1) minishell_tester_menu ;;
         2) tokenization_tester_menu ;;

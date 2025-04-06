@@ -13,23 +13,23 @@ execute_test_cases() {
   exec 4< "$output_csv"
 
   while IFS= read -r test_input <&3; do
-	((total_tests++))
-
 	local is_bonus_case=false
-
+	
 	if [[ "$test_input" == *"*"* ]]; then
 	  is_bonus_case=true
 	fi
 
 	if [[ "$is_bonus_case" == true && "$BONUS_TESTING_ENABLED" -eq 0 ]]; then
-	  echo -e "${YELLOW}Skipping bonus test #$test_index (asterisk found, bonus disabled).${NC}"
+	#   echo -e "${YELLOW}Skipping bonus test #$test_index (asterisk found, bonus disabled).${NC}"
 	  # Read and discard the corresponding output line from FD #4
 	  # to keep the file descriptors in sync.
 	  IFS= read -r _discard <&4
 	  echo
-	  ((test_index++))
+	#   ((test_index++))
 	  continue
 	fi
+
+	((total_tests++))
 
 	# Remove `$>` prefix and trailing `ǂ`
 	test_input="${test_input#\$> }"
@@ -56,21 +56,21 @@ execute_test_cases() {
 
 	actual_output=$(echo "$test_input" | ../minishell 2>&1)
 
-	# Strip minishell prompt from actual output (both leading & trailing prompts)
+	# Strip minishell prompt from actual output (both leading & trailing prompts) 
 	# And remove ANSI color codes & partial lines
 	actual_output=$(
-      echo "$actual_output" | \
-        sed -E "
-          # 1) Remove ANSI color codes
-          s/\x1b\\[[0-9;]*m//g;
+	  echo "$actual_output" \
+	  | sed -E "
+		# 1) Remove ANSI color codes
+		s/\x1b\[[0-9;]*m//g;
 
-          # 2) Delete the first line, whatever it is
-          1d;
+		# 2) Delete the first line, whatever it is
+		1d;
 
-          # 3) On each remaining line, remove everything after '$PROGRAM_PROMPT'
-          s|${PROGRAM_PROMPT//|\\|}.*||
-        "
-    )
+		# 3) On each remaining line, remove \"$PROGRAM_PROMPT\" and everything after '$PROGRAM_PROMPT'
+		s|${PROGRAM_PROMPT//|\\|}.*||
+	  "
+	)
 
 	# Valgrind if enabled
 	local leaks="No leaks detected"
@@ -106,7 +106,7 @@ execute_test_cases() {
 
 	# Print results with colors
 	if $overall_pass; then
-	  echo -e "${GREEN}Test #$test_index${RESET}   Command:  [${test_input}]"
+	  echo -e "${BLUE}Test #$test_index${RESET}   Command:  [${test_input}]"
 	else
 	  echo -e "${RED}Test #$test_index${RESET}   Command:  [${test_input}]"
 	fi
@@ -114,7 +114,7 @@ execute_test_cases() {
 	# Print Expected vs Actual vs Leaks
 	local color_output=$([[ $pass_output == true ]] && echo "$GREEN" || echo "$RED")
 	local color_leak=$([[ $pass_leak == true ]] && echo "$GREEN" || echo "$RED")
-
+	
 	echo -e "${color_output}Expected:${RESET} [${expected_output}]\n${color_output}Actual:${RESET} [${actual_output}]"
 	if [[ "$valgrind_enabled" == "1" ]]; then
 	  echo -e "${color_leak}Leaks:${RESET} [${leaks}]"
