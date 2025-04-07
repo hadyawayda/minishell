@@ -19,7 +19,7 @@ sudo apt install libreadline-dev
 
 ```bash
 sudo apt install dos2unix
-dos2unix * */*
+dos2unix * */* */*/* */*/*/*
 ```
 
 ### 3. Install dependencies

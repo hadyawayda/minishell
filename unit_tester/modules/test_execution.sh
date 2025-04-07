@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 execute_test_cases() {
   local input_csv="$1"
   local output_csv="$2"
@@ -16,13 +17,6 @@ execute_test_cases() {
     
     if [[ "$test_input" == *"*"* ]]; then
       is_bonus_case=true
-    fi
-
-    # Skip test cases containing sleep command
-    if [[ "$test_input" == *"sleep"* ]]; then
-      IFS= read -r _discard <&4
-      echo
-      continue
     fi
 
     if [[ "$is_bonus_case" == true && "$BONUS_TESTING_ENABLED" -eq 0 ]] || [[ "$test_input" == *"sleep"* ]]; then
