@@ -24,9 +24,9 @@ run_test_case() {
     execute_test_cases "$input_csv" "$output_csv" "$VALGRIND_ENABLED"
 }
 
-
 run_all_cases() {
     local test_dir="$1"
+    local no_pause="$2"
 
     local files=("$test_dir"/*.xlsx)
     if [[ "${files[0]}" == "$test_dir/*.xlsx" || ${#files[@]} -eq 0 ]]; then
@@ -37,14 +37,17 @@ run_all_cases() {
     for file in "${files[@]}"; do
         echo -e "\\n${BLUE}Running test file: ${YELLOW}$(basename "$file")${BLUE}"
         run_test_case "$file"
-        echo -e "${CYAN}"
-        read -n 1 -rsp "Press any key to continue to next case..."
+        if [[ "$no_pause" != "true" ]]; then
+            echo -e "${CYAN}"
+            read -n 1 -rsp "Press any key to continue to next case..."
+        fi
     done
 }
 
 execute_test() {
-    local test_type="$1"  # either "program" or "tokenization"
-    local test_arg="$2"   # e.g., "echo.xlsx" or "all"
+    local test_type="$1"
+    local test_arg="$2"
+    local no_pause="$3"
     local original_dir="$(pwd)"
     local test_dir
 
@@ -64,7 +67,7 @@ execute_test() {
     cd "$EXECUTION_DIR" || { echo "Cannot enter execution directory"; return 1; }
 
     if [[ "$test_arg" == "all" ]]; then
-        run_all_cases "$test_dir"
+        run_all_cases "$test_dir" "$no_pause"
     else
         local file="$test_dir/$test_arg"
         if [[ ! -f "$file" ]]; then
