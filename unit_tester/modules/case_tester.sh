@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 run_test_case() {
+    local file="$1"
     local no_pause="$2"
     if [[ "$no_pause" != "true" ]]; then
 	    clear
     fi
 
-    local file="$1"
     local filename_base=$(basename "$file" .xlsx)
 
     local input_csv="$CONVERTED_FILES_DIR/${filename_base}_input.csv"
@@ -24,13 +24,11 @@ run_test_case() {
     fi
 
     # Execute the test cases (assuming execute_test_cases is defined elsewhere)
-    execute_test_cases "$input_csv" "$output_csv" "$VALGRIND_ENABLED"
+    execute_test_cases "$input_csv" "$VALGRIND_ENABLED" "$file"
 
     if [[ "$no_pause" != "true" ]]; then
         echo -e "\\n\\n\\n${CYAN}All $filename_base cases done."
         echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
-        echo -e "${GREEN}"
-        read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
     fi
 }
 
@@ -45,14 +43,20 @@ run_all_cases() {
     fi
 
     for file in "${files[@]}"; do
+		local filename_base=$(basename "$file" .xlsx)
         echo -e "\\n${BLUE}Now testing: ${YELLOW}$(basename "$file")${BLUE}\\n"
         run_test_case "$file" "$no_pause"
         if [[ "$no_pause" != "true" ]]; then
-            echo -e "${CYAN}"
-            read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
             PASSED_TESTS=0
             TOTAL_TESTS=0
-            clear
+			echo -e "${GREEN}"
+			read -n 1 -rsp "Would you like to have a summary of the $filename_base failed test cases? (y/n) " response
+			if [[ "$response" =~ ^[Yy]$ ]]; then
+				echo
+            	clear
+				# Display the failed summary for the basename of a file
+				display_failed_summary "$filename_base"
+			fi
         fi
     done
 }
@@ -65,6 +69,14 @@ execute_test() {
     local no_pause="$3"
     local original_dir="$(pwd)"
     local test_dir
+
+	mkdir -p "$FAILED_TESTS_SUMMARY_DIR"
+
+	# Ensure we start with an empty summary file.
+	> "$FAILED_SUMMARY_FILE"
+
+	# Set up a header in the failed summary file.
+  	echo "Test type: $1" > "$FAILED_SUMMARY_FILE"
 
     # Determine test directory based on test type
     if [[ "$test_type" == "program" ]]; then
@@ -86,6 +98,13 @@ execute_test() {
         if [[ "$no_pause" == "true" ]]; then
             echo -e "${GREEN}All done."
             echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
+			echo -e "${GREEN}"
+			read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
+			if [[ "$response" =~ ^[Yy]$ ]]; then
+				echo
+            	clear
+				display_failed_summary "all"
+			fi
         fi
     else
         local file="$test_dir/$test_arg"
@@ -95,14 +114,19 @@ execute_test() {
             return 1
         fi
         run_test_case "$file" "$no_pause"
+		local file_name=$(basename "$file" .xlsx)
+		echo -e "${GREEN}"
+		read -n 1 -rsp "Would you like to have a summary of the failed $file_name cases? (y/n) " response
+		if [[ "$response" =~ ^[Yy]$ ]]; then
+			echo
+			clear
+			display_failed_summary "$file_name"
+		fi
     fi
 
     # Return to original directory and clean up the tester_files directory
     cd "$original_dir" || exit
+	
+	# Remove the execution directory
     rm -rf "$TESTER_FILES_DIR"
-        
-    if [[ "$no_pause" != "true" ]]; then
-        echo -e "${CYAN}"
-        read -n 1 -rsp "Press any key to return to the menu..." ;
-    fi
 }

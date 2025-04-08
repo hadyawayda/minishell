@@ -22,6 +22,10 @@ EXECUTION_DIR="$TESTER_FILES_DIR/execution"
 PROGRAM_TEST_DIR="$TEST_FILES_DIR/program"
 # 9. TOKENIZATION_TEST_DIR: minishell/unit_tester/test_files/tokenization/
 TOKENIZATION_TEST_DIR="$TEST_FILES_DIR/tokenization"
+# 10. FAILED_TESTS_SUMMARY_DIR: minishell/unit_tester/tester_files/failed_tests_summary/
+FAILED_TESTS_SUMMARY_DIR="$TESTER_FILES_DIR/failed_tests_summary"
+# 11. FAILED_SUMMARY_FILE: minishell/unit_tester/tester_files/failed_summary.txt
+FAILED_SUMMARY_FILE="$FAILED_TESTS_SUMMARY_DIR/failed_summary.txt"
 
 # Global counters
 declare -g PASSED_TESTS=0
@@ -33,6 +37,7 @@ source ./modules/csv_parser.sh
 source ./modules/minishell_tester.sh
 source ./modules/parsing_tester.sh
 source ./modules/settings_menu.sh
+source ./modules/summary_parser.sh
 source ./modules/test_execution.sh
 source ./modules/tokenization_tester_script.sh
 source ./modules/tokenization_tester.sh

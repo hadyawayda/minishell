@@ -19,12 +19,13 @@ run_one_case() {
   local cmd_block="$1"
   local test_index="$2"
   local valgrind_enabled="$3"
+  local file="$4"
 
   # 1) Compute expected output using bash
-  local expected_output="$(echo "$cmd_block" | bash 2>&1)"
+  local expected_output="$(echo -e "$cmd_block" | bash 2>&1)"
 
   # 2) Run your minishell on the same block
-  local actual_output="$(echo "$cmd_block" | "$ROOT_DIR/minishell" 2>&1)"
+  local actual_output="$(echo -e "$cmd_block" | "$ROOT_DIR/minishell" 2>&1)"
 
   # 3) Strip ANSI color codes and prompt lines
   actual_output="$(
@@ -83,22 +84,37 @@ run_one_case() {
 
   # 6) Print results
   if $overall_pass; then
-    echo -e "${BLUE}Test #$test_index   [${cmd_block}]"
+    echo -e "${BLUE}Test #$test_index\\t[${cmd_block}]"
     PASSED_TESTS=$((PASSED_TESTS+1))
   else
-    echo -e "${RED}Test #$test_index   [${cmd_block}]"
+    echo -e "${RED}Test #$test_index\\t[${cmd_block}]"
   fi
 
   local color_output=$([[ $pass_output == true ]] && echo "$GREEN" || echo "$RED")
   local color_leak=$([[ $pass_leak == true ]] && echo "$GREEN" || echo "$RED")
 
-  echo -e "${color_output}Expected:   [${expected_output}]"
-  echo -e "${color_output}Actual:     [${actual_output}]"
+  echo -e "${color_output}Expected:\\t[${expected_output}]"
+  echo -e "${color_output}Actual:\\t\\t[${actual_output}]"
   if [[ "$valgrind_enabled" == "1" ]]; then
-    echo -e "${color_leak}Leaks:      [${leaks}]"
+    echo -e "${color_leak}Leaks:\\t[${leaks}]"
   fi
 
   echo
+  
+  # 7) Log failure details if the test failed.
+  if ! $overall_pass; then
+    {
+	  echo "Test type: $file"
+      echo "Test #$test_index\\tCommand Block: [${cmd_block}]"
+      echo "Expected: [${expected_output}]"
+      echo "Actual:   [${actual_output}]"
+      if [[ "$valgrind_enabled" == "1" ]]; then
+        echo "Leaks:    [${leaks}]"
+      fi
+      echo
+      echo
+    } >> "$FAILED_SUMMARY_FILE"
+  fi
 }
 
 ###############################################################################
@@ -118,6 +134,7 @@ execute_test_cases() {
   local valgrind_enabled="$2"
   local test_index=1
   local delimiter="ǂ"
+  local file=$(basename "$3" .xlsx)
 
   # Open the input CSV using file descriptor 3
   exec 3< "$input_csv"
@@ -166,7 +183,7 @@ execute_test_cases() {
     local cleaned_block="$(echo "$test_block" | sed 's/^\$> //')"
 
     # run the entire block as one case
-    run_one_case "$cleaned_block" "$test_index" "$valgrind_enabled"
+    run_one_case "$cleaned_block" "$test_index" "$valgrind_enabled" "$file"
     ((test_index++))
   done
 
