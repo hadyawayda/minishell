@@ -23,6 +23,10 @@ PROGRAM_TEST_DIR="$TEST_FILES_DIR/program"
 # 9. TOKENIZATION_TEST_DIR: minishell/unit_tester/test_files/tokenization/
 TOKENIZATION_TEST_DIR="$TEST_FILES_DIR/tokenization"
 
+# Global counters
+declare -g PASSED_TESTS=0
+declare -g TOTAL_TESTS=0
+
 # Load external scripts
 source ./modules/case_tester.sh
 source ./modules/csv_parser.sh

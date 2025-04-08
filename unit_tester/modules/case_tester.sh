@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 run_test_case() {
-	clear
+    local no_pause="$2"
+    if [[ "$no_pause" != "true" ]]; then
+	    clear
+    fi
 
     local file="$1"
     local filename_base=$(basename "$file" .xlsx)
@@ -22,6 +25,13 @@ run_test_case() {
 
     # Execute the test cases (assuming execute_test_cases is defined elsewhere)
     execute_test_cases "$input_csv" "$output_csv" "$VALGRIND_ENABLED"
+
+    if [[ "$no_pause" != "true" ]]; then
+        echo -e "\\n\\n\\n${CYAN}All $filename_base cases done."
+        echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
+        echo -e "${GREEN}"
+        read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
+    fi
 }
 
 run_all_cases() {
@@ -35,16 +45,21 @@ run_all_cases() {
     fi
 
     for file in "${files[@]}"; do
-        echo -e "\\n${BLUE}Running test file: ${YELLOW}$(basename "$file")${BLUE}"
-        run_test_case "$file"
+        echo -e "\\n${BLUE}Now testing: ${YELLOW}$(basename "$file")${BLUE}\\n"
+        run_test_case "$file" "$no_pause"
         if [[ "$no_pause" != "true" ]]; then
             echo -e "${CYAN}"
-            read -n 1 -rsp "Press any key to continue to next case..."
+            read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
+            PASSED_TESTS=0
+            TOTAL_TESTS=0
+            clear
         fi
     done
 }
 
 execute_test() {
+    PASSED_TESTS=0
+    TOTAL_TESTS=0
     local test_type="$1"
     local test_arg="$2"
     local no_pause="$3"
@@ -68,6 +83,10 @@ execute_test() {
 
     if [[ "$test_arg" == "all" ]]; then
         run_all_cases "$test_dir" "$no_pause"
+        if [[ "$no_pause" == "true" ]]; then
+            echo -e "${GREEN}All done."
+            echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
+        fi
     else
         local file="$test_dir/$test_arg"
         if [[ ! -f "$file" ]]; then
@@ -75,10 +94,15 @@ execute_test() {
             cd "$original_dir" || exit
             return 1
         fi
-        run_test_case "$file"
+        run_test_case "$file" "$no_pause"
     fi
 
     # Return to original directory and clean up the tester_files directory
     cd "$original_dir" || exit
     rm -rf "$TESTER_FILES_DIR"
+        
+    if [[ "$no_pause" != "true" ]]; then
+        echo -e "${CYAN}"
+        read -n 1 -rsp "Press any key to return to the menu..." ;
+    fi
 }

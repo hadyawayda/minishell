@@ -36,8 +36,5 @@ minishell_tester_menu() {
             f) break ;;
             *) echo -e "${RED}Invalid option.${NC}" ;;
         esac
-        
-        echo -e "${ORANGE}"
-		read -n 1 -rsp "Press any key to return to the menu..." ;
     done
 }

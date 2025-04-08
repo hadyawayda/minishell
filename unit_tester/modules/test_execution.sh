@@ -83,26 +83,23 @@ run_one_case() {
 
   # 6) Print results
   if $overall_pass; then
-    echo -e "${BLUE}Test #$test_index${RESET}   [${cmd_block}]"
+    echo -e "${BLUE}Test #$test_index   [${cmd_block}]"
+    PASSED_TESTS=$((PASSED_TESTS+1))
   else
-    echo -e "${RED}Test #$test_index${RESET}   [${cmd_block}]"
+    echo -e "${RED}Test #$test_index   [${cmd_block}]"
   fi
 
   local color_output=$([[ $pass_output == true ]] && echo "$GREEN" || echo "$RED")
   local color_leak=$([[ $pass_leak == true ]] && echo "$GREEN" || echo "$RED")
 
-  echo -e "${color_output}Expected:${RESET} [${expected_output}]"
-  echo -e "${color_output}Actual:${RESET}   [${actual_output}]"
+  echo -e "${color_output}Expected:   [${expected_output}]"
+  echo -e "${color_output}Actual:     [${actual_output}]"
   if [[ "$valgrind_enabled" == "1" ]]; then
-    echo -e "${color_leak}Leaks:${RESET}    [${leaks}]"
+    echo -e "${color_leak}Leaks:      [${leaks}]"
   fi
 
   echo
-
-  # Return 0 if fail, 1 if pass
-  $overall_pass && return 1 || return 0
 }
-
 
 ###############################################################################
 # execute_test_cases
@@ -120,8 +117,6 @@ execute_test_cases() {
   local input_csv="$1"
   local valgrind_enabled="$2"
   local test_index=1
-  local passed_tests=0
-  local total_tests=0
   local delimiter="ǂ"
 
   # Open the input CSV using file descriptor 3
@@ -138,9 +133,9 @@ execute_test_cases() {
         break 2  # break outer while
       fi
 
-	  if [[ "$line" == *"*"* && "${BONUS_TESTING_ENABLED:-0}" -eq 0 ]] || [[ "$line" == *"sleep"* ]]; then
+	    if [[ "$line" == *"*"* && "${BONUS_TESTING_ENABLED:-0}" -eq 0 ]] || [[ "$line" == *"sleep"* ]]; then
         skip_case=true
-		break
+		    break
       fi
 
       if [[ "$line" == *"$delimiter" ]]; then
@@ -155,7 +150,7 @@ execute_test_cases() {
       fi
     done
 
-	if $skip_case; then
+	  if $skip_case; then
       continue
     fi
 
@@ -164,29 +159,16 @@ execute_test_cases() {
       break
     fi
 
-	if $skip_case; then
-      continue
-    fi
-
-    ((total_tests++))
+    TOTAL_TESTS=$((TOTAL_TESTS+1))
 
     # For each line, remove leading "$> " if present
     # We'll do that for the entire block
-    local cleaned_block
-    cleaned_block="$(echo "$test_block" | sed 's/^\$> //')"
+    local cleaned_block="$(echo "$test_block" | sed 's/^\$> //')"
 
     # run the entire block as one case
     run_one_case "$cleaned_block" "$test_index" "$valgrind_enabled"
-    local this_case_passed=$?  # run_one_case returns 1 if pass, 0 if fail
-    if [[ $this_case_passed -eq 1 ]]; then
-      ((passed_tests++))
-    fi
-
     ((test_index++))
   done
 
   exec 3<&-
-
-  echo -e "${GREEN}All done.${RESET}"
-  echo -e "Passed ${GREEN}${passed_tests}${RESET} out of ${total_tests} tests."
 }
