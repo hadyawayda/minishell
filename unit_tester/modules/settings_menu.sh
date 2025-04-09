@@ -27,6 +27,7 @@ settings_menu() {
         echo -e "${GREEN}3) Toggle comparison method (Current: ${BLUE}'$COMPARISON_METHOD'${GREEN})"
         echo -e "${GREEN}4) Toggle bonus testing (Current: ${BLUE}'$BONUS_TESTING_ENABLED'${GREEN})"
         echo -e "${GREEN}5) Set Program Prompt (Current: ${BLUE}'$PROGRAM_PROMPT'${GREEN})"
+        echo -e "${GREEN}6) Toggle Debugging Logs (Current: ${BLUE}'$DEBUGGING'${GREEN})"
         echo -e "${ORANGE}f) Return to Main Menu"
         echo -e "${GREEN}"
         read -n 1 -rp "Select an option: " choice
@@ -53,6 +54,10 @@ settings_menu() {
 				echo -ne "${BLUE}\\n\\nEnter new Program Prompt (e.g. Minishell>): ${GREEN}"
                 read -r PROGRAM_PROMPT
                 update_config_key "PROGRAM_PROMPT" "$PROGRAM_PROMPT" "$CONFIG_FILE"
+                ;;
+            6)
+                DEBUGGING=$((1 - DEBUGGING))
+                update_config_key "DEBUGGING" "$DEBUGGING" "$CONFIG_FILE"
                 ;;
             f) break ;;
             *) echo -e "${RED}Invalid option.${NC}" ;;

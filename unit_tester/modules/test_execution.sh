@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-###############################################################################
-# run_one_case
-#   Runs the entire command block through bash (for expected_output),
-#   runs it through your minishell (for actual_output),
-#   optionally checks valgrind, and prints results.
-#
-# Arguments:
-#   1) cmd_block      – multiline string of commands
-#   2) test_index     – the index of this test case
-#   3) valgrind_enabled
-#
-# Environment / Globals used:
-#   ROOT_DIR         – path to your minishell, e.g. "$ROOT_DIR/minishell"
-#   PROGRAM_PROMPT   – used to strip prompt lines
-###############################################################################
 run_one_case() {
   local cmd_block="$1"
   local test_index="$2"
@@ -54,6 +39,8 @@ run_one_case() {
     pass_output=true
   elif [[ "$expected_output" == *"No such file or directory"* && "$actual_output" == *"No such file or directory"* ]]; then
     pass_output=true
+  elif [[ "$expected_output" == *"Is a directory"* && "$actual_output" == *"Is a directory"* ]]; then
+    pass_output=true
   elif [[ "$expected_output" == *"invalid option"* && "$actual_output" == *"invalid option"* ]]; then
     pass_output=true
   elif [[ "$expected_output" == *"not a valid identifier"* && "$actual_output" == *"not a valid identifier"* ]]; then
@@ -61,8 +48,6 @@ run_one_case() {
   elif [[ "$expected_output" == *"numeric argument required"* && "$actual_output" == *"numeric argument required"* ]]; then
     pass_output=true
   elif [[ "$expected_output" == *"too many arguments"* && "$actual_output" == *"too many arguments"* ]]; then
-    pass_output=true
-  elif [[ "$expected_output" == *"ambiguous redirect"* && "$actual_output" == *"ambiguous redirect"* ]]; then
     pass_output=true
   elif [[ "$expected_output" == *"ambiguous redirect"* && "$actual_output" == *"ambiguous redirect"* ]]; then
     pass_output=true
@@ -84,35 +69,68 @@ run_one_case() {
 
   # 6) Print results
   if $overall_pass; then
-    echo -e "${BLUE}Test #$test_index\\t[${cmd_block}]"
+    echo -ne "${GREEN}"
+    if [[ "$DEBUGGING" == "1" ]]; then
+      echo -ne "${BLUE}"
+    fi
+    echo -ne "Test #$test_index"
+    if (( test_index > 9 )); then
+      echo -ne "\\t"
+    else
+      echo -ne "\\t\\t"
+    fi
+    echo -e "[${cmd_block}]"
     PASSED_TESTS=$((PASSED_TESTS+1))
   else
-    echo -e "${RED}Test #$test_index\\t[${cmd_block}]"
+    echo -ne "${RED}"
+    if [[ "$DEBUGGING" == "1" ]]; then
+      echo -ne "${BLUE}"
+    fi
+    echo -ne "Test #$test_index"
+    if (( test_index > 9 )); then
+      echo -ne "\\t"
+    else
+      echo -ne "\\t\\t"
+    fi
+    echo -e "[${cmd_block}]"
   fi
 
   local color_output=$([[ $pass_output == true ]] && echo "$GREEN" || echo "$RED")
   local color_leak=$([[ $pass_leak == true ]] && echo "$GREEN" || echo "$RED")
 
-  echo -e "${color_output}Expected:\\t[${expected_output}]"
-  echo -e "${color_output}Actual:\\t\\t[${actual_output}]"
+  if [[ "$DEBUGGING" == "1" ]]; then
+    echo -e "${GREEN}Expected:\\t[${expected_output}]"
+    echo -e "${color_output}Actual:\\t\\t[${actual_output}]"
+  fi
+  
   if [[ "$valgrind_enabled" == "1" ]]; then
     echo -e "${color_leak}Leaks:\\t[${leaks}]"
   fi
 
-  echo
-  
+  if [[ "$DEBUGGING" == "1" ]]; then
+    echo
+  fi
+
   # 7) Log failure details if the test failed.
   if ! $overall_pass; then
     {
-	  echo "Test type: $file"
-      echo "Test #$test_index\\tCommand Block: [${cmd_block}]"
-      echo "Expected: [${expected_output}]"
-      echo "Actual:   [${actual_output}]"
-      if [[ "$valgrind_enabled" == "1" ]]; then
-        echo "Leaks:    [${leaks}]"
+	    echo -ne "$file test #$test_index:"
+      if (( test_index > 9 )); then
+        echo -ne "\\t"
+      else
+        echo -ne "\\t"
       fi
-      echo
-      echo
+      echo -e "[${cmd_block}]"
+      if [[ "$DEBUGGING" == "1" ]]; then
+        echo -e "Expected:\\t[${expected_output}]"
+        echo -e "Actual:\\t\\t[${actual_output}]"
+      fi
+      if [[ "$valgrind_enabled" == "1" ]]; then
+        echo -e "Leaks:\\t[${leaks}]\\n"
+      fi
+      if [[ "$DEBUGGING" == "1" ]]; then
+        echo
+      fi
     } >> "$FAILED_SUMMARY_FILE"
   fi
 }
@@ -150,7 +168,9 @@ execute_test_cases() {
         break 2  # break outer while
       fi
 
-	    if [[ "$line" == *"*"* && "${BONUS_TESTING_ENABLED:-0}" -eq 0 ]] || [[ "$line" == *"sleep"* ]]; then
+	    if  [[ "$line" == *"sleep"* ]] || 
+          [[ "${BONUS_TESTING_ENABLED:-0}" -eq 0 && 
+          ("$line" == *"*"* || "$line" == *"&&"* || "$line" == *"||"* || "$line" == *"("* || "$line" == *")"*) ]]; then
         skip_case=true
 		    break
       fi

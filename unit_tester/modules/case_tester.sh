@@ -7,6 +7,8 @@ run_test_case() {
 	    clear
     fi
 
+    echo -e "${BLUE}Now testing $(basename "$file" .xlsx) cases:${BLUE}\\n"
+
     local filename_base=$(basename "$file" .xlsx)
 
     local input_csv="$CONVERTED_FILES_DIR/${filename_base}_input.csv"
@@ -27,7 +29,8 @@ run_test_case() {
     execute_test_cases "$input_csv" "$VALGRIND_ENABLED" "$file"
 
     if [[ "$no_pause" != "true" ]]; then
-        echo -e "\\n\\n\\n${CYAN}All $filename_base cases done."
+        echo -ne "\\n"
+        echo -e "${CYAN}All $filename_base cases done."
         echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
     fi
 }
@@ -36,6 +39,8 @@ run_all_cases() {
     local test_dir="$1"
     local no_pause="$2"
 
+    clear
+    
     local files=("$test_dir"/*.xlsx)
     if [[ "${files[0]}" == "$test_dir/*.xlsx" || ${#files[@]} -eq 0 ]]; then
         echo -e "${RED}\\nNo test files found in '$test_dir'.${NC}"
@@ -44,19 +49,24 @@ run_all_cases() {
 
     for file in "${files[@]}"; do
 		local filename_base=$(basename "$file" .xlsx)
-        echo -e "\\n${BLUE}Now testing: ${YELLOW}$(basename "$file")${BLUE}\\n"
         run_test_case "$file" "$no_pause"
         if [[ "$no_pause" != "true" ]]; then
             PASSED_TESTS=0
             TOTAL_TESTS=0
 			echo -e "${GREEN}"
-			read -n 1 -rsp "Would you like to have a summary of the $filename_base failed test cases? (y/n) " response
+			read -n 1 -rsp "Would you like to have a summary of the $filename_base failed test cases? (y/n/quit) " response
 			if [[ "$response" =~ ^[Yy]$ ]]; then
 				echo
             	clear
 				# Display the failed summary for the basename of a file
 				display_failed_summary "$filename_base"
+            elif [[ "$response" =~ ^[Nn]$ ]]; then
+                continue
+            else
+                break
 			fi
+        else
+            echo
         fi
     done
 }
@@ -76,7 +86,7 @@ execute_test() {
 	> "$FAILED_SUMMARY_FILE"
 
 	# Set up a header in the failed summary file.
-  	echo "Test type: $1" > "$FAILED_SUMMARY_FILE"
+  	echo -e "Test type: $1\\n" > "$FAILED_SUMMARY_FILE"
 
     # Determine test directory based on test type
     if [[ "$test_type" == "program" ]]; then

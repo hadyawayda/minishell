@@ -61,3 +61,6 @@ dkms.conf
 
 # Testing Scripts
 # *.sh
+
+# Config Files
+*.ini

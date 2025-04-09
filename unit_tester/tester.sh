@@ -57,7 +57,8 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
     echo "EXCEL_FILE=\"tests.xlsx\"" >> "$CONFIG_FILE"
     echo "CSV_FILE=\"tests.csv\"" >> "$CONFIG_FILE"
     echo "BONUS_TESTING_ENABLED=\"0\"" >> "$CONFIG_FILE"
-	echo "PROGRAM_PROMPT=\"Minishell>\"" >> "$CONFIG_FILE"
+	echo "PROGRAM_PROMPT=\"\"" >> "$CONFIG_FILE"
+    echo "DEBUGGING=\"0\"" >> "$CONFIG_FILE"
 fi
 
 source "$CONFIG_FILE"
@@ -86,7 +87,9 @@ if [[ -n "${PROGRAM_PROMPT}" ]]; then
     echo -e "\\n${CYAN}Press any key to continue..."
     read -n 1 -s
 else
-    read -rp "Enter the program prompt name (e.g. 'Minishell>'): " PROGRAM_PROMPT
+    echo -e "${GREEN}Enter the program prompt name (e.g. 'Minishell>'): \\n"
+    echo -ne "${CYAN}$> "
+    read -r PROGRAM_PROMPT
     update_config_key "PROGRAM_PROMPT" "$PROGRAM_PROMPT" "$CONFIG_FILE"
 fi
 
