@@ -1,82 +1,72 @@
 #!/usr/bin/env bash
 
-###############################################################################
-# display_failed_summary()
-#
-#   This function parses the FAILED_SUMMARY_FILE and displays the failed
-#   test cases according to the provided argument.
-#
-#   If the argument is "all", it prints all failure summaries grouped
-#   by header. If the argument is a specific test type (e.g. "program" or
-#   "tokenization"), it prints only the failures that belong to that test type.
-#
-# Usage:
-#   display_failed_summary "all"
-#   display_failed_summary "program"
-###############################################################################
-
 display_failed_summary() {
-  local filter="$1"
-  
   if [[ ! -s "$FAILED_SUMMARY_FILE" ]]; then
-    echo -e "${GREEN}No failed test cases to report.${RESET}"
-    return 0
+    echo "No failed test cases to report."
+    return
   fi
 
-  if [[ "$filter" == "all" ]]; then
-    echo -e "${BLUE}Summary of All Failed Test Cases:${RESET}"
-    awk '
-      BEGIN { block_line = 0; }
-      # A header is any line that begins with "Test type:"
-      /^Test type:/ {
-        # If we already printed a block, insert a separator
-        if (block_line > 0) { print "\n----------------------\n"; }
-        block_line = 0;
-        # Print header (first line) in blue:
-        printf "\033[34m%s\033[0m\n", $0;
-        block_line++;
-        next;
-      }
-      {
-        if (block_line == 1) {
-          # Second line: print in green.
-          printf "\033[32m%s\033[0m\n", $0;
-        } else if (block_line == 2) {
-          # Third line: print in red.
-          printf "\033[31m%s\033[0m\n", $0;
-        } else {
-          # Subsequent lines: no special color.
-          print $0;
-        }
-        block_line++;
-      }
-    ' "$FAILED_SUMMARY_FILE"
+  echo -e "${BLUE}Summary of failed test cases\n"
+
+  # We'll read the file line by line from FD 3
+  exec 3< "$FAILED_SUMMARY_FILE"
+
+  local state="outside"
+  local line
+  local debug="${DEBUGGING:-0}"
+
+  if (( debug == 0 )); then
+    ############################################################
+    # DEBUGGING=0 => print EVERY line in RED, ignore chunking
+    ############################################################
+    while IFS= read -r line <&3; do
+      echo -e "${RED}$line"
+    done
   else
-    echo -e "${BLUE}Summary of Failed Test Cases for $filter:${RESET}"
-    # We assume the header in the summary file is of the form:
-    #   Test type: <filter>
-    awk -v hdr="Test type: $filter" '
-      BEGIN { print_block = 0; block_line = 0; }
-      # When we see a matching header, enable printing
-      $0 == hdr {
-        print_block = 1;
-        block_line = 0;
-        printf "\033[34m%s\033[0m\n", $0;
-        block_line++;
-        next;
-      }
-      # When we see any header that is not the target, disable printing.
-      /^Test type:/ { print_block = 0; }
-      print_block {
-        if (block_line == 1) {
-          printf "\033[32m%s\033[0m\n", $0;
-        } else if (block_line == 2) {
-          printf "\033[31m%s\033[0m\n", $0;
-        } else {
-          print $0;
-        }
-        block_line++;
-      }
-    ' "$FAILED_SUMMARY_FILE"
+    ############################################################
+    # DEBUGGING=1 => chunk lines into header/expected/actual
+    ############################################################
+    while IFS= read -r line <&3; do
+      # If line matches:  ^[^[:space:]]+[[:space:]]+test[[:space:]]+#[0-9]+:
+      # => header (blue)
+      if [[ "$line" =~ ^[^[:space:]]+[[:space:]]+test[[:space:]]+#[0-9]+: ]]; then
+        state="header"
+        echo -e "${BLUE}$line"
+        continue
+      fi
+
+      # If line starts with "Expected:", green
+      if [[ "$line" =~ ^Expected: ]]; then
+        state="expected"
+        echo -e "${GREEN}$line"
+        continue
+      fi
+
+      # If line starts with "Actual:", red
+      if [[ "$line" =~ ^Actual: ]]; then
+        state="actual"
+        echo -e "${RED}$line"
+        continue
+      fi
+
+      # Otherwise, color depends on current state
+      case "$state" in
+        header)
+          echo -e "${BLUE}$line"
+          ;;
+        expected)
+          echo -e "${GREEN}$line"
+          ;;
+        actual)
+          echo -e "${RED}$line"
+          ;;
+      esac
+    done
   fi
+
+  exec 3<&-
+
+  echo -e "${GREEN}"
+  read -n 1 -rsp "Press any key to continue..."
+  echo
 }

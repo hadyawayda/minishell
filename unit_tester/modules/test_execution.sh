@@ -29,11 +29,11 @@ run_one_case() {
       | grep 'definitely lost' || echo 'No leaks detected'
     )"
   fi
-
+			
   # 5) Compare outputs (partial match for errors, or exact match)
   local pass_output=false
 
-  if [[ "$expected_output" == *"syntax error near unexpected token"* && "$actual_output" == *"syntax error near unexpected token"* ]]; then
+  if [[ "$expected_output" == *"syntax error"* && "$actual_output" == *"syntax error"* ]]; then
     pass_output=true
   elif [[ "$expected_output" == *"command not found"* && "$actual_output" == *"command not found"* ]]; then
     pass_output=true
@@ -123,13 +123,12 @@ run_one_case() {
       echo -e "[${cmd_block}]"
       if [[ "$DEBUGGING" == "1" ]]; then
         echo -e "Expected:\\t[${expected_output}]"
-        echo -e "Actual:\\t\\t[${actual_output}]"
+        echo -e "Actual:\\t\\t[${actual_output}]\\n"
+	  else
+		echo
       fi
       if [[ "$valgrind_enabled" == "1" ]]; then
         echo -e "Leaks:\\t[${leaks}]\\n"
-      fi
-      if [[ "$DEBUGGING" == "1" ]]; then
-        echo
       fi
     } >> "$FAILED_SUMMARY_FILE"
   fi

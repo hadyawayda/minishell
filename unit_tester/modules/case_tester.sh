@@ -85,9 +85,6 @@ execute_test() {
 	# Ensure we start with an empty summary file.
 	> "$FAILED_SUMMARY_FILE"
 
-	# Set up a header in the failed summary file.
-  	echo -e "Test type: $1\\n" > "$FAILED_SUMMARY_FILE"
-
     # Determine test directory based on test type
     if [[ "$test_type" == "program" ]]; then
          test_dir="$PROGRAM_TEST_DIR"
@@ -106,7 +103,7 @@ execute_test() {
     if [[ "$test_arg" == "all" ]]; then
         run_all_cases "$test_dir" "$no_pause"
         if [[ "$no_pause" == "true" ]]; then
-            echo -e "${GREEN}All done."
+            echo -e "${BLUE}All done."
             echo -e "Passed $PASSED_TESTS out of $TOTAL_TESTS tests."
 			echo -e "${GREEN}"
 			read -n 1 -rsp "Would you like to have a summary of the failed test cases? (y/n) " response
