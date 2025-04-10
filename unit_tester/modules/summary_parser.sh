@@ -6,7 +6,7 @@ display_failed_summary() {
     return
   fi
 
-  echo -e "${BLUE}Summary of failed test cases\n"
+  echo -e "${CYAN}Summary of failed test cases\n"
 
   # We'll read the file line by line from FD 3
   exec 3< "$FAILED_SUMMARY_FILE"
@@ -49,6 +49,13 @@ display_failed_summary() {
         continue
       fi
 
+	  # If line starts with Leaks, yellow
+	  if [[ "$line" =~ ^Leaks ]]; then
+		state="leaks"
+		echo -e "${YELLOW}$line"
+		continue
+	  fi
+
       # Otherwise, color depends on current state
       case "$state" in
         header)
@@ -60,6 +67,9 @@ display_failed_summary() {
         actual)
           echo -e "${RED}$line"
           ;;
+		leaks)
+		  echo -e "${YELLOW}$line"
+		  ;;
       esac
     done
   fi

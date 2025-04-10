@@ -4,51 +4,45 @@ parse_leaks() {
   local leaks_output="$1"
   
   # Extract each category line from Valgrind output (case-insensitive)
-  local def_line ind_line pos_line still_line supp_line
+  local def_line ind_line pos_line still_line
   def_line=$(echo "$leaks_output" | grep -i "definitely lost:")
   ind_line=$(echo "$leaks_output" | grep -i "indirectly lost:")
   pos_line=$(echo "$leaks_output" | grep -i "possibly lost:")
   still_line=$(echo "$leaks_output" | grep -i "still reachable:")
-  supp_line=$(echo "$leaks_output" | grep -i "suppressed:")
 
   # Extract the leaked byte count from each line.
   # We assume the format is: "Category: <bytes> bytes in <blocks> blocks"
-  local def_bytes ind_bytes pos_bytes still_bytes supp_bytes
+  local def_bytes ind_bytes pos_bytes still_bytes
 
-  def_bytes=$(echo "$def_line" | awk '{print $3}' | tr -d ',')
-  ind_bytes=$(echo "$ind_line" | awk '{print $3}' | tr -d ',')
-  pos_bytes=$(echo "$pos_line" | awk '{print $3}' | tr -d ',')
-  still_bytes=$(echo "$still_line" | awk '{print $3}' | tr -d ',')
-  supp_bytes=$(echo "$supp_line" | awk '{print $3}' | tr -d ',')
-
+  def_bytes=$(echo "$def_line" | sed -n 's/.*definitely lost:[[:space:]]*\([0-9,]\+\) bytes.*/\1/p' | head -n 1 | tr -d ',')
+  ind_bytes=$(echo "$ind_line" | sed -n 's/.*indirectly lost:[[:space:]]*\([0-9,]\+\) bytes.*/\1/p' | head -n 1 | tr -d ',')
+  pos_bytes=$(echo "$pos_line" | sed -n 's/.*possibly lost:[[:space:]]*\([0-9,]\+\) bytes.*/\1/p' | head -n 1 | tr -d ',')
+  still_bytes=$(echo "$still_line" | sed -n 's/.*still reachable:[[:space:]]*\([0-9,]\+\) bytes.*/\1/p' | head -n 1 | tr -d ',')
+  
   # Set default values if empty
   def_bytes=${def_bytes:-0}
   ind_bytes=${ind_bytes:-0}
   pos_bytes=${pos_bytes:-0}
   still_bytes=${still_bytes:-0}
-  supp_bytes=${supp_bytes:-0}
 
   # If all categories are zero, output nothing.
-  if (( def_bytes == 0 && ind_bytes == 0 && pos_bytes == 0 && still_bytes == 228825 && supp_bytes == 0 )); then
+  if (( def_bytes == 0 && ind_bytes == 0 && pos_bytes == 0 && still_bytes == 0 )); then
     return 0
   fi
 
   # Build the summary string for categories with nonzero leaks.
   local summary=""
   if (( def_bytes > 0 )); then
-    summary+="definitely lost: ${def_bytes} bytes; "
+    summary+="[definitely lost:\t${def_bytes} bytes]\n"
   fi
   if (( ind_bytes > 0 )); then
-    summary+="indirectly lost: ${ind_bytes} bytes; "
+    summary+="[indirectly lost:\t${ind_bytes} bytes]\n"
   fi
   if (( pos_bytes > 0 )); then
-    summary+="possibly lost: ${pos_bytes} bytes; "
+    summary+="[possibly lost:\t\t${pos_bytes} bytes]\n"
   fi
-  if (( still_bytes > 228825 )); then
-    summary+="still reachable: ${still_bytes - 228825} bytes; "
-  fi
-  if (( supp_bytes > 0 )); then
-    summary+="suppressed: ${supp_bytes} bytes; "
+  if (( still_bytes > 0 )); then
+    summary+="[still reachable:\t${still_bytes} bytes]\n"
   fi
 
   # Output the constructed summary.
@@ -81,11 +75,9 @@ run_one_case() {
   local leaks_output="No leaks detected"
   if [[ "$valgrind_enabled" == "1" ]]; then
     leaks_output="$(echo -e "$cmd_block" | \
-      valgrind --leak-check=full --show-leak-kinds=all --track-fds=all --trace-children=yes --error-exitcode=42 -s \
+      valgrind --leak-check=full --suppressions=$TESTER_DIR/config/ignore_readline.supp \
       "$ROOT_DIR/minishell" 2>&1)"
-    # echo -e "Leaks output:\t"$leaks_output
     local leak_summary=$(parse_leaks "$leaks_output")
-    echo -e "Leaks summary:\t"$leak_summary
     local leak_flag=0
     if [[ -n "$leak_summary" ]]; then
       leak_flag=1
@@ -137,7 +129,7 @@ run_one_case() {
       if [[ "$leak_flag" -eq 1 ]]; then
         header_color="${YELLOW}"    # leaks present -> header becomes YELLOW
         expected_color="${GREEN}"   # expected remains GREEN
-        actual_color="${YELLOW}"    # actual becomes YELLOW
+        actual_color="${GREEN}"    # actual becomes YELLOW
       else
         header_color="${BLUE}"      # no leaks -> header is BLUE
         expected_color="${GREEN}"   # expected remains GREEN
@@ -148,7 +140,7 @@ run_one_case() {
       if [[ "$leak_flag" -eq 1 ]]; then
         header_color="${ORANGE}"    # leaks present -> header becomes ORANGE
         expected_color="${GREEN}"   # expected remains GREEN
-        actual_color="${YELLOW}"    # actual becomes YELLOW
+        actual_color="${RED}"    # actual becomes YELLOW
       else
         header_color="${BLUE}"      # no leaks -> header remains BLUE
         expected_color="${GREEN}"   # expected remains GREEN
@@ -159,16 +151,12 @@ run_one_case() {
     # DEBUGGING off, only header is printed.
     if $overall_pass; then
       if [[ "$leak_flag" -eq 1 ]]; then
-        header_color="${YELLOW}"    # correct output, but leaks: header = YELLOW
+        header_color="${ORANGE}"    # correct output, but leaks: header = YELLOW
       else
         header_color="${GREEN}"     # correct output, no leaks: header = GREEN
       fi
     else
-      if [[ "$leak_flag" -eq 1 ]]; then
-        header_color="${ORANGE}"    # incorrect output and leaks: header = ORANGE
-      else
-        header_color="${RED}"       # incorrect output, no leaks: header = RED
-      fi
+	header_color="${RED}"       # incorrect output, no leaks: header = RED
     fi
   fi
 
@@ -200,7 +188,7 @@ run_one_case() {
   fi
 
   if [[ "$valgrind_enabled" == "1" && "$leak_flag" -ne 0 ]]; then
-    echo -e "${YELLOW}Leaks Summary:\t[${leak_summary}]"
+    echo -e "${YELLOW}Leaks Summary:\t${leak_summary}"
   fi
 
   if [[ "$DEBUGGING" == "1" ]]; then
@@ -222,7 +210,7 @@ run_one_case() {
         echo -e "Actual:\\t\\t[${actual_output}]"
       fi
       if [[ "$valgrind_enabled" == "1" && "$leak_flag" -ne 0 ]]; then
-        echo -e "Leaks Summary:\t[${leak_summary}]"
+        echo -e "Leaks Summary:\t${leak_summary}"
       fi
       echo
     } >> "$FAILED_SUMMARY_FILE"
