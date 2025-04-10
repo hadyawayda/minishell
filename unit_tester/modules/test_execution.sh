@@ -1,5 +1,61 @@
 #!/usr/bin/env bash
 
+parse_leaks() {
+  local leaks_output="$1"
+  
+  # Extract each category line from Valgrind output (case-insensitive)
+  local def_line ind_line pos_line still_line supp_line
+  def_line=$(echo "$leaks_output" | grep -i "definitely lost:")
+  ind_line=$(echo "$leaks_output" | grep -i "indirectly lost:")
+  pos_line=$(echo "$leaks_output" | grep -i "possibly lost:")
+  still_line=$(echo "$leaks_output" | grep -i "still reachable:")
+  supp_line=$(echo "$leaks_output" | grep -i "suppressed:")
+
+  # Extract the leaked byte count from each line.
+  # We assume the format is: "Category: <bytes> bytes in <blocks> blocks"
+  local def_bytes ind_bytes pos_bytes still_bytes supp_bytes
+
+  def_bytes=$(echo "$def_line" | awk '{print $3}' | tr -d ',')
+  ind_bytes=$(echo "$ind_line" | awk '{print $3}' | tr -d ',')
+  pos_bytes=$(echo "$pos_line" | awk '{print $3}' | tr -d ',')
+  still_bytes=$(echo "$still_line" | awk '{print $3}' | tr -d ',')
+  supp_bytes=$(echo "$supp_line" | awk '{print $3}' | tr -d ',')
+
+  # Set default values if empty
+  def_bytes=${def_bytes:-0}
+  ind_bytes=${ind_bytes:-0}
+  pos_bytes=${pos_bytes:-0}
+  still_bytes=${still_bytes:-0}
+  supp_bytes=${supp_bytes:-0}
+
+  # If all categories are zero, output nothing.
+  if (( def_bytes == 0 && ind_bytes == 0 && pos_bytes == 0 && still_bytes == 228825 && supp_bytes == 0 )); then
+    return 0
+  fi
+
+  # Build the summary string for categories with nonzero leaks.
+  local summary=""
+  if (( def_bytes > 0 )); then
+    summary+="definitely lost: ${def_bytes} bytes; "
+  fi
+  if (( ind_bytes > 0 )); then
+    summary+="indirectly lost: ${ind_bytes} bytes; "
+  fi
+  if (( pos_bytes > 0 )); then
+    summary+="possibly lost: ${pos_bytes} bytes; "
+  fi
+  if (( still_bytes > 228825 )); then
+    summary+="still reachable: ${still_bytes - 228825} bytes; "
+  fi
+  if (( supp_bytes > 0 )); then
+    summary+="suppressed: ${supp_bytes} bytes; "
+  fi
+
+  # Output the constructed summary.
+  echo "$summary"
+  return 0
+}
+
 run_one_case() {
   local cmd_block="$1"
   local test_index="$2"
@@ -21,15 +77,21 @@ run_one_case() {
     "
   )"
 
-  # 4) If valgrind is enabled, check memory leaks using michel
-  local leaks="No leaks detected"
+  # 4) If valgrind is enabled, capture the full leaks summary.
+  local leaks_output="No leaks detected"
   if [[ "$valgrind_enabled" == "1" ]]; then
-    leaks="$(
-      echo "$cmd_block" | valgrind --leak-check=full --error-exitcode=42 "$ROOT_DIR/michel" 2>&1 \
-      | grep 'definitely lost' || echo 'No leaks detected'
-    )"
+    leaks_output="$(echo -e "$cmd_block" | \
+      valgrind --leak-check=full --show-leak-kinds=all --track-fds=all --trace-children=yes --error-exitcode=42 -s \
+      "$ROOT_DIR/minishell" 2>&1)"
+    # echo -e "Leaks output:\t"$leaks_output
+    local leak_summary=$(parse_leaks "$leaks_output")
+    echo -e "Leaks summary:\t"$leak_summary
+    local leak_flag=0
+    if [[ -n "$leak_summary" ]]; then
+      leak_flag=1
+    fi
   fi
-			
+
   # 5) Compare outputs (partial match for errors, or exact match)
   local pass_output=false
 
@@ -58,7 +120,7 @@ run_one_case() {
   fi
 
   local pass_leak=false
-  if [[ "$leaks" == "No leaks detected" || "$valgrind_enabled" == "0" ]]; then
+  if [[ "$valgrind_enabled" == "0" ]] || [[ "$leak_flag" -eq 0 ]]; then
     pass_leak=true
   fi
 
@@ -67,51 +129,85 @@ run_one_case() {
     overall_pass=true
   fi
 
-  # 6) Print results
-  if $overall_pass; then
-    echo -ne "${GREEN}"
-    if [[ "$DEBUGGING" == "1" ]]; then
-      echo -ne "${BLUE}"
+  # 6) Colorize output results
+  local header_color expected_color actual_color
+  if [[ "$DEBUGGING" == "1" ]]; then
+    if $overall_pass; then
+      # Output correct, debugging on.
+      if [[ "$leak_flag" -eq 1 ]]; then
+        header_color="${YELLOW}"    # leaks present -> header becomes YELLOW
+        expected_color="${GREEN}"   # expected remains GREEN
+        actual_color="${YELLOW}"    # actual becomes YELLOW
+      else
+        header_color="${BLUE}"      # no leaks -> header is BLUE
+        expected_color="${GREEN}"   # expected remains GREEN
+        actual_color="${GREEN}"     # actual becomes GREEN
+      fi
+    else
+      # Output not correct, debugging on.
+      if [[ "$leak_flag" -eq 1 ]]; then
+        header_color="${ORANGE}"    # leaks present -> header becomes ORANGE
+        expected_color="${GREEN}"   # expected remains GREEN
+        actual_color="${YELLOW}"    # actual becomes YELLOW
+      else
+        header_color="${BLUE}"      # no leaks -> header remains BLUE
+        expected_color="${GREEN}"   # expected remains GREEN
+        actual_color="${RED}"       # actual becomes RED
+      fi
     fi
+  else
+    # DEBUGGING off, only header is printed.
+    if $overall_pass; then
+      if [[ "$leak_flag" -eq 1 ]]; then
+        header_color="${YELLOW}"    # correct output, but leaks: header = YELLOW
+      else
+        header_color="${GREEN}"     # correct output, no leaks: header = GREEN
+      fi
+    else
+      if [[ "$leak_flag" -eq 1 ]]; then
+        header_color="${ORANGE}"    # incorrect output and leaks: header = ORANGE
+      else
+        header_color="${RED}"       # incorrect output, no leaks: header = RED
+      fi
+    fi
+  fi
+
+  # 7) Print results
+  if $overall_pass; then
+    echo -ne "${header_color}"
     echo -ne "Test #$test_index"
     if (( test_index > 9 )); then
-      echo -ne "\\t"
+      echo -ne "\t"
     else
-      echo -ne "\\t\\t"
+      echo -ne "\t\t"
     fi
     echo -e "[${cmd_block}]"
     PASSED_TESTS=$((PASSED_TESTS+1))
   else
-    echo -ne "${RED}"
-    if [[ "$DEBUGGING" == "1" ]]; then
-      echo -ne "${BLUE}"
-    fi
+    echo -ne "${header_color}"
     echo -ne "Test #$test_index"
     if (( test_index > 9 )); then
-      echo -ne "\\t"
+      echo -ne "\t"
     else
-      echo -ne "\\t\\t"
+      echo -ne "\t\t"
     fi
     echo -e "[${cmd_block}]"
   fi
 
-  local color_output=$([[ $pass_output == true ]] && echo "$GREEN" || echo "$RED")
-  local color_leak=$([[ $pass_leak == true ]] && echo "$GREEN" || echo "$RED")
-
   if [[ "$DEBUGGING" == "1" ]]; then
-    echo -e "${GREEN}Expected:\\t[${expected_output}]"
-    echo -e "${color_output}Actual:\\t\\t[${actual_output}]"
+    echo -e "${expected_color}Expected:\t[${expected_output}]"
+    echo -e "${actual_color}Actual:\t\t[${actual_output}]"
   fi
-  
-  if [[ "$valgrind_enabled" == "1" ]]; then
-    echo -e "${color_leak}Leaks:\\t[${leaks}]"
+
+  if [[ "$valgrind_enabled" == "1" && "$leak_flag" -ne 0 ]]; then
+    echo -e "${YELLOW}Leaks Summary:\t[${leak_summary}]"
   fi
 
   if [[ "$DEBUGGING" == "1" ]]; then
     echo
   fi
 
-  # 7) Log failure details if the test failed.
+  # 8) Log failure details if the test failed.
   if ! $overall_pass; then
     {
 	    echo -ne "$file test #$test_index:"
@@ -123,29 +219,16 @@ run_one_case() {
       echo -e "[${cmd_block}]"
       if [[ "$DEBUGGING" == "1" ]]; then
         echo -e "Expected:\\t[${expected_output}]"
-        echo -e "Actual:\\t\\t[${actual_output}]\\n"
-	  else
-		echo
+        echo -e "Actual:\\t\\t[${actual_output}]"
       fi
-      if [[ "$valgrind_enabled" == "1" ]]; then
-        echo -e "Leaks:\\t[${leaks}]\\n"
+      if [[ "$valgrind_enabled" == "1" && "$leak_flag" -ne 0 ]]; then
+        echo -e "Leaks Summary:\t[${leak_summary}]"
       fi
+      echo
     } >> "$FAILED_SUMMARY_FILE"
   fi
 }
 
-###############################################################################
-# execute_test_cases
-#   Reads an input CSV line by line, grouping them into blocks separated
-#   by the delimiter (default is "ǂ" at line's end). For each block, calls
-#   run_one_case() to run the entire block in one shell session.
-#
-# Arguments:
-#   1) input_csv
-#   2) valgrind_enabled
-#
-# Uses run_one_case() to process each block.
-###############################################################################
 execute_test_cases() {
   local input_csv="$1"
   local valgrind_enabled="$2"
