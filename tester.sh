@@ -1,2 +1,2 @@
-cd unit_tester
+cd minishell-tester
 ./tester.sh
