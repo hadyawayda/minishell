@@ -1,6 +1,7 @@
 # List of source files
 SRCS = src/main.c src/shell.c src/utils/utils.c \
-       src/builtins/echo.c src/builtins/cd.c
+       src/builtins/echo.c src/builtins/cd.c \
+	   src/builtins/pwd.c 
 
 # Object files
 OBJS = $(SRCS:.c=.o)

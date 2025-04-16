@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:41 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/06 00:44:42 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/16 13:06:01 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 // Check if a command is a built-in command
 int is_builtin(char *command) {
-    return (ft_strcmp(command, "echo") == 0 || ft_strcmp(command, "cd") == 0);
+    return (ft_strcmp(command, "echo") == 0 || ft_strcmp(command, "cd") == 0 || ft_strcmp(command, "pwd") == 0 );
 }
 
 // Execute built-in commands
@@ -45,8 +45,14 @@ int execute_builtin(char **args, char *envp[]) {
     else if (ft_strcmp(args[0], "cd") == 0) {
         return (process_cd(args, envp));  // Handle `cd` command
     }
+    else if(ft_strcmp(args[0], "pwd") == 0)
+     { 
+        return (process_pwd(args)); 
+    } 
     
-    return (-1);  // Not a built-in command
+    return (-1); 
+    
+      // Not a built-in command
 }
 
 // Execute external commands
