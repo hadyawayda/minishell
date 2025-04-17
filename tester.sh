@@ -1,2 +1,6 @@
+#!/usr/bin/env bash
+
+sed -i 's/\r$//' minishell-tester/tester.sh
+
 cd minishell-tester
-./tester.sh
+exec ./tester.sh "$@"
