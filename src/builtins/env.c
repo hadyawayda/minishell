@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 11:05:08 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/23 10:31:10 by nabbas           ###   ########.fr       */
+/*   Created: 2025/04/23 10:21:38 by nabbas            #+#    #+#             */
+/*   Updated: 2025/04/23 10:21:46 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-#define BUILTINS_H
+#include "../../includes/minishell.h"
+#include <unistd.h>
 
-void process_echo(char **args);
-int process_cd(char **args, char *envp[]); // Declare cd function
-int process_pwd(char **args);
-int     process_exit(char **args, char **envp);
-int     process_env(char **args, char **envp);
-int     process_export(char **args, char **envp);
+/*
+** process_env:
+**   Ignores any args, and simply prints each envp[i] followed by '\n'.
+*/
+int process_env(char **args, char **envp)
+{
+    int i;
 
-#endif
+    (void)args;
+    i = 0;
+    while (envp[i])
+    {
+        write(1, envp[i], ft_strlen(envp[i]));
+        write(1, "\n", 1);
+        i++;
+    }
+    return (0);
+}

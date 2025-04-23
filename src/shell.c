@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:41 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/16 13:06:01 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/23 10:55:45 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 // Check if a command is a built-in command
 int is_builtin(char *command) {
-    return (ft_strcmp(command, "echo") == 0 || ft_strcmp(command, "cd") == 0 || ft_strcmp(command, "pwd") == 0 );
+    return (ft_strcmp(command, "echo") == 0 || ft_strcmp(command, "cd") == 0 || ft_strcmp(command, "pwd") == 0 || ft_strcmp(command, "exit") == 0 || ft_strcmp(command, "env")  == 0 || ft_strcmp(command, "export") == 0) ;
 }
 
 // Execute built-in commands
@@ -49,8 +49,15 @@ int execute_builtin(char **args, char *envp[]) {
      { 
         return (process_pwd(args)); 
     } 
-    
-    return (-1); 
+    else if (ft_strcmp(args[0], "exit") == 0)
+   { return (process_exit(args, envp));
+       }   
+       else if (ft_strcmp(args[0], "env")  == 0)
+       {   return (process_env(args, envp));
+       }
+       else if (ft_strcmp(args[0], "export")== 0)
+      { return (process_export(args, envp));}
+        return (-1); 
     
       // Not a built-in command
 }
