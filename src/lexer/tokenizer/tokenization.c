@@ -66,9 +66,12 @@ void	print_tokens(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
-		printf("%s\n", tokens[i]);
+		printf("%s", tokens[i]);
+		if (tokens[i + 1])
+			printf(" ");
 		i++;
 	}
+	printf("\n");
 }
 
 void	tokenizer(char *input)
