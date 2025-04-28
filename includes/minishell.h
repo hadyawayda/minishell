@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:04:57 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/06 00:15:59 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/28 12:34:27 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <string.h>
 # include <unistd.h>
 
-enum	builtins
+enum	e_builtins
 {
 	bi_cd,
 	bi_echo,
@@ -33,10 +33,9 @@ enum	builtins
 	bi_exit
 };
 
-// Function Prototypes
-void	start_shell(char *envp[]);
+void	start_shell(char **envp);
 int		is_builtin(char *command);
-int		execute_builtin(char **args, char *envp[]);
+int		execute_builtin(char **args, char **envp);
 int		execute_command(char **args);
 char	**split_input(const char *input);
 
