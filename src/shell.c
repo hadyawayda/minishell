@@ -90,7 +90,7 @@ void start_shell(char *envp[]) {
     char **args;
 
     while (1) {
-        input = readline("Michel > ");
+        input = readline("Minishell > ");
         if (!input)
             break;
 

@@ -16,7 +16,7 @@ LIBFT = libft/includes/libft.a
 LIBS = -Llibft -lft -lreadline
 
 # Final executable
-NAME = michel
+NAME = minishell
 
 # Build rules
 all: $(NAME)
