@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:21:38 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/23 10:21:46 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/04/30 12:06:25 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 
 /*
 ** process_env:
-**   Ignores any args, and simply prints each envp[i] followed by '\n'.
+**   Print each environment variable from envp.
 */
-int process_env(char **args, char **envp)
+int	process_env(char **args, char **envp)
 {
-    int i;
+	int	i;
 
-    (void)args;
-    i = 0;
-    while (envp[i])
-    {
-        write(1, envp[i], ft_strlen(envp[i]));
-        write(1, "\n", 1);
-        i++;
-    }
-    return (0);
+	(void)args;
+	i = 0;
+	while (envp[i])
+	{
+		write(1, envp[i], ft_strlen(envp[i]));
+		write(1, "\n", 1);
+		i++;
+	}
+	return (0);
 }
