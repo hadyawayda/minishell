@@ -18,35 +18,23 @@
 
 # include "../core/core.h"
 
-typedef struct s_parser_state
-{
-	int				in_quotes;
-	char			quote_type;
-	char			*builder;
-	int				i;
-}					t_parser_state;
+typedef enum e_tokentype {
+    T_WORD,
+    T_PIPE,
+    T_AND,
+    T_OR,
+    T_REDIR_IN,
+    T_REDIR_OUT,
+    T_REDIR_HERE,
+    T_REDIR_APPEND,
+    T_LPAREN,
+    T_RPAREN,
+}   t_tokentype;
 
-typedef enum e_quote
-{
-	NONE,
-	SINGLE,
-	DOUBLE
-}					t_quote;
-
-typedef enum
-{
-	TOKEN_COMMAND,
-	TOKEN_ARGUMENT,
-	TOKEN_OPERATOR,
-	TOKEN_REDIRECTION
-}					token_type_t;
-
-typedef struct s_token
-{
-	token_type_t	type;
-	char			*value;
-	struct s_token	*next;
-}					token_t;
+typedef struct s_token {
+    t_tokentype  type;
+    char        *value;
+}   t_token;
 
 int					skip_whitespace(const char *input, int *i);
 int					quote_parser(const char *input, int *i,

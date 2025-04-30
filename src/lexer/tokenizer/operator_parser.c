@@ -12,30 +12,24 @@
 
 #include "../lexer.h"
 
-void	operator_parser(const char *input, int *i, char **tokens, int *j)
+/* operator_parser.c ------------------------------------------------------ */
+void operator_parser(const char *in, int *i, char **tokens, int *j)
 {
-	char	op[3] = {0};
+    char *op;
 
-	op[0] = input[*i];
-	(*i)++;
-	if ((op[0] == '>' || op[0] == '<') && input[*i] == op[0])
-	{
-		op[1] = op[0];
-		(*i)++;
-	}
-	tokens[*j] = ft_strdup(op);
-	(*j)++;
+    /* –– first grab the four two-character operators –– */
+    if ((in[*i] == '|' && in[*i + 1] == '|')      /*  ||  */
+     || (in[*i] == '&' && in[*i + 1] == '&')      /*  &&  */
+     || (in[*i] == '<' && in[*i + 1] == '<')      /*  <<  */
+     || (in[*i] == '>' && in[*i + 1] == '>'))     /*  >>  */
+    {
+        op = ft_strndup(in + *i, 2);
+        *i += 2;
+    }
+    else
+    {   /* single-char | & < > ( ) */
+        op = ft_strndup(in + *i, 1);
+        (*i)++;
+    }
+    tokens[(*j)++] = op;
 }
-
-// void	operator_parser(const char *input, char **tokens, int *i, int *j)
-// {
-// 	int	op_len;
-
-// 	op_len = 1;
-// 	if ((input[*i] == '|' && input[*i + 1] == '|') || (input[*i] == '&'
-// 			&& input[*i + 1] == '&') || (input[*i] == '>' && input[*i
-// 			+ 1] == '>') || (input[*i] == '<' && input[*i + 1] == '<'))
-// 		op_len = 2;
-// 	tokens[(*j)++] = ft_substring(input, *i, *i + op_len);
-// 	*i += op_len;
-// }

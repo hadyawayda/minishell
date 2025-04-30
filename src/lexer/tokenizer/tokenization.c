@@ -12,52 +12,62 @@
 
 #include "../lexer.h"
 
-char	**token_builder(const char *input)
+char **token_builder(const char *input)
 {
-	char	**tokens;
-	char	*current_token;
-	int		i;
-	int		j;
+    char  **tokens;
+    char   *current_token;
+    int     i = 0, j = 0;
+    bool    token_had_quotes = false;      /* survives until we push */
 
-	i = 0;
-	j = 0;
-	tokens = malloc(sizeof(char *) * MAX_TOKENS);
-	if (!tokens)
-		return (NULL);
-	current_token = ft_strdup("");
-	if (!current_token)
-		return (free(tokens), NULL);
-	while (input[i] != '\0' && j < MAX_TOKENS - 1)
-	{
-		skip_whitespace(input, &i);
-		if (!input[i])
-			break ;
-		if (input[i] == '\'' || input[i] == '"')
-		{
-			if (quote_parser(input, &i, &current_token) == -1)
-				return (free_tokens(tokens, j), free(current_token), NULL);
-		}
-		else if (is_operator_char(input[i]))
-			operator_parser(input, &i, tokens, &j);
-		else if (!ft_isdelimiter(input[i]))
-			word_parser(input, &i, &current_token);
-		if (ft_isdelimiter(input[i]) || is_operator_char(input[i])
-			|| input[i] == '\0')
-		{
-			if (current_token[0] != '\0')
-			{
-				tokens[j++] = ft_strdup(current_token);
-				free(current_token);
-				current_token = ft_strdup("");
-			}
-		}
-	}
-	if (current_token[0] != '\0' && j < MAX_TOKENS - 1)
-		tokens[j++] = ft_strdup(current_token);
-	free(current_token);
-	tokens[j] = NULL;
-	return (tokens);
+    tokens = malloc(sizeof(char *) * MAX_TOKENS);
+    if (!tokens)
+        return NULL;
+    current_token = ft_strdup("");
+    if (!current_token)
+        return free(tokens), NULL;
+
+    while (input[i] && j < MAX_TOKENS - 1)
+    {
+        skip_whitespace(input, &i);
+        if (!input[i])
+            break;
+
+        /* ---- quoted fragment ----------------------------------- */
+        if (input[i] == '\'' || input[i] == '"')
+        {
+            token_had_quotes = true;               /* remember */
+            if (quote_parser(input, &i, &current_token) == -1)
+                return free_tokens(tokens, j), free(current_token), NULL;
+        }
+        /* ---- operator ------------------------------------------ */
+        else if (is_operator_char(input[i]))
+            operator_parser(input, &i, tokens, &j);
+        /* ---- plain word / expansion ---------------------------- */
+        else if (!ft_isdelimiter(input[i]))
+            word_parser(input, &i, &current_token);
+
+        /* ---- reached delimiter / end --------------------------- */
+        if (ft_isdelimiter(input[i]) || is_operator_char(input[i]) || !input[i])
+        {
+            if (current_token[0] != '\0' || token_had_quotes)
+                tokens[j++] = ft_strdup(current_token);
+
+            /* reset for next token */
+            token_had_quotes = false;
+            free(current_token);
+            current_token = ft_strdup("");
+        }
+    }
+
+    /* flush last token */
+    if ((current_token[0] != '\0' || token_had_quotes) && j < MAX_TOKENS - 1)
+        tokens[j++] = ft_strdup(current_token);
+
+    free(current_token);
+    tokens[j] = NULL;
+    return tokens;
 }
+
 
 void	print_tokens(char **tokens)
 {

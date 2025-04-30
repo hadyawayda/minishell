@@ -25,11 +25,10 @@ int	skip_whitespace(const char *input, int *i)
 	return (skipped);
 }
 
-int	is_operator_char(char c)
+int is_operator_char(char c)
 {
-	if (c == '|' || c == '&' || c == '<' || c == '>')
-		return (1);
-	return (0);
+    return (c == '|' || c == '&' || c == '<' || c == '>'
+         || c == '(' || c == ')');
 }
 
 void	free_tokens(char **tokens, int j)
