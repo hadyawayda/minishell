@@ -14,37 +14,36 @@
 
 int	quote_parser(const char *input, int *i, char **current_token)
 {
-	char	quote_char;
+	char	quote;
 	char	*temp;
 
-	quote_char = input[*i];
-	if (quote_char == '"' && *i > 0 && input[*i - 1] == '$')
+	quote = input[*i];
+	(*i)++;
+	if ((quote == '"' || quote == '\'') && input[*i - 2] == '$')
 	{
-			(*i) -= 1;
-			*current_token = ft_strdup("");
-
-			*i += 2;  
-			while (input[*i] && input[*i] != '"')
-			{
-					char *tmp = append_char(*current_token, input[*i]);
-					free(*current_token);
-					*current_token = tmp;
-					(*i)++;
-			}
-			if (input[*i] == '"')
-					(*i)++;
-			return 0;
+		size_t len = ft_strlen(*current_token);
+		if (len && (*current_token)[len - 1] == '$')
+				(*current_token)[len - 1] = '\0';
+		while (input[*i] && input[*i] != quote)
+		{
+				char *tmp = append_char(*current_token, input[*i]);
+				free(*current_token);
+				*current_token = tmp;
+				(*i)++;
+		}
+		if (input[*i] == quote)
+				(*i)++;
+		return 0;
 	}
 
-	(*i)++;
 	while (input[*i])
 	{
-		if (input[*i] == quote_char)
+		if (input[*i] == quote)
 		{
 			(*i)++;
 			return (0);
 		}
-		if (quote_char == '"' && input[*i] == '$')
+		if (quote == '"' && input[*i] == '$')
 			handle_expansion(input, i, current_token);
 		else
 		{
