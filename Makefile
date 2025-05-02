@@ -33,6 +33,7 @@ CORE =			src/core/env/expansion/expansion.c \
 
 PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/parser/cleaner.c \
+				src/lexer/tokenizer/dollar_parser.c \
 				src/lexer/tokenizer/expansion.c \
 				src/lexer/tokenizer/tokenization.c \
 				src/lexer/tokenizer/helpers.c \

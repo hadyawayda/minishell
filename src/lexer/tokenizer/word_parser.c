@@ -12,26 +12,22 @@
 
 #include "../lexer.h"
 
-void	word_parser(const char *input, int *i, char **current_token)
+void word_parser(const char *in, int *i, char **cur)
 {
-	char	*temp;
+    char *tmp;
 
-	while (input[*i] && !ft_isdelimiter(input[*i])
-		&& !is_operator_char(input[*i]) && input[*i] != '\''
-		&& input[*i] != '"')
-	{
-		if (input[*i] == '$' && input[*i + 1] && (ft_isalnum(input[*i + 1])))
-		{
-			if (input[*i + 1] && (ft_isalnum(input[*i + 1]) || input[*i
-					+ 1] == '_'))
-				handle_expansion(input, i, current_token);
-		}
-		else
-		{
-			temp = append_char(*current_token, input[*i]);
-			free(*current_token);
-			*current_token = temp;
-			(*i)++;
-		}
-	}
+    while (in[*i] && !ft_isdelimiter(in[*i])
+           && !is_operator_char(in[*i]) && in[*i] != '\''
+           && in[*i] != '"')
+    {
+        if (in[*i] == '$')
+            handle_expansion(in, i, cur);
+        else
+        {
+            tmp = append_char(*cur, in[*i]);
+            free(*cur);
+            *cur = tmp;
+            (*i)++;
+        }
+    }
 }

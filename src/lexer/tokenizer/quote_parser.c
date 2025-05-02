@@ -26,10 +26,15 @@ int	quote_parser(const char *input, int *i, char **current_token)
 				(*current_token)[len - 1] = '\0';
 		while (input[*i] && input[*i] != quote)
 		{
-				char *tmp = append_char(*current_token, input[*i]);
-				free(*current_token);
-				*current_token = tmp;
-				(*i)++;
+            if (quote == '"' && input[*i] == '$')
+                handle_expansion(input, i, current_token);
+            else
+            {
+                char *tmp = append_char(*current_token, input[*i]);
+                free(*current_token);
+                *current_token = tmp;
+                (*i)++;
+            }
 		}
 		if (input[*i] == quote)
 				(*i)++;

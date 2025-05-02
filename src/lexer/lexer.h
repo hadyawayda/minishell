@@ -40,6 +40,7 @@ int					skip_whitespace(const char *input, int *i);
 int					quote_parser(const char *input, int *i,
 						char **current_token);
 int					is_operator_char(char c);
+int                 dollar_parser(const char *in, int *i, char **cur, bool in_dquotes);
 
 char				*expand_variable(const char *input);
 char				*ft_strjoin_char(char *s1, char c);
