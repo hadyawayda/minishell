@@ -14,16 +14,21 @@
 
 char **token_builder(const char *input)
 {
-    char  **tokens;
-    char   *current_token;
-    int     i = 0, j = 0;
-    bool    token_had_quotes = false;      /* survives until we push */
+    char    **tokens;
+    char    *cur;
+    char    *newtok;
+    bool    had_quotes;
+    int     i;
+    int     j;
 
+    i = 0;
+    j = 0;
+    had_quotes = false;
     tokens = malloc(sizeof(char *) * MAX_TOKENS);
     if (!tokens)
         return NULL;
-    current_token = ft_strdup("");
-    if (!current_token)
+    cur = ft_strdup("");
+    if (!cur)
         return free(tokens), NULL;
     while (input[i] && j < MAX_TOKENS - 1)
     {
@@ -32,26 +37,27 @@ char **token_builder(const char *input)
             break;
         if (input[i] == '\'' || input[i] == '"')
         {
-            token_had_quotes = true;               /* remember */
-            if (quote_parser(input, &i, &current_token) == -1)
-                return free_tokens(tokens, j), free(current_token), NULL;
+            had_quotes = true;
+            if (quote_parser(input, &i, &cur) == -1)
+                return free_tokens(tokens, j), free(cur), NULL;
         }
         else if (is_operator_char(input[i]))
             operator_parser(input, &i, tokens, &j);
         else if (!ft_isdelimiter(input[i]))
-            word_parser(input, &i, &current_token);
+            word_parser(input, &i, &cur);
         if (ft_isdelimiter(input[i]) || is_operator_char(input[i]) || !input[i])
         {
-            if (current_token[0] != '\0' || token_had_quotes)
-                tokens[j++] = ft_strdup(current_token);
-            token_had_quotes = false;
-            free(current_token);
-            current_token = ft_strdup("");
+            if (cur[0] != '\0' || had_quotes)
+                tokens[j++] = ft_strdup(cur);
+            had_quotes = false;
+            newtok = ft_strdup("");
+            free(cur);
+            cur = newtok;
         }
     }
-    if ((current_token[0] != '\0' || token_had_quotes) && j < MAX_TOKENS - 1)
-        tokens[j++] = ft_strdup(current_token);
-    free(current_token);
+    if ((cur[0] != '\0' || had_quotes) && j < MAX_TOKENS - 1)
+        tokens[j++] = ft_strdup(cur);
+    free(cur);
     tokens[j] = NULL;
     return tokens;
 }

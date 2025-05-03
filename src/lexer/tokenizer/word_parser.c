@@ -21,7 +21,16 @@ void word_parser(const char *in, int *i, char **cur)
            && in[*i] != '"')
     {
         if (in[*i] == '$')
+        {
+            if (in[*i + 1] == '$') {
+                append_char_inplace(cur, '$');
+                append_char_inplace(cur, '$');
+                (*i) += 2;
+                continue;
+            }
             handle_expansion(in, i, cur);
+            continue;
+        }
         else
         {
             tmp = append_char(*cur, in[*i]);

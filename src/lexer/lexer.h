@@ -56,5 +56,5 @@ void				word_parser(const char *input, int *i,
 void				free_tokens(char **tokens, int j);
 void				handle_expansion(const char *input, int *i,
 						char **current_token);
-
+void                append_char_inplace(char **dst, char c);
 #endif

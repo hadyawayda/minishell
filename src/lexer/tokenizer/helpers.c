@@ -54,3 +54,10 @@ char *append_char(char *s1, char c)
 	result[len + 1] = '\0';
 	return (result);
 }
+
+void append_char_inplace(char **dst, char c)
+{
+    char *tmp = append_char(*dst, c);
+    free(*dst);
+    *dst = tmp;
+}

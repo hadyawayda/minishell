@@ -1,5 +1,4 @@
 NAME =			michel
-TEST_BIN =		minishell_test
 CC =			gcc
 AR =			ar rcs
 CFLAGS =		-g
@@ -7,6 +6,7 @@ LIBFT_DIR =		includes/libft
 LIBFT =			$(LIBFT_DIR)/libft.a
 PRINTF_DIR =	includes/ft_printf
 PRINTF =		$(PRINTF_DIR)/libftprintf.a
+SUPPRESSION =	includes/utils/ignore_readline.supp
 
 SRC =			src/main.c \
 
@@ -27,10 +27,6 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/program/program.c \
 				src/core/signals/signals.c \
 
-# HELPERS	=		src/helpers/ft_split.c \
-				src/helpers/ft_split_helper.c \
-				src/helpers/maintester.c
-
 PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/parser/cleaner.c \
 				src/lexer/tokenizer/dollar_parser.c \
@@ -40,29 +36,13 @@ PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/tokenizer/operator_parser.c \
 				src/lexer/tokenizer/quote_parser.c \
 				src/lexer/tokenizer/word_parser.c \
-				
 
-SIGNALS = 		
-				
-UTILS = 		src/utils/utils1.c \
-
-TEST_SRC =		src/non_interactive_minishell/non_interactive_minishell.c \
-				src/non_interactive_minishell/program.c \
-
-OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
-
-TEST_OBJS =		$(TEST_SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o) $(HELPERS:.c=.o) $(SIGNALS:.c=.o) $(UTILS:.c=.o)
+OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o)
 
 all :			$(NAME)
 
 $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
 				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $(NAME) -lreadline
-# $(CC) $(OBJS) -lreadline -LLibft -lft -o ${NAME}
-
-tester:			$(TEST_BIN)
-
-$(TEST_BIN) :	$(TEST_OBJS) $(LIBFT) $(PRINTF)
-				@$(CC) $(CFLAGS) $(TEST_OBJS) $(LIBFT) $(PRINTF) -o $(TEST_BIN) -lreadline
 
 $(LIBFT):
 				@make --no-print-directory -C $(LIBFT_DIR)
@@ -83,10 +63,7 @@ fclean:			clean
 				@make --no-print-directory fclean -C $(LIBFT_DIR)
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
-tclean:			clean fclean
-				@rm -f $(TEST_BIN) $(BONUS)
-				@make --no-print-directory fclean -C $(LIBFT_DIR)
-				@make --no-print-directory fclean -C $(PRINTF_DIR)
+leaks:
+				@valgrind --leak-check=full --suppressions=$(SUPPRESSION)  ./$(NAME)
 
 re :			fclean all
-te :			fclean tclean tester

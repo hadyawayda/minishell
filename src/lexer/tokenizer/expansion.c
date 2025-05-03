@@ -12,47 +12,41 @@
 
 #include "../lexer.h"
 
-void	handle_expansion(const char *input, int *i, char **current_token)
+/* expansion.c */
+
+void handle_expansion(const char *in, int *i, char **cur)
 {
-	char	*expanded;
-	char	*temp;
-	char	*var_name;
-	int		start;
+    char *var_name;
+    char *expanded;
+    char *tmp;
+    int   start;
 
-	if (!input || !i || !current_token || !*current_token)
-		return ;
-
-	// If no valid var char next, treat '$' literally
-	if (input[*i] == '$' && !(input[*i + 1]
-		&& (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_')))
-	{
-			temp = append_char(*current_token, '$');
-			free(*current_token);
-			*current_token = temp;
-			(*i)++;
-			return;
-	}
-
-	// Check if we see '$' and there's at least one valid var-name char
-	if (input[*i] == '$')
-	{
-		(*i)++;
-		start = *i;
-		while (input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
-			(*i)++;
-		var_name = ft_substring(input, start, *i);
-		if (!var_name)
-			return ;
-		expanded = expand_variable(var_name);
-		free(var_name);
-		if (!expanded)
-			return ;
-		temp = ft_strjoin(*current_token, expanded);
-		free(expanded);
-		free(*current_token);
-		*current_token = temp;
-	}
+    if (in[*i] != '$')
+        return;
+    if (!(in[*i + 1] && (ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i + 1]))))
+    {
+        *cur = append_char(*cur, '$');
+        (*i)++;
+        return;
+    }
+    (*i)++;
+    start = *i;
+    if (ft_isdigit(in[*i]))
+        (*i)++;
+    else
+        while (in[*i] && (ft_isalnum(in[*i]) || in[*i] == '_'))
+            (*i)++;
+    var_name = ft_substring(in, start, *i);
+    if (!var_name) return;
+    expanded = expand_variable(var_name);
+    free(var_name);
+    if (!expanded) return;
+    tmp  = ft_strjoin(*cur, expanded);
+    free(expanded);
+    free(*cur);
+    *cur = tmp;
 }
+
 
 char	*expand_variable(const char *var_name)
 {

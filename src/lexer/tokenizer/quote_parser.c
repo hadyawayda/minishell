@@ -12,50 +12,57 @@
 
 #include "../lexer.h"
 
-int	quote_parser(const char *input, int *i, char **current_token)
+int	quote_parser(const char *in, int *i, char **cur)
 {
 	char	quote;
 	char	*temp;
 
-	quote = input[*i];
+	quote = in[*i];
 	(*i)++;
-	if ((quote == '"' || quote == '\'') && input[*i - 2] == '$')
+	if ((quote == '"' || quote == '\'') && in[*i - 2] == '$')
 	{
-		size_t len = ft_strlen(*current_token);
-		if (len && (*current_token)[len - 1] == '$')
-				(*current_token)[len - 1] = '\0';
-		while (input[*i] && input[*i] != quote)
+		size_t len = ft_strlen(*cur);
+		if (len && (*cur)[len - 1] == '$')
+			(*cur)[len - 1] = '\0';
+		while (in[*i] && in[*i] != quote)
 		{
-            if (quote == '"' && input[*i] == '$')
-                handle_expansion(input, i, current_token);
-            else
-            {
-                char *tmp = append_char(*current_token, input[*i]);
-                free(*current_token);
-                *current_token = tmp;
-                (*i)++;
-            }
-		}
-		if (input[*i] == quote)
+			if (quote == '"' && in[*i] == '$')
+			{
+        if (in[*i + 1] == '$')
+				{
+					append_char_inplace(cur, '$');
+					append_char_inplace(cur, '$');
+					(*i) += 2;
+					continue;
+        }
+        handle_expansion(in, i, cur);
+				continue;
+			}
+			else
+			{
+				temp = append_char(*cur, in[*i]);
+				free(*cur);
+				*cur = temp;
 				(*i)++;
+			}
+		}
+		if (in[*i] == quote)
+			(*i)++;
 		return 0;
 	}
-
-	while (input[*i])
+	while (in[*i])
 	{
-		if (input[*i] == quote)
+		if (in[*i] == quote)
 		{
 			(*i)++;
 			return (0);
 		}
-		if (quote == '"' && input[*i] == '$')
-			handle_expansion(input, i, current_token);
+		if (quote == '"' && in[*i] == '$')
+			handle_expansion(in, i, cur);
 		else
 		{
-			temp = append_char(*current_token, input[*i]);
-			free(*current_token);
-			*current_token = temp;
-			(*i)++;
+			append_char_inplace(cur, in[*i]);
+    	(*i)++;
 		}
 	}
 	ft_printf("Unclosed quote detected\n");
