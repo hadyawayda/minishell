@@ -6,47 +6,55 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/22 04:00:40 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 01:32:44 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-/* expansion.c */
-
-void handle_expansion(const char *in, int *i, char **cur)
+void	handle_expansion(const char *in, int *i, char **cur)
 {
-    char *var_name;
-    char *expanded;
-    char *tmp;
-    int   start;
+	char	*name;
+	char	*value;
+	char	*tmp;
+	int		start;
 
-    if (in[*i] != '$')
-        return;
-    if (!(in[*i + 1] && (ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i + 1]))))
-    {
-        *cur = append_char(*cur, '$');
-        (*i)++;
-        return;
-    }
-    (*i)++;
-    start = *i;
-    if (ft_isdigit(in[*i]))
-        (*i)++;
-    else
-        while (in[*i] && (ft_isalnum(in[*i]) || in[*i] == '_'))
-            (*i)++;
-    var_name = ft_substring(in, start, *i);
-    if (!var_name) return;
-    expanded = expand_variable(var_name);
-    free(var_name);
-    if (!expanded) return;
-    tmp  = ft_strjoin(*cur, expanded);
-    free(expanded);
-    free(*cur);
-    *cur = tmp;
+	if (in[*i] != '$')
+		return ;
+	/* literal '$$'  — keep both dollars */
+	if (in[*i + 1] == '$')
+	{
+		append_char_inplace(cur, '$', i);
+		append_char_inplace(cur, '$', i);
+		return ;
+	}
+	/* lone '$' with no valid name */
+	if (!(ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i
+				+ 1])))
+	{
+		append_char_inplace(cur, '$', i);
+		return ;
+	}
+	(*i)++; /* skip '$' */
+	start = *i;
+	/* $1HOME → only the ‘1’ belongs to the var name */
+	if (ft_isdigit(in[*i]))
+		(*i)++;
+	else
+		while (ft_isalnum(in[*i]) || in[*i] == '_')
+			(*i)++;
+	name = ft_substring(in, start, *i);
+	if (!name)
+		return ;
+	value = expand_variable(name); /* getenv or ""           */
+	free(name);
+	if (!value)
+		return ;
+	tmp = ft_strjoin(*cur, value);
+	free(value);
+	free(*cur);
+	*cur = tmp;
 }
-
 
 char	*expand_variable(const char *var_name)
 {
