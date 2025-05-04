@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:50:41 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 21:44:34 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,14 @@ void	print_tokens(t_token *tokens)
 	printf("\n");
 }
 
-void	tokenizer(t_shell *shell, char *input)
+t_token	*input_tokenizer(t_shell *shell, char *input)
 {
-	t_token	tokens[ARG_MAX];
-	int		i;
+	t_token	*tokens;
 
+	tokens = malloc(sizeof(t_token) * ARG_MAX);
+	if (!tokens)
+		return (NULL);
 	token_builder(shell, input, tokens);
 	print_tokens(tokens);
-	i = 0;
-	while (tokens[i].type != (t_tokentype)-1)
-		free(tokens[i++].value);
+	return (tokens);
 }

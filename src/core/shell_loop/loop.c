@@ -6,23 +6,35 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:57:01 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 01:27:55 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 18:55:24 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../core.h"
 
-// Handle cases when SHLVL and path are not created
-// Ensure uniqueness of keys in env
-// t_env	*increment_shell_level(t_env *_env)
-// {
-// 	char	*tmp;
+void	process_line(t_shell *shell, char *input)
+{
+	int		i;
+	t_token	*tokens;
 
-// 	tmp = get_node_value_by_key(_env, "SHLVL", (void *)(increment_node(1)));
-// 	tmp = ft_itoa(ft_atoi(tmp) + 1);
-// 	set_node_value_by_key(_env, "SHLVL", tmp);
-// 	return (_env);
-// }
+	i = 0;
+	tokens = input_tokenizer(shell, input);
+	if (check_syntax(tokens) < 0)
+	{
+		while (tokens[i].type != (t_tokentype)-1)
+			free(tokens[i++].value);
+		free(tokens);
+		return ;
+	}
+	// 3) (future) build AST, execute, etc.
+	//    t_job *job = parse_tokens(tokens);
+	//    execute_job(job);
+	//    free_job(job);
+	i = 0;
+	while (tokens[i].type != (t_tokentype)-1)
+		free(tokens[i++].value);
+	free(tokens);
+}
 
 void	shell_loop(t_shell *shell)
 {
@@ -45,7 +57,7 @@ void	shell_loop(t_shell *shell)
 			break ;
 		}
 		add_history(input);
-		parser(shell, input);
+		process_line(shell, input);
 		free(input);
 	}
 }

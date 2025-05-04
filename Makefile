@@ -27,8 +27,9 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/program/program.c \
 				src/core/signals/signals.c \
 
-PARSER = 		src/lexer/parser/parser.c \
+TOKENIZER = 	src/lexer/parser/parser.c \
 				src/lexer/parser/cleaner.c \
+				src/lexer/parser/syntax_checker.c \
 				src/lexer/tokenizer/dollar_parser.c \
 				src/lexer/tokenizer/expansion.c \
 				src/lexer/tokenizer/tokenization.c \
@@ -37,12 +38,16 @@ PARSER = 		src/lexer/parser/parser.c \
 				src/lexer/tokenizer/quote_parser.c \
 				src/lexer/tokenizer/word_parser.c \
 
-OBJS =			$(SRC:.c=.o) $(CORE:.c=.o) $(PARSER:.c=.o)
+OBJDIR =		includes/objs
+
+SRCS =			$(SRC) $(CORE) $(TOKENIZER)
+
+OBJS =			$(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
 
 all :			$(NAME)
 
 $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
-				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $(NAME) -lreadline
+				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline
 
 $(LIBFT):
 				@make --no-print-directory -C $(LIBFT_DIR)
@@ -50,7 +55,8 @@ $(LIBFT):
 $(PRINTF):		$(LIBFT)
 				@make --no-print-directory -C $(PRINTF_DIR)
 
-%.o :			%.c
+$(OBJDIR)/%.o:	%.c
+				@mkdir -p $(dir $@)
 				@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -64,6 +70,6 @@ fclean:			clean
 				@make --no-print-directory fclean -C $(PRINTF_DIR)
 
 leaks:
-				@valgrind --leak-check=full --suppressions=$(SUPPRESSION)  ./$(NAME)
+				@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION)  ./$(NAME)
 
 re :			fclean all

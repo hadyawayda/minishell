@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:48:39 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 17:53:30 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*parse_var_name(const char *in, int *i)
 	return (ft_substring(in, start, *i));
 }
 
-void	append_variable_value(char **cur, const char *name)
+void	append_variable_value(char **cur, char *name)
 {
 	char	*env;
 	char	*val;
