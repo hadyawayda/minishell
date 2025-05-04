@@ -6,98 +6,62 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 03:56:33 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 04:51:09 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-char	**token_builder(t_shell *shell, const char *input)
+void	process_tokens(t_shell *shell, const char *input, t_token tokens[],
+		t_tokenstate *st)
 {
-	char	**tokens;
-	char	*cur;
-	bool	had_quotes;
-
-	int i, j;
-	i = j = 0;
-	had_quotes = false;
-	tokens = malloc(sizeof(char *) * MAX_TOKENS);
-	if (!tokens)
-		return (NULL);
-	cur = ft_strdup("");
-	if (!cur)
+	while (input[st->i])
 	{
-		free(tokens);
-		return (NULL);
-	}
-	while (input[i] && j < MAX_TOKENS - 1)
-	{
-		while (input[i] && ft_isspace((unsigned char)input[i]))
-		{
-			if (cur[0] != '\0' || had_quotes)
-			{
-				tokens[j++] = ft_strdup(cur);
-				had_quotes = false;
-				free(cur);
-				cur = ft_strdup("");
-			}
-			i++;
-		}
-		if (!input[i])
+		skip_whitespaces_and_flush(input, st, tokens);
+		if (!input[st->i])
 			break ;
-		if (input[i] == '$')
+		if (input[st->i] == '$')
+			dollar_parser(shell, input, st);
+		else if (input[st->i] == '\'' || input[st->i] == '"')
 		{
-			if (dollar_parser(shell, input, &i, &cur, &had_quotes) == -1)
-				return (free_tokens(tokens, j), free(cur), NULL);
-			continue ;
+			st->had_quotes = true;
+			quote_parser(shell, input, st);
 		}
-		if (input[i] == '\'' || input[i] == '"')
+		else if (is_operator_char(input[st->i]))
 		{
-			had_quotes = true;
-			if (quote_parser(shell, input, &i, &cur) == -1)
-				return (free_tokens(tokens, j), free(cur), NULL);
-			continue ;
+			flush_current(tokens, st);
+			operator_parser(input, tokens, st);
 		}
-		if (is_operator_char(input[i]))
-		{
-			if (cur[0] != '\0' || had_quotes)
-			{
-				tokens[j++] = ft_strdup(cur);
-				had_quotes = false;
-				free(cur);
-				cur = ft_strdup("");
-			}
-			operator_parser(input, &i, tokens, &j);
-			continue ;
-		}
-		if (!ft_isdelimiter(input[i]))
-			word_parser(input, &i, &cur);
-		if (ft_isdelimiter(input[i]) || is_operator_char(input[i])
-			|| input[i] == '\0')
-		{
-			if (cur[0] != '\0' || had_quotes)
-				tokens[j++] = ft_strdup(cur);
-			had_quotes = false;
-			free(cur);
-			cur = ft_strdup("");
-		}
+		else
+			word_parser(input, st);
 	}
-	if ((cur[0] != '\0' || had_quotes) && j < MAX_TOKENS - 1)
-		tokens[j++] = ft_strdup(cur);
-	free(cur);
-	tokens[j] = NULL;
-	return (tokens);
 }
 
-void	print_tokens(char **tokens)
+void	token_builder(t_shell *shell, const char *input, t_token tokens[])
+{
+	t_tokenstate	st;
+
+	st.i = 0;
+	st.j = 0;
+	st.had_quotes = false;
+	st.cur = ft_strdup("");
+	process_tokens(shell, input, tokens, &st);
+	flush_current(tokens, &st);
+	free(st.cur);
+	tokens[st.j].type = (t_tokentype)-1;
+	tokens[st.j].value = NULL;
+	tokens[st.j].quoted = false;
+}
+
+void	print_tokens(t_token *tokens)
 {
 	int	i;
 
 	i = 0;
-	while (tokens[i])
+	while (tokens[i].type != (t_tokentype)-1)
 	{
-		printf("%s", tokens[i]);
-		if (tokens[i + 1])
+		printf("%s", tokens[i].value);
+		if (tokens[i + 1].type != (t_tokentype)-1)
 			printf(" ");
 		i++;
 	}
@@ -106,17 +70,12 @@ void	print_tokens(char **tokens)
 
 void	tokenizer(t_shell *shell, char *input)
 {
-	char	**tokens;
+	t_token	tokens[ARG_MAX];
 	int		i;
-	char	*expanded_input;
 
-	tokens = token_builder(shell, input);
-	if (tokens)
-	{
-		print_tokens(tokens);
-		i = 0;
-		while (tokens[i])
-			free(tokens[i++]);
-		free(tokens);
-	}
+	token_builder(shell, input, tokens);
+	print_tokens(tokens);
+	i = 0;
+	while (tokens[i].type != (t_tokentype)-1)
+		free(tokens[i++].value);
 }

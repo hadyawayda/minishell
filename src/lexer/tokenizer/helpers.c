@@ -6,23 +6,34 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:25:45 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 02:58:17 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 04:51:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-int	skip_whitespace(const char *input, int *i)
+void	flush_current(t_token tokens[], t_tokenstate *st)
 {
-	int	skipped;
-
-	skipped = 0;
-	while (input[*i] == ' ' || input[*i] == '\t')
+	if (st->cur[0] != '\0' || st->had_quotes)
 	{
-		(*i)++;
-		skipped = 1;
+		tokens[st->j].type = T_WORD;
+		tokens[st->j].value = ft_strdup(st->cur);
+		tokens[st->j].quoted = st->had_quotes;
+		st->j++;
+		st->had_quotes = false;
+		free(st->cur);
+		st->cur = ft_strdup("");
 	}
-	return (skipped);
+}
+
+void	skip_whitespaces_and_flush(const char *input, t_tokenstate *st,
+		t_token tokens[])
+{
+	while (input[st->i] && isspace((unsigned char)input[st->i]))
+	{
+		flush_current(tokens, st);
+		st->i++;
+	}
 }
 
 int	is_operator_char(char c)
