@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 05:02:02 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 17:51:44 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void			tokenizer(t_shell *shell, char *input);
 void			operator_parser(const char *in, t_token tokens[],
 					t_tokenstate *st);
 void			word_parser(const char *in, t_tokenstate *st);
-void			free_tokens(char **tokens, int j);
 void			handle_expansion(t_shell *sh, const char *in, int *i,
 					char **cur);
 void			append_char_inplace(char **dst, char c, int *i);

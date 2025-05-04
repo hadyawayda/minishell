@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 04:51:09 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 17:50:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	print_tokens(t_token *tokens)
 	while (tokens[i].type != (t_tokentype)-1)
 	{
 		printf("%s", tokens[i].value);
-		if (tokens[i + 1].type != (t_tokentype)-1)
+		if (tokens[i + 1].type != (t_tokentype) - 1)
 			printf(" ");
 		i++;
 	}

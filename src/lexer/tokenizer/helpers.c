@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:25:45 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 04:51:06 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 17:51:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,6 @@ int	is_operator_char(char c)
 {
 	return (c == '|' || c == '&' || c == '<' || c == '>' || c == '('
 		|| c == ')');
-}
-
-void	free_tokens(char **tokens, int j)
-{
-	while (j > 0)
-		free(tokens[--j]);
-	free(tokens);
 }
 
 char	*append_char(char *s1, char c)
