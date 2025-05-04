@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:41 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/04 19:46:16 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/04 19:58:16 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,35 +88,39 @@ int	execute_command(char **args)
 	return (0);
 }
 
-void	start_shell(char *envp[])
-{
-	char	*input;
-	char	**args;
-	int		i;
+// Start the shell loop
+void start_shell(char *envp[]) {
+    char *input;
+    char **args;
 
-	while (1)
-	{
-		input = readline("> ");
-		if (!input)
-			break;
-		if (ft_strlen(input) == 0)
-		{
-			free(input);
-			continue;
-		}
-		add_history(input);
-		args = split_input(input);
-		if (args && args[0])
-		{
-			if (is_builtin(args[0]))
-				execute_builtin(args, envp);
-			else
-				execute_command(args);
-		}
-		free(input);
-		i = 0;
-		while (args && args[i])
-			free(args[i++]);
-		free(args);
-	}
+    while (1) {
+        input = readline("> ");
+        if (!input)
+            break;
+
+        if (ft_strlen(input) == 0) {
+            free(input);
+            continue;
+        }
+
+        add_history(input);
+        args = split_input(input);
+
+        if (args && args[0]) {
+            if (is_builtin(args[0]))
+                execute_builtin(args, envp);
+            else
+                execute_command(args);
+        }
+
+        free(input);
+        if (args) {
+            int i = 0;
+            while (args[i]) {
+                free(args[i]);
+                i++;
+            }
+            free(args);
+        }
+    }
 }
