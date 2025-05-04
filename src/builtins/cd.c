@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/30 11:59:10 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:05:09 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	print_too_many(void)
 	return (1);
 }
 
-static int	setup_target(char **args, char **target, int *dash)
+static int	get_target(char **args, char **target, int *dash)
 {
 	char	*src;
 
@@ -42,28 +42,13 @@ static int	setup_target(char **args, char **target, int *dash)
 		return (1);
 	}
 	*target = ft_strdup(src);
-	if (!*target)
-		return (1);
-	return (0);
+	return (*target == NULL);
 }
 
-int	process_cd(char **args, char **envp)
+static int	validate_and_chdir(char *target)
 {
-	char		cwd[PATH_MAX_LEN];
-	char		*target;
 	struct stat	st;
-	int			dash;
 
-	(void)envp;
-	dash = 0;
-	if (args[1] && args[2])
-		return (print_too_many());
-	if (args[1] && ft_strchr(args[1], '*'))
-		return (print_too_many());
-	if (!getcwd(cwd, PATH_MAX_LEN))
-		return (perror("minishell: getcwd"), 1);
-	if (setup_target(args, &target, &dash))
-		return (1);
 	if (stat(target, &st) != 0 || !S_ISDIR(st.st_mode))
 	{
 		write(2, "minishell: cd: ", 15);
@@ -78,15 +63,39 @@ int	process_cd(char **args, char **envp)
 		free(target);
 		return (1);
 	}
-	if (dash)
+	free(target);
+	return (0);
+}
+
+static void	update_pwd(int dash)
+{
+	char	cwd[PATH_MAX_LEN];
+
+	if (dash && getcwd(cwd, PATH_MAX_LEN))
 	{
-		if (getcwd(cwd, PATH_MAX_LEN))
-			write(1, cwd, ft_strlen(cwd));
+		write(1, cwd, ft_strlen(cwd));
 		write(1, "\n", 1);
 	}
 	setenv("OLDPWD", getenv("PWD"), 1);
-	getcwd(cwd, PATH_MAX_LEN);
-	setenv("PWD", cwd, 1);
-	free(target);
+	if (getcwd(cwd, PATH_MAX_LEN))
+		setenv("PWD", cwd, 1);
+}
+
+int	process_cd(char **args, char **envp)
+{
+	char	*target;
+	int		dash;
+
+	(void)envp;
+	dash = 0;
+	if (args[1] && args[2])
+		return (print_too_many());
+	if (args[1] && ft_strchr(args[1], '*'))
+		return (print_too_many());
+	if (get_target(args, &target, &dash))
+		return (1);
+	if (validate_and_chdir(target))
+		return (1);
+	update_pwd(dash);
 	return (0);
 }

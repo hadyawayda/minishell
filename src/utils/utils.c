@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:09:26 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/05 23:47:01 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/04 19:44:16 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,3 @@ char **split_input(const char *input) {
     args[i] = NULL;
     return args;
 }
-
