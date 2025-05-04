@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/16 22:20:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 02:22:27 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void	parser(t_shell *shell, char *input)
 {
 	(void)shell;
-	tokenizer(input);
+	tokenizer(shell, input);
 }
 
 // modify the parser to print nothing when using unset and not print a new line when expanding an unset env variable

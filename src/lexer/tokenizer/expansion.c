@@ -6,38 +6,46 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 01:32:44 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 03:31:28 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-void	handle_expansion(const char *in, int *i, char **cur)
+void	handle_expansion(t_shell *sh, const char *in, int *i, char **cur)
 {
 	char	*name;
 	char	*value;
 	char	*tmp;
 	int		start;
+	char	*nbr;
 
 	if (in[*i] != '$')
 		return ;
-	/* literal '$$'  — keep both dollars */
+	if (in[*i + 1] == '?')
+	{
+		nbr = ft_itoa(sh->last_exit_status);
+		tmp = ft_strjoin(*cur, nbr);
+		free(nbr);
+		free(*cur);
+		*cur = tmp;
+		(*i) += 2;
+		return ;
+	}
 	if (in[*i + 1] == '$')
 	{
 		append_char_inplace(cur, '$', i);
 		append_char_inplace(cur, '$', i);
 		return ;
 	}
-	/* lone '$' with no valid name */
 	if (!(ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i
 				+ 1])))
 	{
 		append_char_inplace(cur, '$', i);
 		return ;
 	}
-	(*i)++; /* skip '$' */
+	(*i)++;
 	start = *i;
-	/* $1HOME → only the ‘1’ belongs to the var name */
 	if (ft_isdigit(in[*i]))
 		(*i)++;
 	else
@@ -46,7 +54,7 @@ void	handle_expansion(const char *in, int *i, char **cur)
 	name = ft_substring(in, start, *i);
 	if (!name)
 		return ;
-	value = expand_variable(name); /* getenv or ""           */
+	value = expand_variable(name);
 	free(name);
 	if (!value)
 		return ;

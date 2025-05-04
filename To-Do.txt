@@ -1,67 +1,18 @@
-Tokenizer:
-1. Expand variables in tokenizer (under which conditions? Only when space seperated or enclosed in double quotes right?).
-2. Limit expansions to only command names and their options and arguments and file names (redirections and operators and command options (only when variables are set with the - character in the env variable i.e. export var1="-l") should not be supported at all).
-
-Tester:
-Create makefile for tester and multiple folders for each module
-Create files for non interactive minishell that are plug and play (i.e. you give it the path of the code files in your directories for the looper and it replaces it and processes the outputs, what we can do is replace the main.c file with another that imports the minishell.h header file and )
-Process multiple cases at once using a loop
-Parse valgrind output and check for leaks etc...
-Process multiple lines of code
-
-Project Structure:
-Fix #include "../core.h" in the main.c to include minishell.h instead and then minishell.h will then include core.h, and then replace core.h in all files with minishell.h I guess? Or maybe we can keep it to core.h for the core module for example?
-
 Fix the following tokenizer cases:
-c2r6s1% bash
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME*
-/home/hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME
-/home/hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $HOME*
-/home/hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $hola*
-execute.sh includes Makefile michel README.md src tester test.sh utils
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo *
-execute.sh includes Makefile michel README.md src tester test.sh utils
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $hola*
-execute.sh includes Makefile michel README.md src tester test.sh utils
-hawayda@c2r6s1:~/Desktop/github/minishell$ *
-execute.sh: command not found
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo *
-execute.sh includes Makefile michel README.md src tester test.sh utils
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME"
-HOME
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME
-> "
-HOME
 
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $"HOME
-"
-HOME
+echo $hello*
+execute.sh includes Makefile michel minishell-tester README.md r.sh src tester.sh To-Do.txt
 
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''
- hawayda 
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER
- hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo ''$USER
-hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo $USER
-hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''    $USER
- hawayda  hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''     $USER
- hawayda  hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''  $USER
- hawayda  hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
- hawayda  hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER ''$USER
- hawayda hawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER''$USER
- hawaydahawayda
-hawayda@c2r6s1:~/Desktop/github/minishell$ echo '' $USER '' $USER
- hawayda  hawayda
+echo $PWD*
+/sgoinfre/hawayda/minishell
+
+echo $SHLVL*
+2*
+
+echo "$SHLVL*"
+echo "$hello*"
+echo "$PWD*"
+
 
  hawayda@c2r6s1:~/Desktop/github/minishell$ << a cat
 > asd
@@ -84,3 +35,77 @@ D execute.sh includes Makefile README.md r.sh src tester utils
 
 echo D*
 D*
+
+
+
+
+
+UNCLOSED QUOTES CASES:
+
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo”bar”
+echo “foo”bar”
+Michel > echo “foo”bar
+echo “foo”bar
+Michel > echo “foo”bar'
+Unclosed quote detected
+Michel > echo “foo”bar''
+echo “foo”bar
+Michel > echo “foo”bar
+echo “foo”bar
+Michel > echo “foo”bar"
+Unclosed quote detected
+Michel > echo “foo\”bar"
+Unclosed quote detected
+Michel > 
+exit
+hawayda@c2r6s3:/sgoinfre/hawayda/minishell$ ./michel 
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo "foo"bar
+echo foobar
+Michel > echo "foo"bar'
+Unclosed quote detected
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo "foo"bar'
+Unclosed quote detected
+Michel > echo "foo"bar"
+Unclosed quote detected
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo "foo"bar"
+Unclosed quote detected
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo "foo"bar"
+Unclosed quote detected
+
+hawayda@c2r6s3:/sgoinfre/hawayda/minishell$ ./michel 
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo\”bar
+echo “foo\”bar
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo\”bar
+echo “foo\”bar
+Michel > echo “foo”bar"
+Unclosed quote detected
+Michel > echo “foo”bar"echo “foo\”bar”
+Unclosed quote detected
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo\”bar
+echo “foo\”bar
+Michel > echo “foo\”bar”
+echo “foo\”bar”
+Michel > echo “foo”bar
+echo “foo”bar
+Michel > echo “foo\”bar”
+echo “foo\”bar”
