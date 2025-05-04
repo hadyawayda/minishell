@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 18:35:56 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/04 23:28:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ typedef struct s_token
 	t_tokentype	type;
 	char		*value;
 	bool		quoted;
+	char		*heredoc;
 }				t_token;
 
-typedef struct s_tokstate
+typedef struct s_tokenstate
 {
 	int			i;
 	int			j;
@@ -55,7 +56,7 @@ char			*expand_variable(const char *input);
 char			*ft_strjoin_char(char *s1, char c);
 char			*append_char(char *s1, char c);
 
-void			parser(t_shell *shell, char *input);
+void			parser(t_shell *shell, t_token *tokens);
 void			free_string_array(char **array);
 void			operator_parser(const char *in, t_token tokens[],
 					t_tokenstate *st);
@@ -67,6 +68,7 @@ void			flush_current(t_token tokens[], t_tokenstate *st);
 void			append_literal_dollars(const char *in, int *i, char **cur);
 void			skip_whitespaces_and_flush(const char *input, t_tokenstate *st,
 					t_token tokens[]);
+void			collect_heredocs(t_shell *shell, t_token tokens[]);
 
 t_token			*input_tokenizer(t_shell *shell, char *input);
 

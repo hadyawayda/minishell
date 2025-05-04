@@ -6,15 +6,65 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 18:35:09 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/05 00:40:38 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-void	parser(t_shell *shell, char *input)
+void	free_tokens(t_token *tokens)
 {
-	(void)shell;
+	int	i;
+
+	i = 0;
+	while (tokens[i].type != (t_tokentype)-1)
+	{
+		free(tokens[i].value);
+		i++;
+	}
+	free(tokens);
+}
+
+void visualize_heredoc_tokens(t_token tokens[])
+{
+    int i;
+    for (i = 0; tokens[i].type != (t_tokentype)-1; i++)
+    {
+        if (tokens[i].type == T_REDIR_HERE && tokens[i].heredoc)
+        {
+            /* print the entire heredoc block */
+            printf("%s", tokens[i].heredoc);
+        }
+        else
+        {
+            /* print the normal token value */
+            printf("%s", tokens[i].value);
+        }
+
+        /* space between tokens */
+        if (tokens[i+1].type != (t_tokentype)-1)
+            putchar(' ');
+    }
+    putchar('\n');
+}
+
+void	parser(t_shell *shell, t_token *tokens)
+{
+	if (!tokens)
+		return ;
+	// syntax‐check here instead of in process_line
+	if (check_syntax(tokens) < 0)
+	{
+		free_tokens(tokens);
+		return ;
+	}
+	collect_heredocs(shell, tokens);
+	visualize_heredoc_tokens(tokens);
+	// 3) build AST, execute, etc.
+	//    t_job *job = parse_tokens(tokens);
+	//    execute_job(job);
+	//    free_job(job);
+	free_tokens(tokens);
 }
 
 // modify the parser to print nothing when using unset and not print a new line when expanding an unset env variable
