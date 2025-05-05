@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/30 12:05:00 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/05 13:50:21 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,32 @@
 #include <string.h>
 #include <stdbool.h>
 
+/* returns true if s is exactly "-n", "-nn", "-nnn", etc */
+static bool	is_n_flag(char *s)
+{
+	int	i;
+
+	if (!s || s[0] != '-')
+		return (false);
+	i = 1;
+	while (s[i] == 'n')
+		i++;
+	return (s[i] == '\0');
+}
+
+/* print token, but treat "\n" as literal 'n' */
+static void	print_arg(char *s)
+{
+	if (ft_strcmp(s, "\\n") == 0)
+		printf("n");
+	else
+		printf("%s", s);
+}
+
 /*
 ** process_echo:
-**   Support multiple -n flags and print arguments separated by spaces.
+**   Skip any number of -n flags, print the rest separated by spaces,
+**   and only add a trailing newline if no -n was seen.
 */
 void	process_echo(char **args)
 {
@@ -26,16 +49,14 @@ void	process_echo(char **args)
 
 	i = 1;
 	print_nl = true;
-	while (args[i] && ft_strncmp(args[i], "-n", 2) == 0
-		&& args[i][2] == '\0')
+	while (is_n_flag(args[i]))
 	{
 		print_nl = false;
 		i++;
 	}
-	i = 1;
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		print_arg(args[i]);
 		if (args[i + 1])
 			printf(" ");
 		i++;
