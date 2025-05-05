@@ -6,11 +6,170 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/05 00:40:38 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/05 21:43:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
+
+/* width of the top bar */
+
+#define COL_W 23
+#define COL_GAP 4
+
+static void	repeat(int n, const char *s)
+{
+	while (n--)
+		fputs(s, stdout);
+}
+
+static void	print_job_header(int bg, int width)
+{
+	int label_len = bg ? 9 : 3;                 /* "Job (bg)" vs "Job" */
+	int pad_each = (width - label_len - 6) / 2; /* 6 = box chars + spaces */
+	fputs("  ", stdout);
+	repeat(pad_each, "─");
+	fputs("┌─ Job", stdout);
+	if (bg)
+		fputs(" (bg)", stdout);
+	fputs(" ─┐", stdout);
+	repeat(pad_each, "─");
+	putchar('\n');
+}
+
+static void	print_top_spine(int total_w)
+{
+	repeat(total_w / 2 + 2, " "); /* +2 for left indent */
+	fputs("│\n", stdout);
+}
+
+static void	print_joint_row(int n_cmd)
+{
+	fputs("   ", stdout);
+	for (int k = 0; k < n_cmd; k++)
+	{
+		if (k == 0)
+			fputs("┌", stdout);
+		else if (k == n_cmd - 1)
+			fputs("┐", stdout);
+		else
+			fputs("┬", stdout);
+		repeat(COL_W - 2, "─");
+		if (k != n_cmd - 1)
+			fputs("┴", stdout);
+		if (k != n_cmd - 1)
+			repeat(COL_GAP, " ");
+	}
+	putchar('\n');
+}
+
+static void	print_empty_row(int n_cmd)
+{
+	fputs("   ", stdout);
+	for (int k = 0; k < n_cmd; k++)
+	{
+		fputs("│", stdout);
+		repeat(COL_W - 2, " ");
+		fputs("│", stdout);
+		if (k != n_cmd - 1)
+			repeat(COL_GAP, " ");
+	}
+	putchar('\n');
+}
+
+static void	print_cmd_label(int which, int n_cmd, const char *label)
+{
+	int	lablen;
+	int	left;
+
+	fputs("   ", stdout);
+	for (int k = 0; k < n_cmd; k++)
+	{
+		fputs("│", stdout);
+		if (k == which)
+		{
+			lablen = (int)strlen(label);
+			left = (COL_W - 2 - lablen) / 2;
+			repeat(left, " ");
+			printf("%s", label);
+			repeat(COL_W - 2 - left - lablen, " ");
+		}
+		else
+			repeat(COL_W - 2, " ");
+		fputs("│", stdout);
+		if (k != n_cmd - 1)
+			repeat(COL_GAP, " ");
+	}
+	putchar('\n');
+}
+
+static void	print_redir_line(int which, int n_cmd, t_redir *r)
+{
+			char buf[COL_W - 2] = "";
+
+	fputs("   ", stdout);
+	for (int k = 0; k < n_cmd; k++)
+	{
+		fputs("│", stdout);
+		if (k == which && r)
+		{
+			if (r->kind == R_IN)
+				snprintf(buf, sizeof buf, "redir: < %s", r->target);
+			else if (r->kind == R_OUT)
+				snprintf(buf, sizeof buf, "redir: > %s", r->target);
+			else if (r->kind == R_APPEND)
+				snprintf(buf, sizeof buf, "redir: >> %s", r->target);
+			else
+				snprintf(buf, sizeof buf, "redir: << (heredoc)");
+			printf("%-*s", COL_W - 2, buf);
+		}
+		else
+			repeat(COL_W - 2, " ");
+		fputs("│", stdout);
+		if (k != n_cmd - 1)
+			repeat(COL_GAP, " ");
+	}
+	putchar('\n');
+}
+
+/* ─────────── public: call after parse_tokens() ─────────── */
+void	visualize_job_box(t_job *job)
+{
+	int	n_cmd;
+	int	total_w;
+	int	idx;
+		char preview[COL_W - 2] = "";
+
+	if (!job || !job->first)
+		return ;
+	n_cmd = 0;
+	for (t_command *c = job->first; c; c = c->next)
+		n_cmd++;
+	total_w = n_cmd * COL_W + (n_cmd - 1) * COL_GAP;
+	print_job_header(job->first->background, total_w);
+	print_top_spine(total_w);
+	print_joint_row(n_cmd);
+	print_empty_row(n_cmd);
+	idx = 0;
+	for (t_command *cmd = job->first; cmd; cmd = cmd->next, idx++)
+	{
+		print_cmd_label(idx, n_cmd, "Command");
+		/* argv preview */
+		if (cmd->argv && cmd->argv[0])
+		{
+			strncat(preview, cmd->argv[0], sizeof preview - 1);
+			if (cmd->argv[1])
+			{
+				strncat(preview, " ", sizeof preview - 1);
+				strncat(preview, cmd->argv[1], sizeof preview - 1);
+			}
+		}
+		print_cmd_label(idx, n_cmd, preview[0] ? preview : "(empty)");
+		if (cmd->redirs)
+			print_redir_line(idx, n_cmd, cmd->redirs);
+	}
+	putchar('\n');
+}
 
 void	free_tokens(t_token *tokens)
 {
@@ -25,23 +184,26 @@ void	free_tokens(t_token *tokens)
 	free(tokens);
 }
 
-void visualize_heredoc_tokens(t_token tokens[])
+void	visualize_heredoc_tokens(t_token tokens[])
 {
-    int i;
-    for (i = 0; tokens[i].type != (t_tokentype)-1; i++)
-    {
-        if (tokens[i].type == T_REDIR_HERE && tokens[i].heredoc)
-            printf("%s", tokens[i].heredoc);
-        else
-            printf("%s", tokens[i].value);
-        if (tokens[i+1].type != (t_tokentype)-1)
-            putchar(' ');
-    }
-    putchar('\n');
+	int	i;
+
+	for (i = 0; tokens[i].type != (t_tokentype)-1; i++)
+	{
+		if (tokens[i].type == T_REDIR_HERE && tokens[i].heredoc)
+			printf("%s", tokens[i].heredoc);
+		else
+			printf("%s", tokens[i].value);
+		if (tokens[i + 1].type != (t_tokentype)-1)
+			putchar(' ');
+	}
+	putchar('\n');
 }
 
 void	parser(t_shell *shell, t_token *tokens)
 {
+	t_job	*job;
+
 	if (!tokens)
 		return ;
 	if (check_syntax(tokens) < 0)
@@ -51,8 +213,8 @@ void	parser(t_shell *shell, t_token *tokens)
 	}
 	collect_heredocs(shell, tokens);
 	visualize_heredoc_tokens(tokens);
-	// 3) build AST, execute, etc.
-	t_job *job = parse_tokens(tokens);
+	job = parse_tokens(tokens);
+	visualize_job_box(job);
 	execute_job(job);
 	free_job(job);
 	free_tokens(tokens);

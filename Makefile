@@ -30,6 +30,7 @@ CORE =			src/core/env/expansion/expansion.c \
 LEXER = 	src/lexer/parser/ast_builder.c \
 				src/lexer/parser/cleaner.c \
 				src/lexer/parser/heredoc.c \
+				src/lexer/parser/parser_utils.c \
 				src/lexer/parser/parser.c \
 				src/lexer/parser/syntax_checker.c \
 				src/lexer/tokenizer/dollar_parser.c \
