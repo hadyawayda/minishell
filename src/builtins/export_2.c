@@ -5,12 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/04 19:49:50 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/04 19:52:49 by nabbas           ###   ########.fr       */
+/*   Created: 2025/05/05 11:58:48 by nabbas            #+#    #+#             */
+/*   Updated: 2025/05/05 11:59:00 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "../../includes/builtins.h"  
 
 void	sort_env(char **arr)
 {

@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 23:06:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/04/04 20:47:36 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/05 12:10:37 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*ft_strtok_r(char *str, const char *delim, char **next)
 
 char	*ft_strtok(char *str, const char *delim)
 {
-	char *token;
+	char	*token;
 
 	token = ft_strtok_r(str, delim, &str);
 	return (token);

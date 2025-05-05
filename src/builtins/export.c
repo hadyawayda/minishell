@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 19:48:56 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/04 19:52:46 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/05 12:37:34 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	export_arg(char *arg)
 		setenv(st.key, st.val, 1);
 	else
 	{
-		write(2, "bash: export: ", 15);
+		write(2, "bash: export: ", 14);
 		write(2, arg, ft_strlen(arg));
-		write(2, ": not a valid identifier\n", 26);
+		write(2, ": not a valid identifier\n", 25);
 	}
 	free(st.key);
 }
@@ -78,4 +78,20 @@ char	**duplicate_env(void)
 	}
 	copy[count] = NULL;
 	return (copy);
+}
+
+int	cmp_key(const char *a, const char *b)
+{
+	size_t	i;
+
+	i = 0;
+	while (a[i] && b[i] && a[i] != '=' && b[i] != '=' && a[i] == b[i])
+		i++;
+	if (((a[i] == '=') || !a[i]) && ((b[i] == '=') || !b[i]))
+		return (0);
+	if ((a[i] == '=') || !a[i])
+		return (-1);
+	if ((b[i] == '=') || !b[i])
+		return (1);
+	return ((unsigned char)a[i] - (unsigned char)b[i]);
 }

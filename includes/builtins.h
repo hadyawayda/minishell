@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 11:05:08 by nabbas            #+#    #+#             */
-/*   Updated: 2025/04/28 12:31:11 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/05 12:02:29 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@ int		process_pwd(char **args);
 int		process_exit(char **args, char **envp);
 int		process_env(char **args, char **envp);
 int		process_export(char **args, char **envp);
+int		cmp_key(const char *a, const char *b);
 
 #endif
