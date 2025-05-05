@@ -27,10 +27,11 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/program/program.c \
 				src/core/signals/signals.c \
 
-TOKENIZER = 	src/lexer/parser/parser.c \
+LEXER = 	src/lexer/parser/ast_builder.c \
 				src/lexer/parser/cleaner.c \
-				src/lexer/parser/syntax_checker.c \
 				src/lexer/parser/heredoc.c \
+				src/lexer/parser/parser.c \
+				src/lexer/parser/syntax_checker.c \
 				src/lexer/tokenizer/dollar_parser.c \
 				src/lexer/tokenizer/expansion.c \
 				src/lexer/tokenizer/tokenization.c \
@@ -41,7 +42,7 @@ TOKENIZER = 	src/lexer/parser/parser.c \
 
 OBJDIR =		includes/objs
 
-SRCS =			$(SRC) $(CORE) $(TOKENIZER)
+SRCS =			$(SRC) $(CORE) $(LEXER)
 
 OBJS =			$(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
 

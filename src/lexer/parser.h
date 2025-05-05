@@ -35,3 +35,5 @@ typedef struct s_command {
 typedef struct s_job {
   t_command *first;
 } t_job;
+
+t_job *parse_tokens(t_token tokens[]);
