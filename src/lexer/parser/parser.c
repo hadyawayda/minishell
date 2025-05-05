@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lexer.h"
+#include "../parser.h"
 
 void	free_tokens(t_token *tokens)
 {
@@ -31,17 +31,9 @@ void visualize_heredoc_tokens(t_token tokens[])
     for (i = 0; tokens[i].type != (t_tokentype)-1; i++)
     {
         if (tokens[i].type == T_REDIR_HERE && tokens[i].heredoc)
-        {
-            /* print the entire heredoc block */
             printf("%s", tokens[i].heredoc);
-        }
         else
-        {
-            /* print the normal token value */
             printf("%s", tokens[i].value);
-        }
-
-        /* space between tokens */
         if (tokens[i+1].type != (t_tokentype)-1)
             putchar(' ');
     }
@@ -52,7 +44,6 @@ void	parser(t_shell *shell, t_token *tokens)
 {
 	if (!tokens)
 		return ;
-	// syntax‐check here instead of in process_line
 	if (check_syntax(tokens) < 0)
 	{
 		free_tokens(tokens);
@@ -61,9 +52,9 @@ void	parser(t_shell *shell, t_token *tokens)
 	collect_heredocs(shell, tokens);
 	visualize_heredoc_tokens(tokens);
 	// 3) build AST, execute, etc.
-	//    t_job *job = parse_tokens(tokens);
-	//    execute_job(job);
-	//    free_job(job);
+	t_job *job = parse_tokens(tokens);
+	execute_job(job);
+	free_job(job);
 	free_tokens(tokens);
 }
 

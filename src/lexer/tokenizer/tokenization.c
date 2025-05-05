@@ -76,6 +76,6 @@ t_token	*input_tokenizer(t_shell *shell, char *input)
 	if (!tokens)
 		return (NULL);
 	token_builder(shell, input, tokens);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	return (tokens);
 }

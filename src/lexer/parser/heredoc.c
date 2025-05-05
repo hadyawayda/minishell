@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lexer.h"
+#include "../parser.h"
 
 char	*expand_line_heredoc(t_shell *shell, const char *line)
 {
@@ -102,6 +102,13 @@ void	collect_heredocs(t_shell *shell, t_token tokens[])
 	{
 		if (tokens[i].type == T_REDIR_HERE)
 		{
+			if (tokens[i+1].type != T_WORD)
+			{
+					fprintf(stderr,
+							"syntax error near unexpected token `%s`\n",
+							tokens[i+1].value ? tokens[i+1].value : "newline");
+					return;
+			}
 			delim = tokens[i + 1].value;
 			expand = !tokens[i + 1].quoted;
 			tokens[i].heredoc = read_heredoc(delim, expand, shell);

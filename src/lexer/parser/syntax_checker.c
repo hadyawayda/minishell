@@ -10,39 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lexer.h"
+#include "../parser.h"
 
 #define END_TOKEN ((t_tokentype)-1)
 
-static int	check_leading_token(t_token tokens[]);
-static int	check_single_ampersand(t_token tokens[]);
-static int	check_operator_sequence(t_token tokens[]);
-static int	check_redirection_sequence(t_token tokens[]);
-static int	check_parentheses_balance(t_token tokens[]);
-static int	check_trailing_token(t_token tokens[]);
-
-int	check_syntax(t_token tokens[])
-{
-	if (check_leading_token(tokens) < 0)
-		return (-1);
-	if (check_single_ampersand(tokens) < 0)
-		return (-1);
-	if (check_operator_sequence(tokens) < 0)
-		return (-1);
-	if (check_redirection_sequence(tokens) < 0)
-		return (-1);
-	if (check_parentheses_balance(tokens) < 0)
-		return (-1);
-	if (check_trailing_token(tokens) < 0)
-		return (-1);
-	return (0);
-}
-
-static int	check_leading_token(t_token tokens[])
+int	check_leading_token(t_token tokens[])
 {
 	if (tokens[0].type == END_TOKEN)
 		return (0);
-	if (tokens[0].type != T_WORD && tokens[0].type != T_LPAREN)
+		if (tokens[0].type != T_WORD
+			&& tokens[0].type != T_LPAREN
+			&& tokens[0].type != T_REDIR_IN
+			&& tokens[0].type != T_REDIR_OUT
+			&& tokens[0].type != T_REDIR_APPEND
+			&& tokens[0].type != T_REDIR_HERE)
 	{
 		fprintf(stderr, "syntax error near unexpected token `%s`\n",
 			tokens[0].value ? tokens[0].value : "newline");
@@ -51,7 +32,7 @@ static int	check_leading_token(t_token tokens[])
 	return (0);
 }
 
-static int	check_single_ampersand(t_token tokens[])
+int	check_single_ampersand(t_token tokens[])
 {
 	for (int i = 0; tokens[i].type != END_TOKEN; i++)
 	{
@@ -64,7 +45,7 @@ static int	check_single_ampersand(t_token tokens[])
 	return (0);
 }
 
-static int	check_operator_sequence(t_token tokens[])
+int	check_operator_sequence(t_token tokens[])
 {
 	t_token	*t;
 
@@ -94,14 +75,14 @@ static int	check_operator_sequence(t_token tokens[])
 	return (0);
 }
 
-static int	check_redirection_sequence(t_token tokens[])
+int	check_redirection_sequence(t_token tokens[])
 {
 	t_tokentype	ty;
 
 	for (int i = 0; tokens[i].type != END_TOKEN; i++)
 	{
 		ty = tokens[i].type;
-		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND)
+		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND || ty == T_REDIR_HERE)
 		{
 			if (tokens[i + 1].type != T_WORD)
 			{
@@ -114,7 +95,7 @@ static int	check_redirection_sequence(t_token tokens[])
 	return (0);
 }
 
-static int	check_parentheses_balance(t_token tokens[])
+int	check_parentheses_balance(t_token tokens[])
 {
 	int	depth;
 
@@ -140,7 +121,7 @@ static int	check_parentheses_balance(t_token tokens[])
 	return (0);
 }
 
-static int	check_trailing_token(t_token tokens[])
+int	check_trailing_token(t_token tokens[])
 {
 	int			i;
 	t_tokentype	ty;
@@ -157,5 +138,22 @@ static int	check_trailing_token(t_token tokens[])
 		fprintf(stderr, "syntax error near unexpected token `newline`\n");
 		return (-1);
 	}
+	return (0);
+}
+
+int	check_syntax(t_token tokens[])
+{
+	if (check_leading_token(tokens) < 0)
+		return (-1);
+	if (check_single_ampersand(tokens) < 0)
+		return (-1);
+	if (check_operator_sequence(tokens) < 0)
+		return (-1);
+	if (check_redirection_sequence(tokens) < 0)
+		return (-1);
+	if (check_parentheses_balance(tokens) < 0)
+		return (-1);
+	if (check_trailing_token(tokens) < 0)
+		return (-1);
 	return (0);
 }

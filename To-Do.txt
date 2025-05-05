@@ -1,3 +1,23 @@
+Fix the following heredoc cases:
+
+ctrl+c
+ctrl+d
+ctrl+\
+
+Michel > cat <<$D
+syntax error near unexpected token `newline`
+Michel > cat << $D
+syntax error near unexpected token `newline`
+Michel > cat << 
+syntax error near unexpected token `newline`
+Michel > cat <<$USER
+> hady
+cat
+Michel > cat <<$USER
+> $USER
+> hady
+cat hady
+
 Fix the following tokenizer cases:
 
 echo $hello*
