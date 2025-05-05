@@ -6,7 +6,28 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/04 18:05:09 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/05 15:14:00 by nabbas           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include "minishell.h"   
+#include "builtins.h"
+
+#define PATH_MAX_LEN 1024
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
+/*   Updated: 2025/05/05 15:00:00 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +44,13 @@ static int	print_too_many(void)
 	return (1);
 }
 
-static int	get_target(char **args, char **target, int *dash)
+static int	get_target(char **args, char **target,
+				 int *dash, int *double_slash)
 {
 	char	*src;
 
+	*dash = 0;
+	*double_slash = (args[1] && ft_strcmp(args[1], "//") == 0);
 	if (!args[1] || ft_strcmp(args[1], "~") == 0)
 		src = getenv("HOME");
 	else if (ft_strcmp(args[1], "-") == 0)
@@ -45,7 +69,7 @@ static int	get_target(char **args, char **target, int *dash)
 	return (*target == NULL);
 }
 
-static int	validate_and_chdir(char *target)
+static int	change_directory(char *target)
 {
 	struct stat	st;
 
@@ -67,7 +91,7 @@ static int	validate_and_chdir(char *target)
 	return (0);
 }
 
-static void	update_pwd(int dash)
+static void	update_pwd(int dash, int double_slash)
 {
 	char	cwd[PATH_MAX_LEN];
 
@@ -77,7 +101,9 @@ static void	update_pwd(int dash)
 		write(1, "\n", 1);
 	}
 	setenv("OLDPWD", getenv("PWD"), 1);
-	if (getcwd(cwd, PATH_MAX_LEN))
+	if (double_slash)
+		setenv("PWD", "//", 1);
+	else if (getcwd(cwd, PATH_MAX_LEN))
 		setenv("PWD", cwd, 1);
 }
 
@@ -85,17 +111,17 @@ int	process_cd(char **args, char **envp)
 {
 	char	*target;
 	int		dash;
+	int		dbl_sl;
 
 	(void)envp;
-	dash = 0;
 	if (args[1] && args[2])
 		return (print_too_many());
 	if (args[1] && ft_strchr(args[1], '*'))
 		return (print_too_many());
-	if (get_target(args, &target, &dash))
+	if (get_target(args, &target, &dash, &dbl_sl))
 		return (1);
-	if (validate_and_chdir(target))
+	if (change_directory(target))
 		return (1);
-	update_pwd(dash);
+	update_pwd(dash, dbl_sl);
 	return (0);
 }
