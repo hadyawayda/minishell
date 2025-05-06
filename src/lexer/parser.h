@@ -12,40 +12,35 @@
 
 #include "./lexer.h"
 
-typedef enum e_redir_kind
-{
-	R_IN,
-	R_OUT,
-	R_APPEND,
-	R_HERE
-}						t_redir_kind;
+typedef enum e_node_type {
+	N_CMD,     /* leaf: argv[] + redirs[] */
+	N_PIPE,    /* binary: left | right    */
+	N_AND,     /* binary: left && right   */
+	N_OR       /* binary: left || right   */
+} t_node_type;
 
-typedef struct s_redir
-{
-	t_redir_kind		kind;
-	char				*target;
-	struct s_redir		*next;
-}						t_redir;
+typedef struct s_redir {
+	t_tokentype        op;       /* T_REDIR_IN / OUT / APPEND / HERE */
+	char              *target;   /* filename or heredoc body         */
+	struct s_redir    *next;
+} t_redir;
 
-typedef struct s_command
-{
-	char				**argv;
-	t_redir				*redirs;
-	bool				background;
-	struct s_command	*next;
-}						t_command;
+typedef struct s_cmd_leaf {
+	char     **argv;             /* NULL‑terminated                  */
+	t_redir   *redirs;
+} t_cmd_leaf;
 
-typedef struct s_job
-{
-	t_command			*first;
-}						t_job;
+typedef struct s_ast {
+	t_node_type        type;
+	struct s_ast      *left;
+	struct s_ast      *right;
+	t_cmd_leaf         cmd;      /* only valid when type == N_CMD    */
+} t_ast;
 
-t_job					*parse_tokens(t_token tokens[]);
-t_job					*malloc_job(void);
-t_command				*malloc_command(void);
-char					**append_argv(char **argv, const char *val);
-int						is_redir(t_tokentype type);
-t_redir					*malloc_redir(void);
-t_redir_kind			map_to_redir_kind(t_tokentype type);
-void					execute_job(t_job *job);
-void					free_job(t_job *job);
+t_ast		*parse_expr(void);
+t_ast		*parse_pipe(void);
+t_ast		*parse_factor(void);
+t_ast		*parse_command(void);
+t_ast		*build_ast(t_token *tokens);
+
+void		traverse_ast(t_ast *n);
