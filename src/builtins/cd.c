@@ -5,49 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/07 12:08:20 by nabbas           ###   ########.fr       */
+/*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
+/*   Updated: 2025/05/07 13:21:26 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "builtins.h"
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #define PATH_MAX_LEN 1024
 
-static int	print_too_many(void)
+static int	get_target(char **args, char **target, int *dash, int *dbl_sl)
 {
-	write(2, "minishell: cd: too many arguments\n", 35);
-	return (1);
-}
+	char	*home;
 
-static int	get_target(char **args, char **target,
-			int *dash, int *double_slash)
-{
-	char	*src;
-
-	*dash = 0;
-	*double_slash = (args[1] && ft_strcmp(args[1], "//") == 0);
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
-		src = getenv("HOME");
-	else if (ft_strcmp(args[1], "-") == 0)
+	*dbl_sl = (args[1] && ft_strcmp(args[1], "//") == 0);
+	if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "--"))
+		return (set_target_from_env(target, "HOME", NULL));
+	if (!ft_strcmp(args[1], "-"))
+		return (set_target_from_env(target, "OLDPWD", dash));
+	if (!ft_strncmp(args[1], "~/", 2) || !ft_strcmp(args[1], "~/"))
 	{
-		src = getenv("OLDPWD");
-		*dash = 1;
+		home = getenv("HOME");
+		if (!home)
+			return (cd_env_error("HOME"));
+		*target = ft_strjoin(home, args[1] + 1);
+		return (*target == NULL);
 	}
-	else
-		src = args[1];
-	if (!src)
-	{
-		write(2, "minishell: cd: HOME not set\n", 29);
-		return (1);
-	}
-	*target = ft_strdup(src);
+	*target = ft_strdup(args[1]);
 	return (*target == NULL);
 }
 
+/* ---------------------- chdir + checks ---------------------- */
 static int	change_directory(char *target)
 {
 	struct stat	st;
@@ -70,7 +63,31 @@ static int	change_directory(char *target)
 	return (0);
 }
 
-static void	update_pwd(int dash, int double_slash)
+/* ---------------- set PWD based on current state ------------- */
+static void	set_pwd_value(const char *prev_pwd, int dbl_sl)
+{
+	char	cwd[PATH_MAX_LEN];
+	char	tmp[PATH_MAX_LEN + 3];
+
+	if (dbl_sl)
+	{
+		setenv("PWD", "//", 1);
+		return ;
+	}
+	if (!getcwd(cwd, PATH_MAX_LEN))
+		return ;
+	if (prev_pwd && prev_pwd[0] == '/' && prev_pwd[1] == '/')
+	{
+		ft_strlcpy(tmp, "//", sizeof(tmp));
+		ft_strlcat(tmp, cwd + 1, sizeof(tmp));
+		setenv("PWD", tmp, 1);
+	}
+	else
+		setenv("PWD", cwd, 1);
+}
+
+/* -------------------- update PWD & OLDPWD ------------------- */
+static void	update_pwd(const char *prev_pwd, int dash, int dbl_sl)
 {
 	char	cwd[PATH_MAX_LEN];
 
@@ -79,28 +96,38 @@ static void	update_pwd(int dash, int double_slash)
 		write(1, cwd, ft_strlen(cwd));
 		write(1, "\n", 1);
 	}
-	setenv("OLDPWD", getenv("PWD"), 1);
-	if (double_slash)
-		setenv("PWD", "//", 1);
-	else if (getcwd(cwd, PATH_MAX_LEN))
-		setenv("PWD", cwd, 1);
+	if (prev_pwd)
+		setenv("OLDPWD", prev_pwd, 1);
+	else
+		setenv("OLDPWD", "", 1);
+	set_pwd_value(prev_pwd, dbl_sl);
 }
 
+/* ------------------------- main builtin --------------------- */
 int	process_cd(char **args, char **envp)
 {
 	char	*target;
+	char	*prev_pwd;
 	int		dash;
 	int		dbl_sl;
 
 	(void)envp;
 	if (args[1] && args[2])
-		return (print_too_many());
+	{
+		write(2, "minishell: cd: too many arguments\n", 35);
+		return (1);
+	}
 	if (args[1] && ft_strchr(args[1], '*'))
-		return (print_too_many());
+	{
+		write(2, "minishell: cd: too many arguments\n", 35);
+		return (1);
+	}
+	prev_pwd = getenv("PWD");
+	dash = 0;
 	if (get_target(args, &target, &dash, &dbl_sl))
 		return (1);
 	if (change_directory(target))
 		return (1);
-	update_pwd(dash, dbl_sl);
+	update_pwd(prev_pwd, dash, dbl_sl);
 	return (0);
 }

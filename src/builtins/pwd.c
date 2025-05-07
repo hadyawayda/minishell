@@ -6,13 +6,14 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:09:20 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/07 12:09:22 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/07 13:05:45 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #define PATH_MAX_LEN 1024
 
@@ -40,9 +41,16 @@ int	process_pwd(char **args)
 		return (1);
 	pwd = getenv("PWD");
 	if (pwd && *pwd)
-		return (write(1, pwd, ft_strlen(pwd)), write(1, "\n", 1), 0);
+	{
+		write(1, pwd, ft_strlen(pwd));
+		write(1, "\n", 1);
+		return (0);
+	}
 	if (!getcwd(buf, PATH_MAX_LEN))
-		return (perror("bash: pwd"), 1);
+	{
+		perror("bash: pwd");
+		return (1);
+	}
 	write(1, buf, ft_strlen(buf));
 	write(1, "\n", 1);
 	return (0);
