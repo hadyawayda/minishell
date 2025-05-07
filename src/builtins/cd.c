@@ -6,28 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/05 15:14:00 by nabbas           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../../includes/minishell.h"
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "minishell.h"   
-#include "builtins.h"
-
-#define PATH_MAX_LEN 1024
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 21:19:30 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/05 15:00:00 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/07 12:08:20 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +24,7 @@ static int	print_too_many(void)
 }
 
 static int	get_target(char **args, char **target,
-				 int *dash, int *double_slash)
+			int *dash, int *double_slash)
 {
 	char	*src;
 
