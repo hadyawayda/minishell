@@ -6,24 +6,41 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:53:10 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/07 13:10:22 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/07 15:41:58 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <sys/stat.h>
 
-/* ----- common "$VAR not set" error ----------------------------------- */
+/* ---------- "$VAR not set" error ---------------------------- */
 int	cd_env_error(char *var)
 {
-	write(2, "minishell: cd: ", 15);
-	write(2, var, ft_strlen(var));
-	write(2, " not set\n", 9);
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(var, 2);
+	ft_putstr_fd(" not set\n", 2);
 	return (1);
 }
 
-/* ---- fetch $VAR, set *dash if given, duplicate into *target ----------- */
+/* ---------- generic getcwd() failure reporter --------------- */
+int	print_getcwd_error(const char *cmd)
+{
+	const char	*msg1;
+	const char	*msg2;
+
+	msg1 = ": error retrieving current directory: getcwd: cannot "
+		"access parent directories: ";
+	msg2 = "No such file or directory\n";
+	write(2, cmd, ft_strlen(cmd));
+	write(2, msg1, ft_strlen(msg1));
+	write(2, msg2, ft_strlen(msg2));
+	return (1);
+}
+
+/* ----- duplicate $VAR into *target, set dash when needed ----- */
 int	set_target_from_env(char **target, char *var, int *dash)
 {
 	char	*val;
@@ -34,7 +51,5 @@ int	set_target_from_env(char **target, char *var, int *dash)
 	if (dash)
 		*dash = 1;
 	*target = ft_strdup(val);
-	if (*target == NULL)
-		return (1);
-	return (0);
+	return (*target == NULL);
 }

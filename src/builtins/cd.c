@@ -6,7 +6,7 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
-/*   Updated: 2025/05/07 13:21:26 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/07 15:29:47 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	get_target(char **args, char **target, int *dash, int *dbl_sl)
 	return (*target == NULL);
 }
 
-/* ---------------------- chdir + checks ---------------------- */
+/* ---------------- perform chdir & checks -------------------- */
 static int	change_directory(char *target)
 {
 	struct stat	st;
@@ -63,7 +63,7 @@ static int	change_directory(char *target)
 	return (0);
 }
 
-/* ---------------- set PWD based on current state ------------- */
+/* ------------- compute the new PWD value -------------------- */
 static void	set_pwd_value(const char *prev_pwd, int dbl_sl)
 {
 	char	cwd[PATH_MAX_LEN];
@@ -75,26 +75,37 @@ static void	set_pwd_value(const char *prev_pwd, int dbl_sl)
 		return ;
 	}
 	if (!getcwd(cwd, PATH_MAX_LEN))
+	{
+		print_getcwd_error("chdir");
 		return ;
+	}
 	if (prev_pwd && prev_pwd[0] == '/' && prev_pwd[1] == '/')
 	{
 		ft_strlcpy(tmp, "//", sizeof(tmp));
-		ft_strlcat(tmp, cwd + 1, sizeof(tmp));
+		if (cwd[0] == '/' && cwd[1] == '/')
+			ft_strlcat(tmp, cwd + 2, sizeof(tmp));
+		else
+			ft_strlcat(tmp, cwd + 1, sizeof(tmp));
 		setenv("PWD", tmp, 1);
 	}
 	else
 		setenv("PWD", cwd, 1);
 }
 
-/* -------------------- update PWD & OLDPWD ------------------- */
+/* -------------- update PWD / OLDPWD + echo for cd - -------- */
 static void	update_pwd(const char *prev_pwd, int dash, int dbl_sl)
 {
 	char	cwd[PATH_MAX_LEN];
 
-	if (dash && getcwd(cwd, PATH_MAX_LEN))
+	if (dash)
 	{
-		write(1, cwd, ft_strlen(cwd));
-		write(1, "\n", 1);
+		if (!getcwd(cwd, PATH_MAX_LEN))
+			print_getcwd_error("chdir");
+		else
+		{
+			write(1, cwd, ft_strlen(cwd));
+			write(1, "\n", 1);
+		}
 	}
 	if (prev_pwd)
 		setenv("OLDPWD", prev_pwd, 1);
@@ -103,7 +114,7 @@ static void	update_pwd(const char *prev_pwd, int dash, int dbl_sl)
 	set_pwd_value(prev_pwd, dbl_sl);
 }
 
-/* ------------------------- main builtin --------------------- */
+/* ----------------------------- builtin --------------------- */
 int	process_cd(char **args, char **envp)
 {
 	char	*target;
@@ -113,15 +124,9 @@ int	process_cd(char **args, char **envp)
 
 	(void)envp;
 	if (args[1] && args[2])
-	{
-		write(2, "minishell: cd: too many arguments\n", 35);
-		return (1);
-	}
+		return (write(2, "minishell: cd: too many arguments\n", 35), 1);
 	if (args[1] && ft_strchr(args[1], '*'))
-	{
-		write(2, "minishell: cd: too many arguments\n", 35);
-		return (1);
-	}
+		return (write(2, "minishell: cd: too many arguments\n", 35), 1);
 	prev_pwd = getenv("PWD");
 	dash = 0;
 	if (get_target(args, &target, &dash, &dbl_sl))
