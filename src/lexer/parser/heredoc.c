@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/05 00:40:23 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/07 18:55:34 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,11 @@ void	collect_heredocs(t_shell *shell, t_token tokens[])
 	{
 		if (tokens[i].type == T_REDIR_HERE)
 		{
-			if (tokens[i+1].type != T_WORD)
+			if (tokens[i + 1].type != T_WORD)
 			{
-					fprintf(stderr,
-							"syntax error near unexpected token `%s`\n",
-							tokens[i+1].value ? tokens[i+1].value : "newline");
-					return;
+				fprintf(stderr, "syntax error near unexpected token `%s`\n",
+					tokens[i + 1].value ? tokens[i + 1].value : "newline");
+				return ;
 			}
 			delim = tokens[i + 1].value;
 			expand = !tokens[i + 1].quoted;

@@ -27,9 +27,8 @@ CORE =			src/core/env/expansion/expansion.c \
 				src/core/program/program.c \
 				src/core/signals/signals.c \
 
-LEXER = 	src/lexer/parser/ast_builder.c \
+LEXER = 		src/lexer/parser/ast_builder.c \
 				src/lexer/parser/ast_traverser.c \
-				src/lexer/parser/cleaner.c \
 				src/lexer/parser/heredoc.c \
 				src/lexer/parser/parser_utils.c \
 				src/lexer/parser/parser.c \
