@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/07 19:39:22 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/10 00:08:04 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@
 static int		cur = 0; /* global index into tokens[]    */
 static t_token *g;  /* global pointer to array       */
 
-/* Forward decls */
-t_ast	*parse_expr(void);    /* lowest precedence (AND/OR)    */
-t_ast	*parse_pipe(void);    /* pipeline level                */
-t_ast	*parse_factor(void);  /* command or parenthesised expr */
-t_ast	*parse_command(void); /* simple cmd with redirs        */
-
 static t_token	*peek(void)
 {
 	return (&g[cur]);
@@ -29,65 +23,6 @@ static t_token	*peek(void)
 static t_token	*next(void)
 {
 	return (&g[cur++]);
-}
-
-t_ast	*parse_expr(void)
-{
-	t_ast		*left;
-	t_node_type	kind;
-	t_ast		*right;
-	t_ast		*node;
-
-	left = parse_pipe();
-	while (peek()->type == T_AND || peek()->type == T_OR)
-	{
-		kind = (peek()->type == T_AND) ? N_AND : N_OR;
-		next(); /* consume && / ||        */
-		right = parse_pipe();
-		node = calloc(1, sizeof *node);
-		node->type = kind;
-		node->left = left;
-		node->right = right;
-		left = node;
-	}
-	return (left);
-}
-
-t_ast	*parse_pipe(void)
-{
-	t_ast	*left;
-	t_ast	*right;
-	t_ast	*node;
-
-	left = parse_factor();
-	while (peek()->type == T_PIPE)
-	{
-		next(); /* consume |              */
-		right = parse_factor();
-		node = calloc(1, sizeof *node);
-		node->type = N_PIPE;
-		node->left = left;
-		node->right = right;
-		left = node;
-	}
-	return (left);
-}
-
-t_ast	*parse_factor(void)
-{
-	t_ast	*sub;
-
-	if (peek()->type == T_LPAREN)
-	{
-		next(); /* consume '('            */
-		sub = parse_expr();
-		if (peek()->type != T_RPAREN)
-			return (NULL); /* unmatched ) – shouldn't happen
-							* after syntax check     */
-		next();          /* consume ')'            */
-		return (sub);
-	}
-	return (parse_command()); /* leaf                   */
 }
 
 t_ast	*parse_command(void)
@@ -140,6 +75,65 @@ t_ast	*parse_command(void)
 	node->cmd.argv = argv;
 	node->cmd.redirs = redir_head;
 	return (node);
+}
+
+t_ast	*parse_factor(void)
+{
+	t_ast	*sub;
+
+	if (peek()->type == T_LPAREN)
+	{
+		next(); /* consume '('            */
+		sub = parse_expr();
+		if (peek()->type != T_RPAREN)
+			return (NULL); /* unmatched ) – shouldn't happen
+							* after syntax check     */
+		next();          /* consume ')'            */
+		return (sub);
+	}
+	return (parse_command()); /* leaf                   */
+}
+
+t_ast	*parse_pipe(void)
+{
+	t_ast	*left;
+	t_ast	*right;
+	t_ast	*node;
+
+	left = parse_factor();
+	while (peek()->type == T_PIPE)
+	{
+		next(); /* consume |              */
+		right = parse_factor();
+		node = calloc(1, sizeof *node);
+		node->type = N_PIPE;
+		node->left = left;
+		node->right = right;
+		left = node;
+	}
+	return (left);
+}
+
+t_ast	*parse_expr(void)
+{
+	t_ast		*left;
+	t_node_type	kind;
+	t_ast		*right;
+	t_ast		*node;
+
+	left = parse_pipe();
+	while (peek()->type == T_AND || peek()->type == T_OR)
+	{
+		kind = (peek()->type == T_AND) ? N_AND : N_OR;
+		next(); /* consume && / ||        */
+		right = parse_pipe();
+		node = calloc(1, sizeof *node);
+		node->type = kind;
+		node->left = left;
+		node->right = right;
+		left = node;
+	}
+	return (left);
 }
 
 /* public entry: build tree from tokens[] */
