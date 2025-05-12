@@ -1,7 +1,7 @@
 NAME =			michel
 CC =			gcc
 AR =			ar rcs
-CFLAGS =		-g
+CFLAGS =		-g -O0
 LIBFT_DIR =		includes/libft
 LIBFT =			$(LIBFT_DIR)/libft.a
 PRINTF_DIR =	includes/ft_printf

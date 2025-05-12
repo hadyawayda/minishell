@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/12 23:51:25 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/13 00:25:23 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,15 @@ t_ast	*parse_command(void)
 		else /* redirection op */
 		{
 			t_tokentype op = next()->type; /* eat < , > , …  */
-			t_token *target_tok = next();  /* the WORD after */
 			r = calloc(1, sizeof *r);
 			r->op = op;
 			if (op == T_REDIR_HERE)
-				r->target = ft_strdup(target_tok->heredoc);
-			else
-				r->target = ft_strdup(target_tok->value);
+				r->target = ft_strdup(g[cur-1].heredoc);
+			else 
+			{
+				t_token *tok = next();
+				r->target = ft_strdup(tok->value);
+			}
 			if (!redir_head)
 				redir_head = r;
 			else
