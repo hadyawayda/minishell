@@ -1,137 +1,127 @@
+/* tree_visualizer.c */
 #include "../parser.h"
-#include <locale.h>
-#include <wchar.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#define MIN_GAP 3      // minimum columns between left/right subtrees
-#define MAX_HEIGHT 128 // maximum lines in the tree
+#define MAX_LABEL  64
+#define HSP         6   // horizontal spacing between subtrees
+#define VSP         4   // vertical spacing per generation
 
-// 1) Compute how many columns this subtree needs
-static int	subtree_width(t_ast *node)
-{
-		const char *s = (node->cmd.argv
-				&& node->cmd.argv[0]) ? node->cmd.argv[0] : "(cmd)";
-		wchar_t ws[64];
-	int	w;
-	int	lw;
-	int	rw;
-
-	if (!node)
-		return (0);
-	if (node->type == N_CMD)
-	{
-		// width = length of first argv or "(cmd)"
-		mbstowcs(ws, s, 64);
-		w = wcslen(ws);
-		return (w < MIN_GAP ? MIN_GAP : w);
-	}
-	lw = subtree_width(node->left);
-	rw = subtree_width(node->right);
-	return (lw + MIN_GAP + rw);
+// 1) Compute tree depth
+static int tree_depth(t_ast *n) {
+    if (!n) return 0;
+    int ld = tree_depth(n->left);
+    int rd = tree_depth(n->right);
+    return 1 + (ld>rd ? ld : rd);
 }
 
-// 2) Recursively lay out the tree into a wchar_t canvas
-static void	render(t_ast *node, wchar_t **canvas, int line, int col, int width)
-{
-	wchar_t	label[64];
-	int		lablen;
-	int		start;
-	int		lw;
-	int		rw;
-	int		mid;
-	int		lx;
-	int		rx;
-
-	if (!node)
-		return ;
-	// 2a) draw this node’s label centered in [col..col+width)
-	if (node->type == N_CMD)
-	{
-		mbstowcs(label, node->cmd.argv
-			&& node->cmd.argv[0] ? node->cmd.argv[0] : "(cmd)", 64);
-	}
-	else if (node->type == N_PIPE)
-	{
-		wcscpy(label, L"|");
-	}
-	else if (node->type == N_AND)
-	{
-		wcscpy(label, L"&&");
-	}
-	else
-	{ // N_OR
-		wcscpy(label, L"||");
-	}
-	lablen = wcslen(label);
-	start = col + (width - lablen) / 2;
-	for (int i = 0; i < lablen; i++)
-		canvas[line][start + i] = label[i];
-	// 2b) if we have children, draw connectors and recurse
-	if (node->left || node->right)
-	{
-		lw = subtree_width(node->left);
-		rw = subtree_width(node->right);
-		mid = col + width / 2;
-		// vertical line down from the middle of this node
-		canvas[line + 1][mid] = L'│';
-		// left child branch
-		if (node->left)
-		{
-			lx = col + lw / 2;
-			canvas[line + 2][lx] = L'┌';
-			for (int x = lx + 1; x < mid; x++)
-				canvas[line + 2][x] = L'─';
-			canvas[line + 3][lx] = L'│';
-			render(node->left, canvas, line + 4, col, lw);
-		}
-		// right child branch
-		if (node->right)
-		{
-			rx = col + lw + MIN_GAP + rw / 2;
-			for (int x = mid + 1; x < rx; x++)
-				canvas[line + 2][x] = L'─';
-			canvas[line + 2][rx] = L'┐';
-			canvas[line + 3][rx] = L'│';
-			render(node->right, canvas, line + 4, col + lw + MIN_GAP, rw);
-		}
-	}
+// 2) Build label: join argv into one string, or use PIPE/AND/OR
+static void get_label(t_ast *n, char *buf, int buf_sz) {
+    if (n->type == N_CMD) {
+        buf[0] = '\0';
+        for (int i = 0; n->cmd.argv && n->cmd.argv[i]; ++i) {
+            if (i) strncat(buf, " ", buf_sz - strlen(buf) - 1);
+            strncat(buf, n->cmd.argv[i], buf_sz - strlen(buf) - 1);
+        }
+        if (buf[0]=='\0')
+            strncpy(buf, "CMD()", buf_sz);
+    } else if (n->type == N_PIPE) {
+        strncpy(buf, "PIPE", buf_sz);
+    } else if (n->type == N_AND) {
+        strncpy(buf, "AND", buf_sz);
+    } else { // N_OR
+        strncpy(buf, "OR", buf_sz);
+    }
+    buf[buf_sz-1] = '\0';
 }
 
-// 3) Public entry: build canvas, render, then print
-void	visualize_tree(t_ast *root)
-{
-	setlocale(LC_CTYPE, "");
+// 3) Compute how wide the subtree must be
+static int subtree_width(t_ast *n) {
+    if (!n) return 0;
+    char lbl[MAX_LABEL];
+    get_label(n, lbl, sizeof lbl);
+    int lw = strlen(lbl);
+    // for internal nodes, ensure at least left + HSP + right
+    int left_w  = subtree_width(n->left);
+    int right_w = subtree_width(n->right);
+    if (n->left || n->right) {
+        int spread = left_w + HSP + right_w;
+        if (spread > lw) lw = spread;
+    }
+    return lw;
+}
 
-	int width = subtree_width(root);
-	int height = MAX_HEIGHT;
+// 4) Render: place label at row; draw diagonal slashes of length VSP to each child
+static void render_rec(
+    t_ast   *n,
+    char   **canvas,
+    int      row,
+    int      left,
+    int      right
+) {
+    if (!n) return;
+    int mid = (left + right) / 2;
 
-	// allocate canvas[height][width+1]
-	wchar_t **canvas = malloc(sizeof(wchar_t *) * height);
-	for (int i = 0; i < height; i++)
-	{
-		canvas[i] = malloc(sizeof(wchar_t) * (width + 1));
-		for (int j = 0; j < width; j++)
-			canvas[i][j] = L' ';
-		canvas[i][width] = L'\0';
-	}
+    // draw label
+    char lbl[MAX_LABEL];
+    get_label(n, lbl, sizeof lbl);
+    int len = strlen(lbl);
+    int start = mid - len/2;
+    if (start < left)        start = left;
+    if (start + len > right+1) start = right+1 - len;
+    memcpy(&canvas[row][start], lbl, len);
 
-	// render the tree
-	render(root, canvas, 0, 0, width);
+    // draw left branch: VSP slashes from (row+1, mid-1) down-left
+    if (n->left) {
+        int child_mid = (left + mid - HSP) / 2;
+        int dc = mid - child_mid;
+        for (int i = 1; i <= VSP; ++i) {
+            int r = row + i;
+            int c = mid - (i * dc + VSP/2) / VSP; 
+            // simple linear interpolation towards child_mid
+            if (c >= 0 && r < row + VSP + 1)
+                canvas[r][c] = '/';
+        }
+        render_rec(n->left, canvas, row + VSP + 1, left, mid - HSP);
+    }
+    // draw right branch
+    if (n->right) {
+        int child_mid = (mid + HSP + right) / 2;
+        int dc = child_mid - mid;
+        for (int i = 1; i <= VSP; ++i) {
+            int r = row + i;
+            int c = mid + (i * dc + VSP/2) / VSP;
+            if (c < right+1 && r < row + VSP + 1)
+                canvas[r][c] = '\\';
+        }
+        render_rec(n->right, canvas, row + VSP + 1, mid + HSP, right);
+    }
+}
 
-	// print non-empty rows
-	for (int i = 0; i < height; i++)
-	{
-		wchar_t *row = canvas[i];
-		// check if row has any non-space
-		int j = 0;
-		while (row[j] == L' ' && j < width)
-			j++;
-		if (j == width)
-			break ;
-		wprintf(L"%ls\n", row);
-	}
+// 5) Public entry: build canvas, render, print
+void visualize_tree(t_ast *root) {
+    int depth = tree_depth(root);
+    if (!depth) return;
+    int rows = depth * (VSP + 1) - VSP;
+    int cols = subtree_width(root);
 
-	// free canvas
-	for (int i = 0; i < height; i++)
-		free(canvas[i]);
-	free(canvas);
+    // allocate and clear
+    char **canvas = malloc(rows * sizeof *canvas);
+    for (int r = 0; r < rows; ++r) {
+        canvas[r] = malloc(cols+1);
+        memset(canvas[r], ' ', cols);
+        canvas[r][cols] = '\0';
+    }
+
+    // draw and print
+    render_rec(root, canvas, 0, 0, cols-1);
+	putchar('\n');
+    const int MARGIN = 4;
+    for (int r = 0; r < rows; ++r) {
+        int c = 0; while (c < cols && canvas[r][c] == ' ') ++c;
+        if (c == cols) break;
+        puts(canvas[r]);
+    }
+    // omit frees while tinkering
 }
