@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/09 21:30:01 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:44:04 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ static void	print_tokens(t_token *tokens)
 	printf("\n");
 }
 
+void free_ast(t_ast *node)
+{
+	if (node != NULL)
+	{
+		free_ast(node->left);
+		free_ast(node->right);
+	}
+	free(node);
+}
+
 void	parser(t_shell *shell, t_token *tokens)
 {
 	t_ast	*root;
@@ -74,6 +84,7 @@ void	parser(t_shell *shell, t_token *tokens)
 	// visualize_tree(root);
 	// traverse_ast(root);
 	free_tokens(tokens);
+	free_ast(root);
 }
 
 // echo $USER | cat <<b | echo hello | cat << c | echo hi

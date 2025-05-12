@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/10 00:08:04 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:51:25 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_ast	*parse_command(void)
 				cap *= 2;
 				argv = realloc(argv, sizeof(char *) * cap);
 			}
-			argv[argc++] = strdup(next()->value);
+			argv[argc++] = ft_strdup(next()->value);
 		}
 		else /* redirection op */
 		{
@@ -61,9 +61,9 @@ t_ast	*parse_command(void)
 			r = calloc(1, sizeof *r);
 			r->op = op;
 			if (op == T_REDIR_HERE)
-				r->target = strdup(target_tok->heredoc);
+				r->target = ft_strdup(target_tok->heredoc);
 			else
-				r->target = strdup(target_tok->value);
+				r->target = ft_strdup(target_tok->value);
 			if (!redir_head)
 				redir_head = r;
 			else
