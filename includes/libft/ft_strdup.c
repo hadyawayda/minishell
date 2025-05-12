@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 16:43:24 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/05/12 23:54:08 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/13 00:29:09 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ char	*ft_strdup(const char *s)
 	char	*dest;
 
 	i = 0;
-	if (!s)
-		return (NULL);
 	len = ft_strlen(s);
 	dest = malloc(sizeof(char) * (len + 1));
 	if (dest == NULL)
