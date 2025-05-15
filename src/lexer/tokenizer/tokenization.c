@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 21:44:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	token_builder(t_shell *shell, const char *input, t_token tokens[])
 	free(st.cur);
 	tokens[st.j].type = (t_tokentype)-1;
 	tokens[st.j].value = NULL;
-	tokens[st.j].quoted = false;
+	tokens[st.j].is_quoted = false;
 }
 
 void	print_tokens(t_token *tokens)
@@ -61,7 +61,7 @@ void	print_tokens(t_token *tokens)
 	while (tokens[i].type != (t_tokentype)-1)
 	{
 		printf("%s", tokens[i].value);
-		if (tokens[i + 1].type != (t_tokentype) - 1)
+		if (tokens[i + 1].type != (t_tokentype)-1)
 			printf(" ");
 		i++;
 	}

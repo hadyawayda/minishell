@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 23:28:11 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_token
 {
 	t_tokentype	type;
 	char		*value;
-	bool		quoted;
+	bool		is_quoted;
 	char		*heredoc;
 }				t_token;
 

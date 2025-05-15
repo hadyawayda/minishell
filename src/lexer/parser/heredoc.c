@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/07 19:31:26 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	collect_heredocs(t_shell *shell, t_token tokens[])
 				return ;
 			}
 			delim = tokens[i + 1].value;
-			expand = !tokens[i + 1].quoted;
+			expand = !tokens[i + 1].is_quoted;
 			tokens[i].heredoc = read_heredoc(delim, expand, shell);
 			shift_left(tokens, i + 1);
 			free(delim);

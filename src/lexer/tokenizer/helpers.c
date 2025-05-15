@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:25:45 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:51:42 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	flush_current(t_token tokens[], t_tokenstate *st)
 	{
 		tokens[st->j].type = T_WORD;
 		tokens[st->j].value = ft_strdup(st->cur);
-		tokens[st->j].quoted = st->had_quotes;
+		tokens[st->j].is_quoted = st->had_quotes;
 		st->j++;
 		st->had_quotes = false;
 		free(st->cur);

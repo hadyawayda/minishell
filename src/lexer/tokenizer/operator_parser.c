@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   operator_parser.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 02:54:28 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:42:59 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 bool	is_double_operator(const char *in, int idx)
 {
 	return ((in[idx] == '|' && in[idx + 1] == '|') || (in[idx] == '&' && in[idx
-				+ 1] == '&') || (in[idx] == '<' && in[idx + 1] == '<')
+			+ 1] == '&') || (in[idx] == '<' && in[idx + 1] == '<')
 		|| (in[idx] == '>' && in[idx + 1] == '>'));
 }
 
@@ -67,7 +67,7 @@ void	operator_parser(const char *in, t_token tokens[], t_tokenstate *st)
 	op = ft_strndup(in + st->i, len);
 	tokens[st->j].type = type;
 	tokens[st->j].value = op;
-	tokens[st->j].quoted = false;
+	tokens[st->j].is_quoted = false;
 	st->j++;
 	st->i += len;
 }
