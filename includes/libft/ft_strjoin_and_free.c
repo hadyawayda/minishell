@@ -6,13 +6,13 @@
 /*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 04:49:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/15 20:01:02 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/15 20:08:56 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_and_free(char *s1, char *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*result;
 	size_t	len1;
@@ -26,7 +26,10 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 		return (NULL);
 	i = 0;
 	while (i < len1)
-		result[i] = s1[i++];
+	{
+		result[i] = s1[i];
+		i++;
+	}
 	i = 0;
 	while (i < len2)
 	{
@@ -34,7 +37,15 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 		i++;
 	}
 	result[len1 + len2] = '\0';
+	return (result);
+}
+
+char	*ft_strjoin_and_free(char *s1, char *s2)
+{
+	char	*joined;
+
+	joined = ft_strjoin(s1, s2);
 	free(s1);
 	free(s2);
-	return (result);
+	return (joined);
 }
