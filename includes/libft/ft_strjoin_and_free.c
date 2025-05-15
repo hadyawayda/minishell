@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_and_free.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 04:49:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/18 19:40:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:01:02 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 		return (NULL);
 	i = 0;
 	while (i < len1)
-	{
-		result[i] = s1[i];
-		i++;
-	}
+		result[i] = s1[i++];
 	i = 0;
 	while (i < len2)
 	{
