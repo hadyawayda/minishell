@@ -12,23 +12,40 @@
 
 #include "../lexer.h"
 
+int contains_unclosed_quote(const char *in, size_t pos, char q)
+{
+	while (in[pos])
+	{
+		if (in[pos] == q)
+			return 0;
+		pos++;
+	}
+	ft_printf("Unclosed quote detected\n");
+	return 1;
+}
+
 int	quote_parser(t_shell *sh, const char *in, t_tokenstate *st)
 {
 	char	q;
 
-	q = in[st->i++];
-	while (in[st->i])
+	q = in[st->i];
+	if (contains_unclosed_quote(in, st->i + 1, q) == 1)
+		return (-1);
+	st->i++;
+	while (in[st->i] && in[st->i] != q)
 	{
-		if (in[st->i] == q)
+		if (st->skip_expansion && in[st->i] == '$')
 		{
-			st->i++;
-			return (0);
+			append_char_inplace(&st->cur, in[st->i], &st->i);
+			word_parser(in, st);
+			continue;
 		}
 		if (q == '"' && in[st->i] == '$')
 			handle_expansion(sh, in, &st->i, &st->cur);
 		else
 			append_char_inplace(&st->cur, in[st->i], &st->i);
 	}
-	ft_printf("Unclosed quote detected\n");
-	return (-1);
+	if (in[st->i] == q)
+		st->i++;
+	return (0);
 }

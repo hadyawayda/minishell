@@ -12,20 +12,23 @@
 
 #include "../lexer.h"
 
-void	process_tokens(t_shell *shell, const char *input, t_token tokens[],
+int	process_tokens(t_shell *shell, const char *input, t_token tokens[],
 		t_tokenstate *st)
 {
 	while (input[st->i])
 	{
 		skip_whitespaces_and_flush(input, st, tokens);
+		if (st->j > 0 && tokens[st->j - 1].type == T_REDIR_HERE)
+			st->skip_expansion = true;
 		if (!input[st->i])
 			break ;
-		if (input[st->i] == '$')
-			dollar_parser(shell, input, st);
+		if (input[st->i] == '$' && dollar_parser(shell, input, st) == -1)
+			return (-1);
 		else if (input[st->i] == '\'' || input[st->i] == '"')
 		{
 			st->had_quotes = true;
-			quote_parser(shell, input, st);
+			if (quote_parser(shell, input, st) == -1)
+				return (-1);
 		}
 		else if (is_operator_char(input[st->i]))
 		{
@@ -35,37 +38,29 @@ void	process_tokens(t_shell *shell, const char *input, t_token tokens[],
 		else
 			word_parser(input, st);
 	}
+	return (0);
 }
 
-void	token_builder(t_shell *shell, const char *input, t_token tokens[])
+int	token_builder(t_shell *shell, const char *input, t_token tokens[])
 {
 	t_tokenstate	st;
 
 	st.i = 0;
 	st.j = 0;
 	st.had_quotes = false;
+	st.skip_expansion = false;
 	st.cur = ft_strdup("");
-	process_tokens(shell, input, tokens, &st);
+	if (process_tokens(shell, input, tokens, &st) == -1)
+	{
+		free(st.cur);
+		return (-1);
+	}
 	flush_current(tokens, &st);
 	free(st.cur);
 	tokens[st.j].type = (t_tokentype)-1;
 	tokens[st.j].value = NULL;
 	tokens[st.j].is_quoted = false;
-}
-
-void	print_tokens(t_token *tokens)
-{
-	int	i;
-
-	i = 0;
-	while (tokens[i].type != (t_tokentype)-1)
-	{
-		printf("%s", tokens[i].value);
-		if (tokens[i + 1].type != (t_tokentype)-1)
-			printf(" ");
-		i++;
-	}
-	printf("\n");
+	return (0);
 }
 
 t_token	*input_tokenizer(t_shell *shell, char *input)
@@ -75,7 +70,10 @@ t_token	*input_tokenizer(t_shell *shell, char *input)
 	tokens = malloc(sizeof(t_token) * ARG_MAX);
 	if (!tokens)
 		return (NULL);
-	token_builder(shell, input, tokens);
-	// print_tokens(tokens);
+	if (token_builder(shell, input, tokens) == -1)
+	{
+		free(tokens);
+		return NULL;
+	}
 	return (tokens);
 }

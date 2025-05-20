@@ -23,18 +23,24 @@ void	append_literal_dollars(const char *in, int *i, char **cur)
 
 int	dollar_parser(t_shell *sh, const char *in, t_tokenstate *st)
 {
+	if (in[st->i + 1] == '"' || in[st->i + 1] == '\'')
+	{
+		st->had_quotes = true;
+		st->i++;
+		return (quote_parser(sh, in, st));
+	}
+	if (st->skip_expansion)
+	{
+		append_char_inplace(&st->cur, in[st->i], &st->i);
+		word_parser(in, st);
+		return 0;
+	}
 	if (in[st->i] != '$')
 		return (0);
 	if (in[st->i + 1] == '$')
 	{
 		append_literal_dollars(in, &st->i, &st->cur);
 		return (0);
-	}
-	if (in[st->i + 1] == '"' || in[st->i + 1] == '\'')
-	{
-		st->had_quotes = true;
-		st->i++;
-		return (quote_parser(sh, in, st));
 	}
 	handle_expansion(sh, in, &st->i, &st->cur);
 	return (0);

@@ -12,60 +12,6 @@
 
 #include "../parser.h"
 
-void	free_tokens(t_token *tokens)
-{
-	int	i;
-
-	i = 0;
-	while (tokens[i].type != (t_tokentype)-1)
-	{
-		free(tokens[i].value);
-		i++;
-	}
-	free(tokens);
-}
-
-void	visualize_heredoc_tokens(t_token tokens[])
-{
-	int	i;
-
-	for (i = 0; tokens[i].type != (t_tokentype)-1; i++)
-	{
-		if (tokens[i].type == T_REDIR_HERE && tokens[i].heredoc)
-			printf("%s", tokens[i].heredoc);
-		else
-			printf("%s", tokens[i].value);
-		if (tokens[i + 1].type != (t_tokentype)-1)
-			putchar(' ');
-	}
-	putchar('\n');
-}
-
-static void	print_tokens(t_token *tokens)
-{
-	int	i;
-
-	i = 0;
-	while (tokens[i].type != (t_tokentype)-1)
-	{
-		printf("%s", tokens[i].value);
-		if (tokens[i + 1].type != (t_tokentype)-1)
-			printf(" ");
-		i++;
-	}
-	printf("\n");
-}
-
-void free_ast(t_ast *node)
-{
-	if (node != NULL)
-	{
-		free_ast(node->left);
-		free_ast(node->right);
-	}
-	free(node);
-}
-
 void	parser(t_shell *shell, t_token *tokens)
 {
 	t_ast	*root;
@@ -77,14 +23,14 @@ void	parser(t_shell *shell, t_token *tokens)
 		free_tokens(tokens);
 		return ;
 	}
-	collect_heredocs(shell, tokens);
-	// print_tokens(tokens);
+	// collect_heredocs(shell, tokens);
+	print_tokens(tokens);
 	// visualize_heredoc_tokens(tokens);
-	root = build_ast(tokens);
-	visualize_tree(root);
+	// root = build_ast(tokens);
+	// visualize_tree(root);
 	// traverse_ast(root);
 	free_tokens(tokens);
-	free_ast(root);
+	// free_ast(root);
 }
 
 // echo $USER | cat <<b | echo hello | cat << c | echo hi

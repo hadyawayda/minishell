@@ -49,3 +49,7 @@ t_ast				*build_ast(t_token *tokens);
 
 void				traverse_ast(t_ast *n);
 void				visualize_tree(t_ast *root);
+void				free_tokens(t_token *tokens);
+void				visualize_heredoc_tokens(t_token tokens[]);
+void				free_ast(t_ast *node);
+void				print_tokens(t_token *tokens);

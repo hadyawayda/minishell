@@ -17,6 +17,8 @@ void	process_line(t_shell *shell, char *input)
 	t_token	*tokens;
 
 	tokens = input_tokenizer(shell, input);
+	if (!tokens)
+		return;
 	parser(shell, tokens);
 }
 
