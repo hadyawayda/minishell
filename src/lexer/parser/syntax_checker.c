@@ -45,36 +45,6 @@ int	check_single_ampersand(t_token tokens[])
 	return (0);
 }
 
-int	check_operator_sequence(t_token tokens[])
-{
-	t_token	*t;
-
-	for (int i = 0; tokens[i].type != END_TOKEN; i++)
-	{
-		t = &tokens[i];
-		if (t->type == T_AND
-			|| t->type == T_OR
-			|| t->type == T_PIPE)
-		{
-			if (i == 0 || (tokens[i - 1].type != T_WORD && tokens[i
-					- 1].type != T_RPAREN))
-			{
-				fprintf(stderr, "syntax error near unexpected token `%s`\n",
-					t->value);
-				return (-1);
-			}
-			if (tokens[i + 1].type == END_TOKEN || (tokens[i + 1].type != T_WORD
-					&& tokens[i + 1].type != T_LPAREN))
-			{
-				fprintf(stderr, "syntax error near unexpected token `%s`\n",
-					tokens[i + 1].value ? tokens[i + 1].value : "newline");
-				return (-1);
-			}
-		}
-	}
-	return (0);
-}
-
 int	check_redirection_sequence(t_token tokens[])
 {
 	t_tokentype	ty;
@@ -153,6 +123,8 @@ int	check_syntax(t_token tokens[])
 		return (-1);
 	if (check_parentheses_balance(tokens) < 0)
 		return (-1);
+	if (check_dollar_paren(tokens) < 0)
+		return -1;
 	if (check_trailing_token(tokens) < 0)
 		return (-1);
 	return (0);

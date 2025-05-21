@@ -8,47 +8,45 @@ PRINTF_DIR =	includes/ft_printf
 PRINTF =		$(PRINTF_DIR)/libftprintf.a
 SUPPRESSION =	includes/utils/ignore_readline.supp
 
-SRC =			src/main.c \
+# Source directory prefixes
+SRC_DIR					:= src
+PROGRAM_DIR			:= $(SRC_DIR)/core/program
+ENV_DIR					:= $(SRC_DIR)/core/env
+SIGNALS_DIR			:= $(SRC_DIR)/core/signals
+PARSER_DIR			:= $(SRC_DIR)/lexer/parser
+TOKENIZER_DIR		:= $(SRC_DIR)/lexer/tokenizer
 
-CORE =			src/core/env/expansion/expansion.c \
-				src/core/env/getters/list_env.c \
-				src/core/env/getters/list_export.c \
-				src/core/env/getters/merge_sort.c \
-				src/core/env/initialization/cleaner.c \
-				src/core/env/initialization/cloners.c \
-				src/core/env/initialization/helpers.c \
-				src/core/env/initialization/initializer.c \
-				src/core/env/setters/helpers.c \
-				src/core/env/setters/setter.c \
-				src/core/env/setters/unset.c \
-				src/core/shell_loop/loop.c \
-				src/core/program/cleaner.c \
-				src/core/program/initializer.c \
-				src/core/program/program.c \
-				src/core/signals/signals.c \
+# Top-level sources
+SRC            := $(SRC_DIR)/main.c
 
-LEXER = 		src/lexer/parser/ast_builder.c \
-				src/lexer/parser/ast_traverser.c \
-				src/lexer/parser/heredoc.c \
-				src/lexer/parser/parser_utils.c \
-				src/lexer/parser/parser.c \
-				src/lexer/parser/syntax_checker.c \
-				src/lexer/parser/tree_visualizer.c \
-				src/lexer/tokenizer/dollar_parser.c \
-				src/lexer/tokenizer/expansion.c \
-				src/lexer/tokenizer/tokenization.c \
-				src/lexer/tokenizer/helpers.c \
-				src/lexer/tokenizer/operator_parser.c \
-				src/lexer/tokenizer/quote_parser.c \
-				src/lexer/tokenizer/word_parser.c \
+PROGRAM_SRCS		:= loop.c cleaner.c initializer.c program.c
 
-OBJDIR =		includes/objs
+# Per-component source filenames (relative to their directory)
+ENV_SRCS				:= expansion/expansion.c getters/list_env.c getters/list_export.c getters/merge_sort.c \
+									initialization/cleaner.c initialization/cloners.c initialization/helpers.c initialization/initializer.c \
+									setters/helpers.c setters/setter.c setters/unset.c
 
-SRCS =			$(SRC) $(CORE) $(LEXER)
+SIGNALS_SRCS		:= signals.c
 
-OBJS =			$(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
+PARSER_SRCS			:= ast_builder.c ast_traverser.c heredoc.c parser_utils.c parser.c syntax_checker.c syntax_checker_helpers.c tree_visualizer.c
 
-all :			$(NAME)
+TOKENIZER_SRCS	:= dollar_parser.c expansion.c tokenization.c helpers.c operator_parser.c quote_parser.c word_parser.c
+
+# Prefix them with their directories
+PROGRAM					:= $(addprefix $(PROGRAM_DIR)/,$(PROGRAM_SRCS))
+ENV							:= $(addprefix $(ENV_DIR)/,$(ENV_SRCS))
+SIGNALS					:= $(addprefix $(SIGNALS_DIR)/,$(SIGNALS_SRCS))
+PARSER					:= $(addprefix $(PARSER_DIR)/,$(PARSER_SRCS))
+TOKENIZER				:= $(addprefix $(TOKENIZER_DIR)/,$(TOKENIZER_SRCS))
+
+# Build output directory
+OBJDIR					:= includes/objs
+
+# All sources and objects
+SRCS						:= $(SRC) $(ENV) $(PROGRAM) $(SIGNALS) $(TOKENIZER) $(PARSER)
+OBJS						:= $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
+
+all	:			$(NAME)
 
 $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
 				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline

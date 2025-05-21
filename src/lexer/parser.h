@@ -41,11 +41,8 @@ typedef struct s_ast
 	t_cmd_leaf cmd; /* only valid when type == N_CMD    */
 }					t_ast;
 
-t_ast				*parse_expr(void);
-t_ast				*parse_pipe(void);
-t_ast				*parse_factor(void);
-t_ast				*parse_command(void);
-t_ast				*build_ast(t_token *tokens);
+int					check_operator_sequence(t_token tokens[]);
+int					check_dollar_paren(t_token tokens[]);
 
 void				traverse_ast(t_ast *n);
 void				visualize_tree(t_ast *root);
@@ -53,3 +50,9 @@ void				free_tokens(t_token *tokens);
 void				visualize_heredoc_tokens(t_token tokens[]);
 void				free_ast(t_ast *node);
 void				print_tokens(t_token *tokens);
+
+t_ast				*parse_expr(void);
+t_ast				*parse_pipe(void);
+t_ast				*parse_factor(void);
+t_ast				*parse_command(void);
+t_ast				*build_ast(t_token *tokens);
