@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:03:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/23 00:01:20 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ t_ast	*parse_command(t_parser *p)
 {
 	t_ast	*node;
 	int		n_opts;
-	int		n_args;
 
 	n_opts = 0;
-	n_args = 0;
 	count_opts(p, &n_opts);
 	node = alloc_cmd_node(n_opts);
 	fill_cmd_node(p, node);

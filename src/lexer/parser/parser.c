@@ -6,11 +6,12 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:08:47 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 23:44:59 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
+#include <stdio.h>
 
 void	parser(t_shell *shell, t_token *tokens)
 {

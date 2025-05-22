@@ -26,3 +26,13 @@ D execute.sh includes Makefile README.md r.sh src tester utils
 
 echo D*
 D*
+
+
+Michel > echo a < a > b >> c -b
+zsh: segmentation fault (core dumped)  ./michel
+c1r1s8% ./michel
+Michel > echo a < a > b
+zsh: segmentation fault (core dumped)  ./michel
+c1r1s8% ./michel
+Michel > echo a < a
+zsh: segmentation fault (core dumped)  ./michel

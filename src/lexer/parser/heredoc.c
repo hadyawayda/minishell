@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:36:33 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 23:40:29 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,28 @@ void	shift_left(t_token tokens[], int idx)
 		tokens[idx] = tokens[idx + 1];
 		idx++;
 	}
-	tokens[idx] = tokens[idx + 1];
 }
 
-int	process_heredoc_token(t_shell *shell, t_token tokens[], int idx)
+int	process_heredoc_token(t_shell *shell, t_token tokens[], int i)
 {
 	char	*delim;
 	int		expand;
 
-	if (tokens[idx + 1].type != T_WORD)
+	if (tokens[i + 1].type != T_WORD)
 	{
-		if (tokens[idx + 1].value)
-			printf("syntax error near unexpected token `%s`\n", tokens[idx
+		if (tokens[i + 1].value)
+			printf("syntax error near unexpected token `%s`\n", tokens[i
 				+ 1].value);
 		else
 			printf("syntax error near unexpected token `newline`\n");
 		return (-1);
 	}
-	delim = tokens[idx + 1].value;
-	expand = !tokens[idx + 1].is_quoted;
-	tokens[idx].heredoc = read_heredoc(delim, expand, shell);
-	shift_left(tokens, idx + 1);
+	delim = tokens[i + 1].value;
+	expand = !tokens[i + 1].is_quoted;
+	tokens[i].heredoc = read_heredoc(delim, expand, shell);
+	shift_left(tokens, i + 1);
 	free(delim);
-	return (idx + 1);
+	return (i);
 }
 
 void	collect_heredocs(t_shell *shell, t_token tokens[])

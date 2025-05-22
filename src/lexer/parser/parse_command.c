@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:23:42 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:06:09 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/23 00:00:21 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,23 @@ void	count_opts(t_parser *p, int *n_opts)
 
 	save = p->pos;
 	*n_opts = 0;
-	tok = peek(p);
-	while (tok->type == T_WORD || is_redir(tok->type))
+	while (1)
 	{
+		tok = peek(p);
 		if (tok->type == T_WORD)
 		{
 			next(p);
 			if (tok->value[0] == '-' && !tok->is_quoted)
 				(*n_opts)++;
 		}
-		else
+		else if (is_redir(tok->type))
 		{
 			next(p);
-			if (peek(p)->type == T_WORD)
+			if (tok->type != T_REDIR_HERE && peek(p)->type == T_WORD)
 				next(p);
 		}
+		else
+			break ;
 	}
 	p->pos = save;
 }
@@ -59,15 +61,24 @@ t_redir	*parse_redir(t_parser *p)
 {
 	t_token	*op_tok;
 	t_redir	*r;
+	t_token	*tgt;
 
 	op_tok = next(p);
 	r = malloc(sizeof * r);
 	ft_memset(r, 0, sizeof * r);
 	r->op = op_tok->type;
 	if (r->op == T_REDIR_HERE)
-		r->target = ft_strdup(op_tok[1].heredoc);
+	{
+		if (op_tok->heredoc)
+			r->target = ft_strdup(op_tok->heredoc);
+		else
+			r->target = ft_strdup("");
+	}
 	else
-		r->target = ft_strdup(next(p)->value);
+	{
+		tgt = next(p);
+		r->target = ft_strdup(tgt->value);
+	}
 	r->next = NULL;
 	return (r);
 }
@@ -98,18 +109,18 @@ void	fill_cmd_node(t_parser *p, t_ast *node)
 	rtail = NULL;
 	args_head = NULL;
 	args_tail = NULL;
-	tok = peek(p);
-	while (tok->type == T_WORD || is_redir(tok->type))
+	while (1)
 	{
+		tok = peek(p);
 		if (tok->type == T_WORD)
 		{
-			tok = next(p);
+			next(p);
 			handle_word_token(node, tok, &args_head, &args_tail);
 		}
-		else
-		{
+		else if (is_redir(tok->type))
 			handle_redir_token(p, &rhead, &rtail);
-		}
+		else
+			break ;
 	}
 	node->cmd.redirs = rhead;
 	node->cmd.args = args_head;
