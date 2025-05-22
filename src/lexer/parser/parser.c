@@ -23,11 +23,11 @@ void	parser(t_shell *shell, t_token *tokens)
 		free_tokens(tokens);
 		return ;
 	}
-	// collect_heredocs(shell, tokens);
-	print_tokens(tokens);
+	collect_heredocs(shell, tokens);
+	// print_tokens(tokens);
 	// visualize_heredoc_tokens(tokens);
-	// root = build_ast(tokens);
-	// visualize_tree(root);
+	root = build_ast(tokens);
+	visualize_tree(root);
 	// traverse_ast(root);
 	free_tokens(tokens);
 	// free_ast(root);

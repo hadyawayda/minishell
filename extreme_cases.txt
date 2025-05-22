@@ -1,1 +1,55 @@
+echo hello
+ls -l /tmp
+grep foo file.txt
+echo a | grep a
+echo a | echo b | echo c
+echo a && echo b
+echo a || echo b
+echo a && echo b || echo c
+echo a || echo b && echo c
+(echo a)
+(echo a && echo b)
+(echo a || echo b)
+(echo a && (echo b || echo c))
+((echo a) && echo b) || echo c
+echo a | (echo b && echo c) | echo d
+(echo a | echo b) && (echo c | echo d)
+echo a > out.txt
+echo a >> out.txt
+cat < input.txt
+grep foo < in.txt > out.txt
+grep foo < in.txt >> out.txt
+echo a 2> err.log
+echo a > out1.txt > out2.txt
+echo a > out.txt 2>&1
+echo a | tee t.txt > out.txt
+echo a && echo b > b.txt
+echo a || echo b > b.txt
+(echo a > a.txt) && (echo b > b.txt)
+echo $(date) | grep 2023
+cat <<EOF
+cat <<'EOF'
+cat <<"EOF"
+grep foo <<EOF | wc -l
+(grep a <<E1) | (grep b <<E2)
+echo a && cat <<E
+cat <<E1 | cat <<E2 | cat <<E3
+echo a | grep a && echo b | grep b
+(echo a | grep a) && (echo b | grep b)
+echo a | (grep a && echo success)
+(echo a && echo b) | (echo c && echo d)
+echo a | grep a || echo fallback
+echo start && (echo mid1 || echo mid2) && echo end
+(echo a || echo b) && (echo c || echo d)
+((echo x && echo y) || echo z) | grep z
+echo a > f1.txt < f2.txt
+echo a < f1.txt > f2.txt >> f3.txt
+(echo a >> f1) && (echo b <<B)
+cmd1 | cmd2 > out && cmd3 < in || cmd4 >> append
+(cmdA arg1 arg2) || (cmdB arg3 arg4) | cmdC
+((echo a | echo b) && (echo c || echo d)) | (grep d > d.txt)
+(echo a | echo b) && (echo c || echo d) | (grep d > d.txt)
+((echo a | echo b) && (echo c || echo d)) | (grep d > d.txt) || (echo a | echo b) && (echo c || echo d) | (grep d > d.txt)
 ( echo a << E1 | (echo b <<E2 && echo c ) ) | echo d << E3
+echo a << E1 | ( (echo b <<E2 && echo c )  | echo d << E3 )
+echo -e a << E1 | ( (echo b -e <<E2 && echo c )  | echo d << E3 -e)

@@ -49,7 +49,7 @@ OBJS						:= $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
 all	:			$(NAME)
 
 $(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
-				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline
+				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline -lm
 
 $(LIBFT):
 				@make --no-print-directory -C $(LIBFT_DIR)
