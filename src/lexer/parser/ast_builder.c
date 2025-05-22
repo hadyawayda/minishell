@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 20:51:08 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:03:00 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ t_ast	*parse_pipe(t_parser *p)
 	{
 		next(p);
 		right = parse_factor(p);
-		node = malloc(sizeof *node);
-		ft_memset(node, 0, sizeof *node);
+		node = malloc(sizeof * node);
+		ft_memset(node, 0, sizeof * node);
 		node->type = N_PIPE;
 		node->left = left;
 		node->right = right;
@@ -74,11 +74,14 @@ t_ast	*parse_expr(t_parser *p)
 	left = parse_pipe(p);
 	while (peek(p)->type == T_AND || peek(p)->type == T_OR)
 	{
-		kind = (peek(p)->type == T_AND) ? N_AND : N_OR;
+		if (peek(p)->type == T_AND)
+			kind = N_AND;
+		else if (peek(p)->type == T_OR)
+			kind = N_OR;
 		next(p);
 		right = parse_pipe(p);
-		node = malloc(sizeof *node);
-		ft_memset(node, 0, sizeof *node);
+		node = malloc(sizeof * node);
+		ft_memset(node, 0, sizeof * node);
 		node->type = kind;
 		node->left = left;
 		node->right = right;

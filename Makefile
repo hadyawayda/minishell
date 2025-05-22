@@ -28,7 +28,7 @@ ENV_SRCS		:= expansion/expansion.c getters/list_env.c getters/list_export.c gett
 
 SIGNALS_SRCS	:= signals.c
 
-PARSER_SRCS		:= ast_builder.c ast_traverser.c heredoc.c parse_command_helpers.c parse_command.c parser_helpers.c \
+PARSER_SRCS		:= ast_builder.c ast_traverser.c heredoc_helpers.c heredoc.c parse_command_helpers.c parse_command.c parser_helpers.c \
 				   parser_utils.c parser.c syntax_checker.c syntax_checker_helpers.c tree_parser.c tree_visualizer.c
 
 TOKENIZER_SRCS	:= dollar_parser.c expansion.c tokenization.c helpers.c operator_parser.c quote_parser.c word_parser.c

@@ -6,11 +6,13 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 20:59:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:34:19 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./lexer.h"
+
+#define END_TOKEN ((t_tokentype)-1)
 
 typedef enum e_node_type
 {
@@ -56,10 +58,16 @@ typedef struct s_parser
 }						t_parser;
 
 char					**expand_wildcards(char **arguments, bool *expandable);
+char					*expand_line_heredoc(t_shell *shell, const char *line);
+char					*make_chunk(t_shell *shell, const char *line,
+							int expand, size_t *chunk_len);
+char					*append_buf(char *buf, size_t len, const char *chunk,
+							size_t chunk_len);
 
 int						check_operator_sequence(t_token tokens[]);
 int						check_dollar_paren(t_token tokens[]);
 int						is_redir(t_tokentype t);
+int						check_leading_token(t_token tokens[]);
 
 void					traverse_ast(t_ast *n);
 void					visualize_tree(t_ast *root);

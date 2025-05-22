@@ -6,38 +6,25 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:58:49 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:25:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-#define END_TOKEN ((t_tokentype)-1)
-
-int	check_leading_token(t_token tokens[])
-{
-	if (tokens[0].type == END_TOKEN)
-		return (0);
-	if (tokens[0].type != T_WORD && tokens[0].type != T_LPAREN
-		&& tokens[0].type != T_REDIR_IN && tokens[0].type != T_REDIR_OUT
-		&& tokens[0].type != T_REDIR_APPEND && tokens[0].type != T_REDIR_HERE)
-	{
-		fprintf(stderr, "syntax error near unexpected token `%s`\n",
-			tokens[0].value ? tokens[0].value : "newline");
-		return (-1);
-	}
-	return (0);
-}
-
 int	check_single_ampersand(t_token tokens[])
 {
-	for (int i = 0; tokens[i].type != END_TOKEN; i++)
+	int	i;
+
+	i = 0;
+	while (tokens[i].type != END_TOKEN)
 	{
 		if (tokens[i].type == T_WORD && strcmp(tokens[i].value, "&") == 0)
 		{
-			fprintf(stderr, "syntax error: single '&' not allowed\n");
+			printf("syntax error: single '&' not allowed\n");
 			return (-1);
 		}
+		i++;
 	}
 	return (0);
 }
@@ -45,8 +32,10 @@ int	check_single_ampersand(t_token tokens[])
 int	check_redirection_sequence(t_token tokens[])
 {
 	t_tokentype	ty;
+	int			i;
 
-	for (int i = 0; tokens[i].type != END_TOKEN; i++)
+	i = 0;
+	while (tokens[i].type != END_TOKEN)
 	{
 		ty = tokens[i].type;
 		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND
@@ -54,11 +43,15 @@ int	check_redirection_sequence(t_token tokens[])
 		{
 			if (tokens[i + 1].type != T_WORD)
 			{
-				fprintf(stderr, "syntax error near unexpected token `%s`\n",
-					tokens[i + 1].value ? tokens[i + 1].value : "newline");
+				if (tokens[i + 1].value)
+					printf("syntax error near unexpected token `%s`\n", tokens[i
+						+ 1].value);
+				else
+					printf("syntax error near unexpected token `newline`\n");
 				return (-1);
 			}
 		}
+		i++;
 	}
 	return (0);
 }
@@ -66,9 +59,11 @@ int	check_redirection_sequence(t_token tokens[])
 int	check_parentheses_balance(t_token tokens[])
 {
 	int	depth;
+	int	i;
 
+	i = 0;
 	depth = 0;
-	for (int i = 0; tokens[i].type != END_TOKEN; i++)
+	while (tokens[i].type != END_TOKEN)
 	{
 		if (tokens[i].type == T_LPAREN)
 			depth++;
@@ -76,14 +71,15 @@ int	check_parentheses_balance(t_token tokens[])
 		{
 			if (--depth < 0)
 			{
-				fprintf(stderr, "syntax error: unmatched `)`\n");
+				printf("syntax error: unmatched `)`\n");
 				return (-1);
 			}
 		}
+		i++;
 	}
 	if (depth > 0)
 	{
-		fprintf(stderr, "syntax error: unmatched `(`\n");
+		printf("syntax error: unmatched `(`\n");
 		return (-1);
 	}
 	return (0);
@@ -103,7 +99,7 @@ int	check_trailing_token(t_token tokens[])
 	if (ty == T_AND || ty == T_OR || ty == T_PIPE || ty == T_REDIR_IN
 		|| ty == T_REDIR_OUT || ty == T_REDIR_APPEND)
 	{
-		fprintf(stderr, "syntax error near unexpected token `newline`\n");
+		printf("syntax error near unexpected token `newline`\n");
 		return (-1);
 	}
 	return (0);

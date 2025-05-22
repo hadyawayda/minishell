@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:37:55 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 20:52:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:04:04 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ t_argnode	*make_argnode(const char *val, bool exp)
 {
 	t_argnode	*an;
 
-	an = malloc(sizeof *an);
-	ft_memset(an, 0, sizeof *an);
+	an = malloc(sizeof * an);
+	ft_memset(an, 0, sizeof * an);
 	an->value = ft_strdup(val);
 	an->expandable = exp;
 	an->next = NULL;

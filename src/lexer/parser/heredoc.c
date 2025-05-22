@@ -6,77 +6,36 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:58:46 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:36:33 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
 
-char	*expand_line_heredoc(t_shell *shell, const char *line)
-{
-	t_tokenstate	st;
-
-	st.i = 0;
-	st.cur = ft_strdup("");
-	st.had_quotes = false;
-	while (line[st.i])
-	{
-		if (line[st.i] == '$')
-			dollar_parser(shell, line, &st);
-		else
-			append_char_inplace(&st.cur, line[st.i], &st.i);
-	}
-	return (st.cur);
-}
-
+/*–– main heredoc reader ––*/
 char	*read_heredoc(char *delim, int expand, t_shell *shell)
 {
 	char	*buf;
 	size_t	len;
 	char	*line;
-	char	*text;
-	size_t	chunk;
-	char	*newbuf;
-	size_t	k;
-	size_t	m;
+	char	*chunk;
+	size_t	chunk_len;
 
 	buf = ft_strdup("");
 	len = 0;
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
-			break ;
 		if (ft_strcmp(line, delim) == 0)
 		{
 			free(line);
 			break ;
 		}
-		if (expand)
-			text = expand_line_heredoc(shell, line);
-		else
-			text = ft_strdup(line);
+		chunk = make_chunk(shell, line, expand, &chunk_len);
 		free(line);
-		chunk = ft_strlen(text) + 1;
-		newbuf = malloc(len + chunk + 1);
-		k = 0;
-		while (k < len)
-		{
-			newbuf[k] = buf[k];
-			k++;
-		}
-		m = 0;
-		while (m < chunk - 1)
-		{
-			newbuf[k + m] = text[m];
-			m++;
-		}
-		newbuf[k + m] = '\n';
-		newbuf[k + m + 1] = '\0';
-		free(buf);
-		buf = newbuf;
-		len += chunk;
-		free(text);
+		buf = append_buf(buf, len, chunk, chunk_len);
+		len += chunk_len;
+		free(chunk);
 	}
 	return (buf);
 }
@@ -91,30 +50,42 @@ void	shift_left(t_token tokens[], int idx)
 	tokens[idx] = tokens[idx + 1];
 }
 
-void	collect_heredocs(t_shell *shell, t_token tokens[])
+int	process_heredoc_token(t_shell *shell, t_token tokens[], int idx)
 {
-	int		i;
 	char	*delim;
 	int		expand;
+
+	if (tokens[idx + 1].type != T_WORD)
+	{
+		if (tokens[idx + 1].value)
+			printf("syntax error near unexpected token `%s`\n", tokens[idx
+				+ 1].value);
+		else
+			printf("syntax error near unexpected token `newline`\n");
+		return (-1);
+	}
+	delim = tokens[idx + 1].value;
+	expand = !tokens[idx + 1].is_quoted;
+	tokens[idx].heredoc = read_heredoc(delim, expand, shell);
+	shift_left(tokens, idx + 1);
+	free(delim);
+	return (idx + 1);
+}
+
+void	collect_heredocs(t_shell *shell, t_token tokens[])
+{
+	int	i;
+	int	next_idx;
 
 	i = 0;
 	while (tokens[i].type != (t_tokentype)-1)
 	{
 		if (tokens[i].type == T_REDIR_HERE)
 		{
-			if (tokens[i + 1].type != T_WORD)
-			{
-				fprintf(stderr, "syntax error near unexpected token `%s`\n",
-					tokens[i + 1].value ? tokens[i + 1].value : "newline");
+			next_idx = process_heredoc_token(shell, tokens, i);
+			if (next_idx < 0)
 				return ;
-			}
-			delim = tokens[i + 1].value;
-			expand = !tokens[i + 1].is_quoted;
-			tokens[i].heredoc = read_heredoc(delim, expand, shell);
-			shift_left(tokens, i + 1);
-			free(delim);
-			i++;
-			continue ;
+			i = next_idx;
 		}
 		i++;
 	}

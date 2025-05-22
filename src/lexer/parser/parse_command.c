@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:23:42 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 20:51:04 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:06:09 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	count_opts(t_parser *p, int *n_opts)
 
 	save = p->pos;
 	*n_opts = 0;
-	while ((tok = peek(p))->type == T_WORD || is_redir(tok->type))
+	tok = peek(p);
+	while (tok->type == T_WORD || is_redir(tok->type))
 	{
 		if (tok->type == T_WORD)
 		{
@@ -42,14 +43,14 @@ t_ast	*alloc_cmd_node(int n_opts)
 {
 	t_ast	*node;
 
-	node = malloc(sizeof *node);
-	ft_memset(node, 0, sizeof *node);
+	node = malloc(sizeof * node);
+	ft_memset(node, 0, sizeof * node);
 	node->type = N_CMD;
 	node->cmd.command = NULL;
 	node->cmd.redirs = NULL;
 	node->cmd.args = NULL;
-	node->cmd.options = malloc((n_opts + 1) * sizeof *node->cmd.options);
-	ft_memset(node->cmd.options, 0, (n_opts + 1) * sizeof *node->cmd.options);
+	node->cmd.options = malloc((n_opts + 1) * sizeof * node->cmd.options);
+	ft_memset(node->cmd.options, 0, (n_opts + 1) * sizeof * node->cmd.options);
 	return (node);
 }
 
@@ -60,8 +61,8 @@ t_redir	*parse_redir(t_parser *p)
 	t_redir	*r;
 
 	op_tok = next(p);
-	r = malloc(sizeof *r);
-	ft_memset(r, 0, sizeof *r);
+	r = malloc(sizeof * r);
+	ft_memset(r, 0, sizeof * r);
 	r->op = op_tok->type;
 	if (r->op == T_REDIR_HERE)
 		r->target = ft_strdup(op_tok[1].heredoc);
@@ -97,7 +98,8 @@ void	fill_cmd_node(t_parser *p, t_ast *node)
 	rtail = NULL;
 	args_head = NULL;
 	args_tail = NULL;
-	while ((tok = peek(p))->type == T_WORD || is_redir(tok->type))
+	tok = peek(p);
+	while (tok->type == T_WORD || is_redir(tok->type))
 	{
 		if (tok->type == T_WORD)
 		{
