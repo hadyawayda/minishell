@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 23:06:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 23:07:11 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:39:55 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*ft_strtok_r(char *str, const char *delim, char **next)
 
 char	*ft_strtok(char *str, const char *delim)
 {
-	char *token;
+	char	*token;
 
 	token = ft_strtok_r(str, delim, &str);
 	return (token);

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 02:54:28 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:58:59 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:37:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 bool	is_double_operator(const char *in, int idx)
 {
 	return ((in[idx] == '|' && in[idx + 1] == '|') || (in[idx] == '&' && in[idx
-			+ 1] == '&') || (in[idx] == '<' && in[idx + 1] == '<')
+				+ 1] == '&') || (in[idx] == '<' && in[idx + 1] == '<')
 		|| (in[idx] == '>' && in[idx + 1] == '>'));
 }
 
