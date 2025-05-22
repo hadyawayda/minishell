@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/22 19:59:01 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_token	*input_tokenizer(t_shell *shell, char *input)
 	if (token_builder(shell, input, tokens) == -1)
 	{
 		free(tokens);
-		return NULL;
+		return (NULL);
 	}
 	return (tokens);
 }

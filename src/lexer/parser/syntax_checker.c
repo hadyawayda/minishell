@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 21:59:52 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 19:58:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@ int	check_leading_token(t_token tokens[])
 {
 	if (tokens[0].type == END_TOKEN)
 		return (0);
-		if (tokens[0].type != T_WORD
-			&& tokens[0].type != T_LPAREN
-			&& tokens[0].type != T_REDIR_IN
-			&& tokens[0].type != T_REDIR_OUT
-			&& tokens[0].type != T_REDIR_APPEND
-			&& tokens[0].type != T_REDIR_HERE)
+	if (tokens[0].type != T_WORD && tokens[0].type != T_LPAREN
+		&& tokens[0].type != T_REDIR_IN && tokens[0].type != T_REDIR_OUT
+		&& tokens[0].type != T_REDIR_APPEND && tokens[0].type != T_REDIR_HERE)
 	{
 		fprintf(stderr, "syntax error near unexpected token `%s`\n",
 			tokens[0].value ? tokens[0].value : "newline");
@@ -52,7 +49,8 @@ int	check_redirection_sequence(t_token tokens[])
 	for (int i = 0; tokens[i].type != END_TOKEN; i++)
 	{
 		ty = tokens[i].type;
-		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND || ty == T_REDIR_HERE)
+		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND
+			|| ty == T_REDIR_HERE)
 		{
 			if (tokens[i + 1].type != T_WORD)
 			{
@@ -124,7 +122,7 @@ int	check_syntax(t_token tokens[])
 	if (check_parentheses_balance(tokens) < 0)
 		return (-1);
 	if (check_dollar_paren(tokens) < 0)
-		return -1;
+		return (-1);
 	if (check_trailing_token(tokens) < 0)
 		return (-1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:43:28 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 19:58:56 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	dollar_parser(t_shell *sh, const char *in, t_tokenstate *st)
 	{
 		append_char_inplace(&st->cur, in[st->i], &st->i);
 		word_parser(in, st);
-		return 0;
+		return (0);
 	}
 	if (in[st->i] != '$')
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 17:53:30 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 19:58:57 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	handle_expansion(t_shell *sh, const char *in, int *i, char **cur)
 		return ;
 	}
 	if (!(ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i
-					+ 1])))
+				+ 1])))
 	{
 		append_char_inplace(cur, '$', i);
 		return ;

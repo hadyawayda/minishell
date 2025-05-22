@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/15 20:55:48 by nabbas           ###   ########.fr       */
+/*   Updated: 2025/05/22 19:58:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ typedef enum e_tokentype
 
 typedef struct s_token
 {
-	t_tokentype		type;
-	char					*value;
-	bool					is_quoted;
-	char					*heredoc;
+	t_tokentype	type;
+	char		*value;
+	bool		is_quoted;
+	char		*heredoc;
 }				t_token;
 
 typedef struct s_tokenstate

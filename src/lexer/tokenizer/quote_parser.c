@@ -6,22 +6,22 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:24:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/04 04:50:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/22 19:59:00 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lexer.h"
 
-int contains_unclosed_quote(const char *in, size_t pos, char q)
+int	contains_unclosed_quote(const char *in, size_t pos, char q)
 {
 	while (in[pos])
 	{
 		if (in[pos] == q)
-			return 0;
+			return (0);
 		pos++;
 	}
 	ft_printf("Unclosed quote detected\n");
-	return 1;
+	return (1);
 }
 
 int	quote_parser(t_shell *sh, const char *in, t_tokenstate *st)
@@ -38,7 +38,7 @@ int	quote_parser(t_shell *sh, const char *in, t_tokenstate *st)
 		{
 			append_char_inplace(&st->cur, in[st->i], &st->i);
 			word_parser(in, st);
-			continue;
+			continue ;
 		}
 		if (q == '"' && in[st->i] == '$')
 			handle_expansion(sh, in, &st->i, &st->cur);
