@@ -53,3 +53,4 @@ cmd1 | cmd2 > out && cmd3 < in || cmd4 >> append
 ( echo a << E1 | (echo b <<E2 && echo c ) ) | echo d << E3
 echo a << E1 | ( (echo b <<E2 && echo c )  | echo d << E3 )
 echo -e a << E1 | ( (echo b -e <<E2 && echo c )  | echo d << E3 -e)
+echo -e a << E1 | ( (echo b -e <<E2 && echo c < input.txt > output.txt)  | echo d << E3 -e)

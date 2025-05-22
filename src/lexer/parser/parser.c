@@ -27,6 +27,7 @@ void	parser(t_shell *shell, t_token *tokens)
 	// print_tokens(tokens);
 	// visualize_heredoc_tokens(tokens);
 	root = build_ast(tokens);
+	// tree_parser(root);
 	visualize_tree(root);
 	// traverse_ast(root);
 	free_tokens(tokens);

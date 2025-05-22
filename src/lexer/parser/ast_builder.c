@@ -13,70 +13,156 @@
 #include "../parser.h"
 
 /* tokens[] must already have heredocs collected and syntax checked */
-static int		cur = 0; /* global index into tokens[]    */
-static t_token *g;  /* global pointer to array       */
+static int			g_pos = 0; /* global index into tokens[]    */
+static t_token	*g_tokens;  /* global pointer to array       */
 
-static t_token	*peek(void)
+static t_token *peek(void)
 {
-	return (&g[cur]);
-}
-static t_token	*next(void)
-{
-	return (&g[cur++]);
+    return (&g_tokens[g_pos]);
 }
 
-t_ast	*parse_command(void)
+static t_token *next(void)
 {
-	t_ast	*node;
-	int		cap = 4, argc;
-	char	**argv;
-	t_redir	*redir_head;
-	t_redir	*redir_tail;
-	t_redir	*r;
+    return (&g_tokens[g_pos++]);
+}
 
-	node = calloc(1, sizeof *node);
-	node->type = N_CMD;
-	/* dynamic argv builder */
-	cap = 4, argc = 0;
-	argv = malloc(sizeof(char *) * cap);
-	redir_head = NULL;
-	redir_tail = NULL;
-	while (peek()->type == T_WORD || peek()->type == T_REDIR_IN
-		|| peek()->type == T_REDIR_OUT || peek()->type == T_REDIR_APPEND
-		|| peek()->type == T_REDIR_HERE)
-	{
-		if (peek()->type == T_WORD) /* argument token */
-		{
-			if (argc == cap)
-			{
-				cap *= 2;
-				argv = realloc(argv, sizeof(char *) * cap);
-			}
-			argv[argc++] = ft_strdup(next()->value);
-		}
-		else /* redirection op */
-		{
-			t_tokentype op = next()->type; /* eat < , > , …  */
-			r = calloc(1, sizeof *r);
-			r->op = op;
-			if (op == T_REDIR_HERE)
-				r->target = ft_strdup(g[cur-1].heredoc);
-			else 
-			{
-				t_token *tok = next();
-				r->target = ft_strdup(tok->value);
-			}
-			if (!redir_head)
-				redir_head = r;
-			else
-				redir_tail->next = r;
-			redir_tail = r;
-		}
-	}
-	argv[argc] = NULL;
-	node->cmd.argv = argv;
-	node->cmd.redirs = redir_head;
-	return (node);
+static inline int is_redir(t_tokentype t)
+{
+    return (t == T_REDIR_IN
+         || t == T_REDIR_OUT
+         || t == T_REDIR_APPEND
+         || t == T_REDIR_HERE);
+}
+
+static void count_opts(int *n_opts)
+{
+    t_token *tok;
+    int      save = g_pos;
+
+    *n_opts = 0;
+    while ((tok = peek())->type == T_WORD || is_redir(tok->type))
+    {
+        if (tok->type == T_WORD)
+        {
+            next();
+            if (tok->value[0] == '-' && !tok->is_quoted)
+                (*n_opts)++;
+        }
+        else
+        {
+            next();
+            if (peek()->type == T_WORD)
+                next();
+        }
+    }
+    g_pos = save;
+}
+
+/*–– 2) allocate and zero a t_ast + its leaf arrays ––*/
+static t_ast *alloc_cmd_node(int n_opts)
+{
+    t_ast *node = malloc(sizeof *node);
+
+    ft_memset(node, 0, sizeof *node);
+    node->type            = N_CMD;
+    node->cmd.command     = NULL;
+    node->cmd.redirs      = NULL;
+    node->cmd.args        = NULL;
+    node->cmd.options     = malloc((n_opts + 1) * sizeof *node->cmd.options);
+    ft_memset(node->cmd.options, 0, (n_opts + 1) * sizeof *node->cmd.options);
+    return (node);
+}
+
+/*–– 3) parse a single redirection into a t_redir* ––*/
+static t_redir *parse_redir(void)
+{
+	t_tokentype op = next()->type;
+	t_redir    *r = malloc(sizeof *r);
+
+	ft_memset(r, 0, sizeof *r);
+	r->op = op;
+	if (op == T_REDIR_HERE)
+		r->target = ft_strdup(g_tokens[g_pos - 1].heredoc);
+	else
+		r->target = ft_strdup(next()->value);
+	r->next = NULL;
+	return r;
+}
+
+static void handle_word_token(t_ast *node,
+    t_token *tok, int *opt_i, t_argnode **args_head, t_argnode **args_tail)
+{
+    t_argnode *an;
+
+    if (!node->cmd.command)
+        node->cmd.command = ft_strdup(tok->value);
+    else if (tok->value[0] == '-' && !tok->is_quoted)
+        node->cmd.options[(*opt_i)++] = ft_strdup(tok->value);
+    else
+    {
+        an = malloc(sizeof *an);
+        ft_memset(an, 0, sizeof *an);
+        an->value      = ft_strdup(tok->value);
+        an->expandable = !tok->is_quoted;
+        an->next       = NULL;
+        if (!*args_head)
+            *args_head = an;
+        else
+            (*args_tail)->next = an;
+        *args_tail = an;
+    }
+}
+
+/*–– helper: parse & attach one redirection to the list ––*/
+static void handle_redir_token(t_redir **rhead, t_redir **rtail)
+{
+    t_redir *r = parse_redir();
+
+    r->next = NULL;
+    if (!*rhead)
+        *rhead = r;
+    else
+        (*rtail)->next = r;
+    *rtail = r;
+}
+
+/*–– 4) second pass: fill command, options[], args list, redirs ––*/
+static void fill_cmd_node(t_ast *node)
+{
+    t_token   *tok;
+    int        opt_i = 0;
+    t_redir   *rhead = NULL;
+    t_redir   *rtail = NULL;
+    t_argnode *args_head = NULL;
+    t_argnode *args_tail = NULL;
+
+    while ((tok = peek())->type == T_WORD || is_redir(tok->type))
+    {
+        if (tok->type == T_WORD)
+        {
+            tok = next();
+            handle_word_token(node, tok,
+                &opt_i, &args_head, &args_tail);
+        }
+        else
+        {
+            handle_redir_token(&rhead, &rtail);
+        }
+    }
+    node->cmd.options[opt_i] = NULL;
+    node->cmd.redirs         = rhead;
+    node->cmd.args           = args_head;
+}
+
+/*–– public: parse a single command leaf ––*/
+t_ast *parse_command(void)
+{
+    int n_opts, n_args;
+
+		count_opts(&n_opts);
+    t_ast *node = alloc_cmd_node(n_opts);
+    fill_cmd_node(node);
+    return node;
 }
 
 t_ast	*parse_factor(void)
@@ -107,7 +193,8 @@ t_ast	*parse_pipe(void)
 	{
 		next(); /* consume |              */
 		right = parse_factor();
-		node = calloc(1, sizeof *node);
+		node  = malloc(sizeof *node);
+		ft_memset(node, 0, sizeof *node);
 		node->type = N_PIPE;
 		node->left = left;
 		node->right = right;
@@ -129,7 +216,8 @@ t_ast	*parse_expr(void)
 		kind = (peek()->type == T_AND) ? N_AND : N_OR;
 		next(); /* consume && / ||        */
 		right = parse_pipe();
-		node = calloc(1, sizeof *node);
+		node  = malloc(sizeof *node);
+		ft_memset(node, 0, sizeof *node);
 		node->type = kind;
 		node->left = left;
 		node->right = right;
@@ -139,9 +227,9 @@ t_ast	*parse_expr(void)
 }
 
 /* public entry: build tree from tokens[] */
-t_ast	*build_ast(t_token *tokens)
+t_ast *build_ast(t_token *tokens)
 {
-	g = tokens;
-	cur = 0;
-	return (parse_expr()); /* root of the tree */
+    g_tokens = tokens;
+    g_pos    = 0;
+    return (parse_expr());
 }

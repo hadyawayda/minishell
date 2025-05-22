@@ -27,11 +27,20 @@ typedef struct s_redir
 	struct s_redir	*next;
 }					t_redir;
 
+typedef struct s_argnode
+{
+    char							*value;      /* the token text, e.g. "foo" or "*.c" */
+    bool							expandable; /* true ⇒ later wildcard pass may expand */
+    struct s_argnode	*next;
+}											t_argnode;
+
 typedef struct s_cmd_leaf
 {
-	char **argv; /* NULL‑terminated                  */
-	t_redir			*redirs;
-}					t_cmd_leaf;
+	char				*command;     /* e.g. "echo"                             */
+	char				**options;     /* NULL-terminated array of options "-l"  */
+	t_argnode		*args;      /* head of list of arguments + flags */
+	t_redir			*redirs;      /* as before                              */
+}							t_cmd_leaf;
 
 typedef struct s_ast
 {
@@ -40,6 +49,8 @@ typedef struct s_ast
 	struct s_ast	*right;
 	t_cmd_leaf cmd; /* only valid when type == N_CMD    */
 }					t_ast;
+
+char 				**expand_wildcards(char **arguments, bool *expandable);
 
 int					check_operator_sequence(t_token tokens[]);
 int					check_dollar_paren(t_token tokens[]);
@@ -50,6 +61,7 @@ void				free_tokens(t_token *tokens);
 void				visualize_heredoc_tokens(t_token tokens[]);
 void				free_ast(t_ast *node);
 void				print_tokens(t_token *tokens);
+void				tree_parser(t_ast *root);
 
 t_ast				*parse_expr(void);
 t_ast				*parse_pipe(void);
