@@ -34,10 +34,3 @@ void	parser(t_shell *shell, t_token *tokens)
 	free_tokens(tokens);
 	// free_ast(root);
 }
-
-// echo $USER | cat <<b | echo hello | cat << c | echo hi
-
-/* width of the top bar */
-
-// #define COL_W 23
-// #define COL_GAP 4

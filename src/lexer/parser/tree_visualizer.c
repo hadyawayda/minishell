@@ -19,14 +19,14 @@ static void	build_cmd_label(t_ast *n, char *buf, int cap)
 	ft_bzero(buf, cap);
 	ft_strlcat(buf, "cmd: ", cap);
 	ft_strlcat(buf, n->cmd.command ? n->cmd.command : "(none)", cap);
-	ft_strlcat(buf, "\noptions:", cap);
 	if (n->cmd.options && n->cmd.options[0])
-		for (int i = 0; n->cmd.options[i]; i++)
-		{
-			ft_strlcat(buf, " ", cap);
-			ft_strlcat(buf, n->cmd.options[i], cap);
-		}
-	ft_strlcat(buf, "\n", cap);
+		ft_strlcat(buf, "\noptions:", cap);
+    for (int i = 0; n->cmd.options[i]; i++)
+    {
+      ft_strlcat(buf, " ", cap);
+      ft_strlcat(buf, n->cmd.options[i], cap);
+    }
+    ft_strlcat(buf, "\n", cap);
 	for (t_argnode *a = n->cmd.args; a; a = a->next, ai++)
 	{
 		snprintf(ln, sizeof ln, "arg%d: %s (%s)\n", ai, a->value,

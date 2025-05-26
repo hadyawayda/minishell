@@ -19,6 +19,7 @@ char	*expand_line_heredoc(t_shell *shell, const char *line)
 	st.i = 0;
 	st.cur = ft_strdup("");
 	st.had_quotes = false;
+	st.skip_expansion = false;
 	while (line[st.i])
 	{
 		if (line[st.i] == '$')
