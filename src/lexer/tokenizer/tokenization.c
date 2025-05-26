@@ -44,22 +44,32 @@ int	process_tokens(t_shell *shell, const char *input, t_token tokens[],
 int	token_builder(t_shell *shell, const char *input, t_token tokens[])
 {
 	t_tokenstate	st;
+	int				k;
 
+	k = 0;
 	st.i = 0;
 	st.j = 0;
 	st.had_quotes = false;
-	st.skip_expansion = false;
 	st.cur = ft_strdup("");
+	st.skip_expansion = false;
+	st.is_expandable = malloc(sizeof(int) * ARG_MAX);
+	ft_memset(st.is_expandable, 0, sizeof(int) * ARG_MAX);
+	while (k < ARG_MAX)
+		st.is_expandable[k++] = true;
 	if (process_tokens(shell, input, tokens, &st) == -1)
 	{
 		free(st.cur);
+		free(st.is_expandable);
 		return (-1);
 	}
 	flush_current(tokens, &st);
 	free(st.cur);
+	st.is_expandable[st.j] = -1;
 	tokens[st.j].type = (t_tokentype)-1;
 	tokens[st.j].value = NULL;
 	tokens[st.j].is_quoted = false;
+	tokens[st.j].is_expandable = &st.is_expandable[st.j];
+	tokens[st.j].heredoc = NULL;
 	return (0);
 }
 

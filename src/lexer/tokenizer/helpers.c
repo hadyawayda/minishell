@@ -19,8 +19,10 @@ void	flush_current(t_token tokens[], t_tokenstate *st)
 		tokens[st->j].type = T_WORD;
 		tokens[st->j].value = ft_strdup(st->cur);
 		tokens[st->j].is_quoted = st->had_quotes;
-		st->j++;
+		tokens[st->j].is_expandable = &st->is_expandable[st->j];
+		tokens[st->j].heredoc = NULL;
 		st->had_quotes = false;
+		st->j++;
 		free(st->cur);
 		st->cur = ft_strdup("");
 	}

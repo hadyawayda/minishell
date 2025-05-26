@@ -34,8 +34,9 @@ typedef enum e_tokentype
 typedef struct s_token
 {
 	t_tokentype	type;
-	char		*value;
 	bool		is_quoted;
+	char		*value;
+	int			*is_expandable;
 	char		*heredoc;
 }				t_token;
 
@@ -43,9 +44,10 @@ typedef struct s_tokenstate
 {
 	int			i;
 	int			j;
-	char		*cur;
 	bool		had_quotes;
 	bool		skip_expansion;
+	char		*cur;
+	int			*is_expandable;
 }				t_tokenstate;
 
 int				quote_parser(t_shell *sh, const char *in, t_tokenstate *st);

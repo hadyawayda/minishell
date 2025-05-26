@@ -18,6 +18,8 @@ void	word_parser(const char *in, t_tokenstate *st)
 		&& !is_operator_char(in[st->i]) && in[st->i] != '\'' && in[st->i] != '"'
 		&& in[st->i] != '$')
 	{
+		if (in[st->i] == '*')
+			st->is_expandable[st->j] = 1;
 		append_char_inplace(&st->cur, in[st->i], &st->i);
 	}
 }

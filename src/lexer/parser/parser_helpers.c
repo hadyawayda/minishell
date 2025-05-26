@@ -24,14 +24,18 @@ t_token	*next(t_parser *p)
 
 void	free_tokens(t_token *tokens)
 {
-	int	i;
+	int		i;
+	bool	*shared_flags;
 
+	shared_flags = tokens[0].is_expandable;
 	i = 0;
 	while (tokens[i].type != (t_tokentype)-1)
 	{
 		free(tokens[i].value);
+		free(tokens[i].heredoc);
 		i++;
 	}
+	free(shared_flags);
 	free(tokens);
 }
 
