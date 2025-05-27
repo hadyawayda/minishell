@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/27 21:02:17 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 21:29:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define WILD_UNEXPANDABLE '\x1F'
 
 # include "../core/core.h"
+#include <dirent.h>
 
 typedef enum e_tokentype
 {
