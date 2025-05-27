@@ -31,7 +31,7 @@ SIGNALS_SRCS	:= signals.c
 PARSER_SRCS		:= ast_builder.c ast_traverser.c heredoc_helpers.c heredoc.c parse_command_helpers.c parse_command.c parser_helpers.c \
 				   parser_utils.c parser.c syntax_checker.c syntax_checker_helpers.c tree_parser.c tree_visualizer.c
 
-TOKENIZER_SRCS	:= dollar_parser.c expansion.c tokenization.c helpers.c operator_parser.c quote_parser.c word_parser.c
+TOKENIZER_SRCS	:= dollar_parser.c expansion.c tokenization.c helpers.c operator_parser.c quote_parser.c wildcard_expansion.c word_parser.c
 
 # Prefix them with their directories
 PROGRAM			:= $(addprefix $(PROGRAM_DIR)/,$(PROGRAM_SRCS))

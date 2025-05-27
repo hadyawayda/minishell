@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 20:22:15 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 23:23:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 20:05:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ t_token	*next(t_parser *p)
 void	free_tokens(t_token *tokens)
 {
 	int		i;
-	bool	*shared_flags;
 
-	shared_flags = tokens[0].is_expandable;
 	i = 0;
 	while (tokens[i].type != (t_tokentype)-1)
 	{
@@ -35,7 +33,6 @@ void	free_tokens(t_token *tokens)
 		free(tokens[i].heredoc);
 		i++;
 	}
-	free(shared_flags);
 	free(tokens);
 }
 

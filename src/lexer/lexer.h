@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:58:54 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 21:02:17 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LEXER_H
 
 # define ARG_MAX
+# define WILD_UNEXPANDABLE '\x1F'
 
 # include "../core/core.h"
 
@@ -36,7 +37,6 @@ typedef struct s_token
 	t_tokentype	type;
 	bool		is_quoted;
 	char		*value;
-	int			*is_expandable;
 	char		*heredoc;
 }				t_token;
 
@@ -47,7 +47,6 @@ typedef struct s_tokenstate
 	bool		had_quotes;
 	bool		skip_expansion;
 	char		*cur;
-	int			*is_expandable;
 }				t_tokenstate;
 
 int				quote_parser(t_shell *sh, const char *in, t_tokenstate *st);
@@ -72,6 +71,7 @@ void			append_literal_dollars(const char *in, int *i, char **cur);
 void			skip_whitespaces_and_flush(const char *input, t_tokenstate *st,
 					t_token tokens[]);
 void			collect_heredocs(t_shell *shell, t_token tokens[]);
+void			expand_wildcards(t_token tokens[]);
 
 t_token			*input_tokenizer(t_shell *shell, char *input);
 

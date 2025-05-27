@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:59:01 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 21:01:46 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,18 @@ int	token_builder(t_shell *shell, const char *input, t_token tokens[])
 	st.had_quotes = false;
 	st.cur = ft_strdup("");
 	st.skip_expansion = false;
-	st.is_expandable = malloc(sizeof(int) * ARG_MAX);
-	ft_memset(st.is_expandable, 0, sizeof(int) * ARG_MAX);
-	while (k < ARG_MAX)
-		st.is_expandable[k++] = true;
 	if (process_tokens(shell, input, tokens, &st) == -1)
 	{
+		while (k < st.j)
+			free(tokens[k++].value);
 		free(st.cur);
-		free(st.is_expandable);
 		return (-1);
 	}
 	flush_current(tokens, &st);
 	free(st.cur);
-	st.is_expandable[st.j] = -1;
 	tokens[st.j].type = (t_tokentype)-1;
 	tokens[st.j].value = NULL;
 	tokens[st.j].is_quoted = false;
-	tokens[st.j].is_expandable = &st.is_expandable[st.j];
 	tokens[st.j].heredoc = NULL;
 	return (0);
 }
@@ -85,5 +80,6 @@ t_token	*input_tokenizer(t_shell *shell, char *input)
 		free(tokens);
 		return (NULL);
 	}
+	expand_wildcards(tokens);
 	return (tokens);
 }

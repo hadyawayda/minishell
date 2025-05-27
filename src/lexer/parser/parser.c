@@ -6,12 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 23:44:59 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 20:30:10 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parser.h"
-#include <stdio.h>
 
 void	parser(t_shell *shell, t_token *tokens)
 {
@@ -25,12 +24,13 @@ void	parser(t_shell *shell, t_token *tokens)
 		return ;
 	}
 	collect_heredocs(shell, tokens);
-	// print_tokens(tokens);
+	print_tokens(tokens);
 	// visualize_heredoc_tokens(tokens);
-	root = build_ast(tokens);
+	// root = build_ast(tokens);
 	// tree_parser(root);
-	visualize_tree(root);
-	// traverse_ast(root);
+	// visualize_tree(root);
 	free_tokens(tokens);
-	// free_ast(root);
+	// execute_ast(root);
+	// move tree traversal to execute_ast();
+	// // traverse_ast(root);
 }

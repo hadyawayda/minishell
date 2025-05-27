@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:25:45 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 19:58:58 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 20:04:58 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	flush_current(t_token tokens[], t_tokenstate *st)
 		tokens[st->j].type = T_WORD;
 		tokens[st->j].value = ft_strdup(st->cur);
 		tokens[st->j].is_quoted = st->had_quotes;
-		tokens[st->j].is_expandable = &st->is_expandable[st->j];
 		tokens[st->j].heredoc = NULL;
 		st->had_quotes = false;
 		st->j++;

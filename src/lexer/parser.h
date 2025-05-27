@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:34:19 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/27 21:03:12 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct s_parser
 	int pos;         /* current index  */
 }						t_parser;
 
-char					**expand_wildcards(char **arguments, bool *expandable);
 char					*expand_line_heredoc(t_shell *shell, const char *line);
 char					*make_chunk(t_shell *shell, const char *line,
 							int expand, size_t *chunk_len);
