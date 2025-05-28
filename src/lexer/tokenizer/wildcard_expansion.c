@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:01:06 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/27 21:35:07 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/28 22:52:43 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	shift_tokens_right(t_token tokens[], int from, int n)
 	end = 0;
 	while (tokens[end].type != (t_tokentype)-1)
 		end++;
-	/* move the sentinel too */
 	while (end >= from)
 	{
 		tokens[end + n] = tokens[end];
@@ -66,11 +65,36 @@ void	insert_token(t_token tokens[], int pos, const char *s)
 	tokens[pos].value = ft_strdup(s);
 	tokens[pos].is_quoted = false;
 	tokens[pos].heredoc = NULL;
-	/* you can set is_expandable[pos] here if you track it */
 }
 
 /*
 **  The main expansion loop.
+**  Handles the “mcount > 0” block: replaces tokens[j] with matches[0]
+**  and inserts the rest of the matches into the token stream.
+**  Returns the new index to continue from.
+*/
+int	apply_matches(t_token tokens[], int j, char **matches, int mcount)
+{
+	int	k;
+
+	free(tokens[j].value);
+	tokens[j].value = ft_strdup(matches[0]);
+	if (mcount > 1)
+	{
+		shift_tokens_right(tokens, j + 1, mcount - 1);
+		k = 1;
+		while (k < mcount)
+		{
+			insert_token(tokens, j + k, matches[k]);
+			k++;
+		}
+	}
+	return (j + mcount);
+}
+
+/*
+**  Loop through all tokens, call get_matches, then either
+**  expand via apply_matches() or strip markers on no-match.
 */
 void	expand_wildcards(t_token tokens[])
 {
@@ -86,26 +110,9 @@ void	expand_wildcards(t_token tokens[])
 		{
 			mcount = get_matches(tokens[j].value, &matches);
 			if (mcount > 0)
-			{
-				free(tokens[j].value);
-				tokens[j].value = ft_strdup(matches[0]);
-				if (mcount > 1)
-				{
-					shift_tokens_right(tokens, j + 1, mcount - 1);
-					k = 1;
-					while (k < mcount)
-					{
-						insert_token(tokens, j + k, matches[k]);
-						k++;
-					}
-				}
-				j += mcount;
-			}
+				j = apply_matches(tokens, j, matches, mcount);
 			else
-			{
-				strip_unexpandable(tokens[j].value);
-				j++;
-			}
+				strip_unexpandable(tokens[j++].value);
 			k = 0;
 			while (k < mcount)
 				free(matches[k++]);
