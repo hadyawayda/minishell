@@ -6,18 +6,19 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/28 23:16:43 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 21:36:27 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
+# include "../../includes/minishell.h"
+
+# include <stdbool.h>
+
 # define ARG_MAX
 # define WILD_UNEXPANDABLE '\x1F'
-
-# include "../core/core.h"
-# include <dirent.h>
 
 typedef enum e_tokentype
 {

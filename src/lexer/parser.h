@@ -6,13 +6,16 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/28 23:17:39 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 21:35:33 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lexer.h"
+#ifndef PARSER_H
+# define PARSER_H
 
-#define END_TOKEN ((t_tokentype)-1)
+# include "../../includes/minishell.h"
+
+# define END_TOKEN ((t_tokentype)-1)
 
 typedef enum e_node_type
 {
@@ -74,7 +77,6 @@ void					free_tokens(t_token *tokens);
 void					visualize_heredoc_tokens(t_token tokens[]);
 void					free_ast(t_ast *node);
 void					print_tokens(t_token *tokens);
-void					tree_parser(t_ast *root);
 void					count_opts(t_parser *p, int *n_opts);
 void					fill_cmd_node(t_parser *p, t_ast *node);
 void					handle_word_token(t_ast *node, t_token *tok,
@@ -89,3 +91,5 @@ t_ast					*alloc_cmd_node(int n_opts);
 
 t_token					*peek(t_parser *p);
 t_token					*next(t_parser *p);
+
+#endif

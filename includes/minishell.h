@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 23:09:17 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/05/04 02:25:07 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 21:36:05 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 # define MINISHELL_H
 # define _XOPEN_SOURCE 700
 
+# include "../src/core/core.h"
+# include "../src/execution/execution.h"
+# include "../src/lexer/lexer.h"
+# include "../src/lexer/parser.h"
 # include "ft_printf/ft_printf.h"
 # include "libft/libft.h"
 # include <ctype.h>
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -24,6 +29,7 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
+# include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
