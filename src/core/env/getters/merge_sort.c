@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:03:15 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 01:25:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:37:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_env	*merge_sorted_env(t_env *left, t_env *right)
 		return (right);
 	if (!right)
 		return (left);
-	if (ft_strcmp(left->key, right->key) < 0)
+	if (ft_strcasecmp(left->key, right->key) < 0)
 	{
 		result = left;
 		result->next = merge_sorted_env(left->next, right);

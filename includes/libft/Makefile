@@ -34,6 +34,7 @@ SRCS =		ft_atoi.c \
 			ft_putstr.c \
 			ft_putunbr.c \
 			ft_split_charset.c \
+			ft_strcasecmp.c \
 			ft_strcat.c \
 			ft_strchr.c \
 			ft_strcmp.c \

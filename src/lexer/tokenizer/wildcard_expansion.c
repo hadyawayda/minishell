@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:01:06 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/28 22:52:43 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:33:43 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,50 @@
 // }
 
 /*
+**  Build an env‐style linked list from matches[0..count-1].
+*/
+t_env	*matches_to_env_list(char **matches, int count)
+{
+	t_env	*head;
+	t_env	*node;
+	int		i;
+
+	head = NULL;
+	i = 0;
+	while (i < count)
+	{
+		node = malloc(sizeof(*node));
+		node->key = matches[i];
+		node->value = NULL;
+		node->next = head;
+		head = node;
+		i++;
+	}
+	return (head);
+}
+
+/*
+**  Sort the array matches[0..count-1] in place, alphabetically.
+*/
+void	sort_matches(char **matches, int count)
+{
+	int		i;
+	t_env	*tmp;
+	t_env	*list;
+
+	i = 0;
+	list = matches_to_env_list(matches, count);
+	sort_env_list(&list);
+	while (list)
+	{
+		matches[i++] = list->key;
+		tmp = list;
+		list = list->next;
+		free(tmp);
+	}
+}
+
+/*
 **  Shift all tokens[from..] right by `n` slots to make room.
 */
 void	shift_tokens_right(t_token tokens[], int from, int n)
@@ -54,17 +98,6 @@ void	shift_tokens_right(t_token tokens[], int from, int n)
 		tokens[end + n] = tokens[end];
 		end--;
 	}
-}
-
-/*
-**  Insert a new word-token at `pos` whose value is `s`.
-*/
-void	insert_token(t_token tokens[], int pos, const char *s)
-{
-	tokens[pos].type = T_WORD;
-	tokens[pos].value = ft_strdup(s);
-	tokens[pos].is_quoted = false;
-	tokens[pos].heredoc = NULL;
 }
 
 /*
@@ -85,7 +118,10 @@ int	apply_matches(t_token tokens[], int j, char **matches, int mcount)
 		k = 1;
 		while (k < mcount)
 		{
-			insert_token(tokens, j + k, matches[k]);
+			tokens[j + k].type = T_WORD;
+			tokens[j + k].value = ft_strdup(matches[k]);
+			tokens[j + k].is_quoted = false;
+			tokens[j + k].heredoc = NULL;
 			k++;
 		}
 	}
@@ -109,6 +145,8 @@ void	expand_wildcards(t_token tokens[])
 		if (need_expand(tokens[j].value))
 		{
 			mcount = get_matches(tokens[j].value, &matches);
+			if (mcount > 1)
+				sort_matches(matches, mcount);
 			if (mcount > 0)
 				j = apply_matches(tokens, j, matches, mcount);
 			else

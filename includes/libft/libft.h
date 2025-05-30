@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/03/31 21:56:03 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:35:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int					ft_isprint(int c);
 int					ft_atoi(const char *nptr);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
+int					ft_strcasecmp(char *s1, char *s2);
 int					ft_strcmp(char *s1, char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
