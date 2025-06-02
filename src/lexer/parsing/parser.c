@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/28 23:17:37 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/05/30 21:12:19 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ void	parser(t_shell *shell, t_token *tokens)
 		return ;
 	}
 	collect_heredocs(shell, tokens);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	// visualize_heredoc_tokens(tokens);
-	// root = build_ast(tokens);
-	// tree_parser(root);
+	root = build_ast(tokens);
 	// visualize_tree(root);
 	free_tokens(tokens);
-	// execute_ast(root);
+	execute_ast(root);
 	// move tree traversal to execute_ast();
 	// // traverse_ast(root);
 }
