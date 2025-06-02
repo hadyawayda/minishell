@@ -32,7 +32,7 @@ t_ast	*parse_factor(t_parser *p)
 	if (peek(p)->type == T_LPAREN)
 	{
 		next(p);
-		sub = parse_expr(p);
+		sub = parse_expression(p);
 		if (peek(p)->type != T_RPAREN)
 			return (NULL);
 		next(p);
@@ -62,7 +62,7 @@ t_ast	*parse_pipe(t_parser *p)
 	return (left);
 }
 
-t_ast	*parse_expr(t_parser *p)
+t_ast	*parse_expression(t_parser *p)
 {
 	t_ast		*left;
 	t_ast		*node;
@@ -94,5 +94,6 @@ t_ast	*build_ast(t_token *tokens)
 
 	parser.tokens = tokens;
 	parser.pos = 0;
-	return (parse_expr(&parser));
+	return (parse_expression(&parser));
 }
+

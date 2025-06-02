@@ -12,8 +12,6 @@
 
 #include "../../../lib/parser.h"
 
-// split check_operator_sequence into smaller functions
-
 int	check_left_operand(t_token tokens[], int i)
 {
 	if (i == 0)

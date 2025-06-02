@@ -127,4 +127,16 @@ typedef struct s_parser
 	int pos;         /* current index  */
 }						t_parser;
 
+typedef enum e_builtin
+{
+		BI_ECHO,
+    BI_CD,
+    BI_PWD,
+    BI_ENV,
+    BI_EXPORT,
+    BI_UNSET,
+    BI_EXIT,
+		BI_NONE
+}               t_builtin;
+
 #endif

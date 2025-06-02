@@ -15,11 +15,20 @@
 void	process_line(t_shell *shell, char *input)
 {
 	t_token	*tokens;
+	t_ast		*root;
+	int			status;
 
+	status = 0;
 	tokens = input_tokenizer(shell, input);
 	if (!tokens)
 		return;
-	parser(shell, tokens);
+	root = parser(shell, tokens);
+	if (root)
+	{
+			status = execute_ast(shell, root);
+			shell->last_exit_status = status;
+			// free_ast(root);
+	}
 }
 
 void	shell_loop(t_shell *shell)

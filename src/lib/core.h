@@ -14,7 +14,10 @@
 # define CORE_H
 
 # include "minishell.h"
+// what is this include doing?
 # include "lexer.h"
+# include "parser.h"
+# include "execution.h"
 
 char				*expand_variables(char *input, t_shell *shell);
 char				*get_env_value(t_env *env, char *key);

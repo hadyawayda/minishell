@@ -13,7 +13,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-#include "./lexer.h"
+# include "lexer.h"
 
 char					*expand_line_heredoc(t_shell *shell, const char *line);
 char					*make_chunk(t_shell *shell, const char *line,
@@ -37,7 +37,8 @@ void					fill_cmd_node(t_parser *p, t_ast *node);
 void					handle_word_token(t_ast *node, t_token *tok,
 							t_argnode **args_head, t_argnode **args_tail);
 
-t_ast					*parse_expr(t_parser *p);
+t_ast					*parser(t_shell *shell, t_token *tokens);
+t_ast					*parse_expression(t_parser *p);
 t_ast					*parse_pipe(t_parser *p);
 t_ast					*parse_factor(t_parser *p);
 t_ast					*parse_command(t_parser *p);

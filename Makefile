@@ -18,7 +18,7 @@ LIBFT           := $(LIBFT_DIR)/libft.a
 PRINTF_DIR      := src/lib/includes/ft_printf
 PRINTF          := $(PRINTF_DIR)/libftprintf.a
 
-SUPPRESSION     := src/lib/includes/utils/ignore_readline.supp
+SUPPRESSION     := src/lib/utils/ignore_readline.supp
 
 # ──────────────────────────────────────────────────────────────────────────────
 # DIRECTORY LAYOUT
@@ -54,6 +54,9 @@ TREE_DIR                := $(PARSING_DIR)/tree
 TOKENIZER_DIR           := $(TOKENIZATION_DIR)/tokenizer
 WILDCARD_DIR            := $(TOKENIZATION_DIR)/wildcard
 
+# Execution directories
+EXECUTION_DIR           := $(SRC_DIR)/execution
+
 # ──────────────────────────────────────────────────────────────────────────────
 # SOURCE FILES (relative to the project root)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -65,7 +68,7 @@ MAIN                    := $(SRC_DIR)/main.c
 PROGRAM_SRCS            := loop.c cleaner.c initializer.c program.c
 
 # 3) ENV sub‐components: list only the .c filenames here
-EXPANSION_SRCS          := expansion_old.c expansion.c
+EXPANSION_SRCS          := expansion_helpers.c expansion.c
 GETTERS_SRCS            := list_env.c list_export.c merge_sort.c
 INITIALIZATION_SRCS     := cleaner.c cloners.c helpers.c initializer.c
 SETTERS_SRCS            := helpers.c setter.c unset.c
@@ -76,14 +79,17 @@ SIGNALS_SRCS            := signals.c
 # 5) PARSING sources
 PARSER_TOP_SRCS         := parser.c
 HEREDOC_SRCS            := heredoc.c heredoc_helpers.c
-PARSER_SRCS             := parse_command_helpers.c parse_command.c parser_helpers.c parser_utils.c
+PARSER_SRCS             := parser_helpers.c parser_utils.c
 SYNTAX_CHECKER_SRCS     := syntax_checker.c syntax_checker_helpers.c
-TREE_SRCS               := ast_builder.c ast_traverser.c tree_parser.c tree_visualizer.c
+TREE_SRCS               := ast_builder.c ast_traverser.c parse_command_helpers.c parse_command.c tree_visualizer.c
 
 # 6) TOKENIZATION sources
 TOKENIZATION_TOP_SRCS   := tokenization.c
 TOKENIZER_SRCS          := dollar_parser.c helpers.c operator_parser.c quote_parser.c word_parser.c
 WILDCARD_SRCS           := wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
+
+# 7) EXECUTION sources
+EXECUTION_SRCS          := build_argv.c builtin_handler.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c launch_process.c redirection_helpers.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
@@ -116,11 +122,14 @@ TOKENIZER               := $(addprefix $(TOKENIZER_DIR)/,$(TOKENIZER_SRCS))
 WILDCARD                := $(addprefix $(WILDCARD_DIR)/,$(WILDCARD_SRCS))
 TOKENIZATION            := $(TOKENIZATION_TOP) $(TOKENIZER) $(WILDCARD)
 
+# EXECUTION
+EXECUTION               := $(addprefix $(EXECUTION_DIR)/,$(EXECUTION_SRCS))
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ALL SOURCE FILES COMBINED
 # ──────────────────────────────────────────────────────────────────────────────
 
-SRCS                    := $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING)
+SRCS                    := $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING) $(EXECUTION)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # OBJECT FILES: simply replace “.c” with “$(OBJDIR)/…/*.o”

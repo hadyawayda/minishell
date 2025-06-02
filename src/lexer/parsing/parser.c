@@ -12,16 +12,16 @@
 
 #include "../../lib/parser.h"
 
-void	parser(t_shell *shell, t_token *tokens)
+t_ast	*parser(t_shell *shell, t_token *tokens)
 {
 	t_ast	*root;
 
 	if (!tokens)
-		return ;
+		return (NULL);
 	if (check_syntax(tokens) < 0)
 	{
 		free_tokens(tokens);
-		return ;
+		return (NULL);
 	}
 	collect_heredocs(shell, tokens);
 	// print_tokens(tokens);
@@ -29,7 +29,5 @@ void	parser(t_shell *shell, t_token *tokens)
 	root = build_ast(tokens);
 	// visualize_tree(root);
 	free_tokens(tokens);
-	execute_ast(root);
-	// move tree traversal to execute_ast();
-	// // traverse_ast(root);
+	return (root);
 }
