@@ -5,92 +5,92 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 04:19:12 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/17 21:57:36 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
+/*   Updated: 2025/05/22 21:37:33 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../core.h"
+#include "../../../lib/lexer.h"
 
-char	*get_env_value(t_env *env, char *key)
+void	append_exit_status(t_shell *sh, int *i, char **cur)
 {
-	if (!key || !env)
-		return ("");
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-		{
-			if (env->value)
-				return (env->value);
-			else
-				return ("");
-		}
-		env = env->next;
-	}
-	return ("");
+	char	*nbr;
+	char	*tmp;
+
+	nbr = ft_itoa(sh->last_exit_status);
+	tmp = ft_strjoin(*cur, nbr);
+	free(nbr);
+	free(*cur);
+	*cur = tmp;
+	*i += 2;
 }
-char	*expand_variables(char *input, t_shell *shell)
-{
-	char	*result;
-	char	*var_name;
-	char	*var_value;
-	char	*exit_status_str;
-	int		i;
-	int		j;
-	int		start;
 
-	if (!input)
-		return (NULL);
-	result = (char *)malloc(4096);
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (input[i])
+char	*parse_var_name(const char *in, int *i)
+{
+	int	start;
+
+	start = ++(*i);
+	if (ft_isdigit(in[*i]))
+		(*i)++;
+	else
+		while (ft_isalnum(in[*i]) || in[*i] == '_')
+			(*i)++;
+	return (ft_substring(in, start, *i));
+}
+
+void	append_variable_value(char **cur, char *name)
+{
+	char	*env;
+	char	*val;
+	char	*tmp;
+
+	env = getenv(name);
+	free(name);
+	if (env)
+		val = ft_strdup(env);
+	else
+		val = ft_strdup("");
+	tmp = ft_strjoin(*cur, val);
+	free(val);
+	free(*cur);
+	*cur = tmp;
+}
+
+void	handle_expansion(t_shell *sh, const char *in, int *i, char **cur)
+{
+	char	*name;
+
+	if (in[*i] != '$')
+		return ;
+	if (in[*i + 1] == '?')
 	{
-		if (input[i] == '$' && (i == 0 || input[i - 1] != '\\'))
-		{
-			if (input[i + 1] == '?')
-			{
-				exit_status_str = ft_itoa(shell->last_exit_status);
-				if (!exit_status_str)
-				{
-					free(result);
-					return (NULL);
-				}
-				ft_strcpy(&result[j], exit_status_str);
-				j += ft_strlen(exit_status_str);
-				free(exit_status_str);
-				i += 2;
-				continue ;
-			}
-			start = ++i;
-			while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
-				i++;
-			if (i == start)
-			{
-				result[j++] = '$';
-				continue ;
-			}
-			var_name = ft_strndup(&input[start], i - start);
-			if (!var_name)
-			{
-				free(result);
-				return (NULL);
-			}
-			var_value = get_env_value(shell->env, var_name);
-			free(var_name);
-			if (var_value)
-			{
-				ft_strcpy(&result[j], var_value);
-				j += ft_strlen(var_value);
-			}
-		}
-		else
-		{
-			result[j++] = input[i++];
-		}
+		append_exit_status(sh, i, cur);
+		return ;
 	}
-	result[j] = '\0';
-	return (result);
+	if (in[*i + 1] == '$')
+	{
+		append_literal_dollars(in, i, cur);
+		return ;
+	}
+	if (!(ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i
+					+ 1])))
+	{
+		append_char_inplace(cur, '$', i);
+		return ;
+	}
+	name = parse_var_name(in, i);
+	if (name)
+		append_variable_value(cur, name);
+}
+
+char	*expand_variable(const char *var_name)
+{
+	char	*env_value;
+
+	if (!var_name)
+		return (NULL);
+	env_value = getenv(var_name);
+	if (!env_value)
+		return (ft_strdup(""));
+	return (ft_strdup(env_value));
 }

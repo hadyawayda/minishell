@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "../../lib/minishell.h"
 
 void	handle_sigint(int sig)
 {

@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   word_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 17:43:22 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 00:04:13 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/19 02:56:06 by hawayda           #+#    #+#             */
+/*   Updated: 2025/05/27 20:05:29 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/core.h"
+#include "../../../lib/lexer.h"
 
-void	free_shell(t_shell *shell)
+void	word_parser(const char *in, t_tokenstate *st)
 {
-	if (shell)
+	while (in[st->i] && !ft_isdelimiter(in[st->i])
+		&& !is_operator_char(in[st->i]) && in[st->i] != '\'' && in[st->i] != '"'
+		&& in[st->i] != '$')
 	{
-		free_env(shell->env);
-		free(shell);
+		append_char_inplace(&st->cur, in[st->i], &st->i);
 	}
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../core.h"
+#include "../../../lib/core.h"
 
 t_env	*merge_sorted_env(t_env *left, t_env *right)
 {

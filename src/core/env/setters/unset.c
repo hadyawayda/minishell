@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../core.h"
+#include "../../../lib/core.h"
 
 void	unset_env_variable(t_env **env, char *key)
 {

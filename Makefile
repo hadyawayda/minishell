@@ -1,78 +1,190 @@
-NAME			= michel
-CC				= gcc
-AR				= ar rcs
-CFLAGS			= -g -O0
-LIBFT_DIR		= includes/libft
-LIBFT			= $(LIBFT_DIR)/libft.a
-PRINTF_DIR		= includes/ft_printf
-PRINTF			= $(PRINTF_DIR)/libftprintf.a
-SUPPRESSION		= includes/utils/ignore_readline.supp
+# ──────────────────────────────────────────────────────────────────────────────
+# PROJECT SETTINGS
+# ──────────────────────────────────────────────────────────────────────────────
 
-# Source directory prefixes
+NAME            := michel
+CC              := gcc
+AR              := ar rcs
+CFLAGS          := -g -O0
+OBJDIR          := includes/objs
+
+# ──────────────────────────────────────────────────────────────────────────────
+# LIBRARIES (libft, ft_printf, readline)
+# ──────────────────────────────────────────────────────────────────────────────
+
+LIBFT_DIR       := src/lib/includes/libft
+LIBFT           := $(LIBFT_DIR)/libft.a
+
+PRINTF_DIR      := src/lib/includes/ft_printf
+PRINTF          := $(PRINTF_DIR)/libftprintf.a
+
+SUPPRESSION     := src/lib/includes/utils/ignore_readline.supp
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DIRECTORY LAYOUT
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Root directory
 SRC_DIR			:= src
-PROGRAM_DIR		:= $(SRC_DIR)/core/program
-ENV_DIR			:= $(SRC_DIR)/core/env
-SIGNALS_DIR		:= $(SRC_DIR)/core/signals
-PARSER_DIR		:= $(SRC_DIR)/lexer/parser
-TOKENIZER_DIR	:= $(SRC_DIR)/lexer/tokenizer
 
-# Top-level sources
-SRC				:= $(SRC_DIR)/main.c
+# Core directories
+CORE_DIR                := $(SRC_DIR)/core
+ENV_DIR                 := $(CORE_DIR)/env
+PROGRAM_DIR             := $(CORE_DIR)/program
+SIGNALS_DIR             := $(CORE_DIR)/signals
 
-PROGRAM_SRCS	:= loop.c cleaner.c initializer.c program.c
+# ENV directories:
+EXPANSION_DIR           := $(ENV_DIR)/expansion
+GETTERS_DIR             := $(ENV_DIR)/getters
+INITIALIZATION_DIR      := $(ENV_DIR)/initialization
+SETTERS_DIR             := $(ENV_DIR)/setters
 
-# Per-component source filenames (relative to their directory)
-ENV_SRCS		:= expansion/expansion.c getters/list_env.c getters/list_export.c getters/merge_sort.c \
-				   initialization/cleaner.c initialization/cloners.c initialization/helpers.c initialization/initializer.c \
-				   setters/helpers.c setters/setter.c setters/unset.c
+# Lexer directories
+LEXER_DIR               := $(SRC_DIR)/lexer
+TOKENIZATION_DIR        := $(LEXER_DIR)/tokenization
+PARSING_DIR             := $(LEXER_DIR)/parsing
 
-SIGNALS_SRCS	:= signals.c
+# Parsing directories:
+HEREDOC_DIR             := $(PARSING_DIR)/heredoc
+PARSER_SUBDIR           := $(PARSING_DIR)/parser
+SYNTAX_CHECKER_DIR      := $(PARSING_DIR)/syntax_checker
+TREE_DIR                := $(PARSING_DIR)/tree
 
-PARSER_SRCS		:= ast_builder.c ast_traverser.c heredoc_helpers.c heredoc.c parse_command_helpers.c parse_command.c parser_helpers.c \
-				   parser_utils.c parser.c syntax_checker.c syntax_checker_helpers.c tree_parser.c tree_visualizer.c
+# Tokenization directories:
+TOKENIZER_DIR           := $(TOKENIZATION_DIR)/tokenizer
+WILDCARD_DIR            := $(TOKENIZATION_DIR)/wildcard
 
-TOKENIZER_SRCS	:= dollar_parser.c expansion.c tokenization.c helpers.c operator_parser.c quote_parser.c wildcard_expansion.c wildcard_matcher.c wildcard_matcher_helpers.c word_parser.c
+# ──────────────────────────────────────────────────────────────────────────────
+# SOURCE FILES (relative to the project root)
+# ──────────────────────────────────────────────────────────────────────────────
 
-# Prefix them with their directories
-PROGRAM			:= $(addprefix $(PROGRAM_DIR)/,$(PROGRAM_SRCS))
-ENV				:= $(addprefix $(ENV_DIR)/,$(ENV_SRCS))
-SIGNALS			:= $(addprefix $(SIGNALS_DIR)/,$(SIGNALS_SRCS))
-PARSER			:= $(addprefix $(PARSER_DIR)/,$(PARSER_SRCS))
-TOKENIZER		:= $(addprefix $(TOKENIZER_DIR)/,$(TOKENIZER_SRCS))
+# 1) Top‐level source
+MAIN                    := $(SRC_DIR)/main.c
 
-# Build output directory
-OBJDIR			:= includes/objs
+# 2) PROGRAM sources (just filenames; will be prefixed later)
+PROGRAM_SRCS            := loop.c cleaner.c initializer.c program.c
 
-# All sources and objects
-SRCS			:= $(SRC) $(ENV) $(PROGRAM) $(SIGNALS) $(TOKENIZER) $(PARSER)
-OBJS			:= $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
+# 3) ENV sub‐components: list only the .c filenames here
+EXPANSION_SRCS          := expansion_old.c expansion.c
+GETTERS_SRCS            := list_env.c list_export.c merge_sort.c
+INITIALIZATION_SRCS     := cleaner.c cloners.c helpers.c initializer.c
+SETTERS_SRCS            := helpers.c setter.c unset.c
 
-all	:			$(NAME)
+# 4) SIGNALS sources
+SIGNALS_SRCS            := signals.c
 
-$(NAME) :		$(OBJS) $(LIBFT) $(PRINTF)
-				@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline -lm
+# 5) PARSING sources
+PARSER_TOP_SRCS         := parser.c
+HEREDOC_SRCS            := heredoc.c heredoc_helpers.c
+PARSER_SRCS             := parse_command_helpers.c parse_command.c parser_helpers.c parser_utils.c
+SYNTAX_CHECKER_SRCS     := syntax_checker.c syntax_checker_helpers.c
+TREE_SRCS               := ast_builder.c ast_traverser.c tree_parser.c tree_visualizer.c
+
+# 6) TOKENIZATION sources
+TOKENIZATION_TOP_SRCS   := tokenization.c
+TOKENIZER_SRCS          := dollar_parser.c helpers.c operator_parser.c quote_parser.c word_parser.c
+WILDCARD_SRCS           := wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PREFIX each group of filenames with its directory
+# ──────────────────────────────────────────────────────────────────────────────
+
+# PROGRAM
+PROGRAM                 := $(addprefix $(PROGRAM_DIR)/,$(PROGRAM_SRCS))
+
+# ENV: break into sub‐directories, then combine
+EXPANSION               := $(addprefix $(EXPANSION_DIR)/,$(EXPANSION_SRCS))
+GETTERS                 := $(addprefix $(GETTERS_DIR)/,$(GETTERS_SRCS))
+INITIALIZATION          := $(addprefix $(INITIALIZATION_DIR)/,$(INITIALIZATION_SRCS))
+SETTERS                 := $(addprefix $(SETTERS_DIR)/,$(SETTERS_SRCS))
+ENV                     := $(EXPANSION) $(GETTERS) $(INITIALIZATION) $(SETTERS)
+
+# SIGNALS
+SIGNALS                 := $(addprefix $(SIGNALS_DIR)/,$(SIGNALS_SRCS))
+
+# PARSING: one top‐level parser.c, plus subdirectories
+PARSER_TOP              := $(addprefix $(PARSING_DIR)/,$(PARSER_TOP_SRCS))
+PARSER_MIDDLE           := $(addprefix $(PARSER_SUBDIR)/,$(PARSER_SRCS))
+TREE                    := $(addprefix $(TREE_DIR)/,$(TREE_SRCS))
+SYNTAX_CHECKER          := $(addprefix $(SYNTAX_CHECKER_DIR)/,$(SYNTAX_CHECKER_SRCS))
+HEREDOC                 := $(addprefix $(HEREDOC_DIR)/,$(HEREDOC_SRCS))
+PARSING                 := $(PARSER_TOP) $(PARSER_MIDDLE) $(TREE) $(SYNTAX_CHECKER) $(HEREDOC)
+
+# TOKENIZATION: one top‐level tokenization.c, plus subdirectories
+TOKENIZATION_TOP        := $(addprefix $(TOKENIZATION_DIR)/,$(TOKENIZATION_TOP_SRCS))
+TOKENIZER               := $(addprefix $(TOKENIZER_DIR)/,$(TOKENIZER_SRCS))
+WILDCARD                := $(addprefix $(WILDCARD_DIR)/,$(WILDCARD_SRCS))
+TOKENIZATION            := $(TOKENIZATION_TOP) $(TOKENIZER) $(WILDCARD)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ALL SOURCE FILES COMBINED
+# ──────────────────────────────────────────────────────────────────────────────
+
+SRCS                    := $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# OBJECT FILES: simply replace “.c” with “$(OBJDIR)/…/*.o”
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Pattern:  e.g.  src/core/program/loop.c   →   includes/objs/src/core/program/loop.o
+OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DEFAULT TARGET
+# ──────────────────────────────────────────────────────────────────────────────
+
+.PHONY: all
+all: $(NAME)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# LINKING: build the final executable
+# ──────────────────────────────────────────────────────────────────────────────
+
+$(NAME): $(OBJS) $(LIBFT) $(PRINTF)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline -lm
+
+# ──────────────────────────────────────────────────────────────────────────────
+# BUILD libft and ft_printf if they don’t exist
+# ──────────────────────────────────────────────────────────────────────────────
 
 $(LIBFT):
-				@make --no-print-directory -C $(LIBFT_DIR)
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
 
-$(PRINTF):		$(LIBFT)
-				@make --no-print-directory -C $(PRINTF_DIR)
+$(PRINTF): $(LIBFT)
+	@$(MAKE) --no-print-directory -C $(PRINTF_DIR)
 
-$(OBJDIR)/%.o:	%.c
-				@mkdir -p $(dir $@)
-				@$(CC) $(CFLAGS) -c $< -o $@
+# ──────────────────────────────────────────────────────────────────────────────
+# PATTERN RULE TO COMPILE ANY .c → .o under $(OBJDIR)
+# ──────────────────────────────────────────────────────────────────────────────
 
+# e.g.  includes/objs/src/core/env/getters/list_env.o:  src/core/env/getters/list_env.c
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CLEAN & FCLEAN
+# ──────────────────────────────────────────────────────────────────────────────
+
+.PHONY: clean
 clean:
-				@rm -f ${OBJS} $(BONUS_OBJ)
-				@make --no-print-directory clean -C $(LIBFT_DIR)
-				@make --no-print-directory clean -C $(PRINTF_DIR)
+	@rm -f $(OBJS)
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
+	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) clean
 
-fclean:			clean
-				@rm -f $(NAME) $(BONUS)
-				@make --no-print-directory fclean -C $(LIBFT_DIR)
-				@make --no-print-directory fclean -C $(PRINTF_DIR)
+.PHONY: fclean
+fclean: clean
+	@rm -f $(NAME)
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
+	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) fclean
 
+.PHONY: re
+re: fclean all
+
+# ──────────────────────────────────────────────────────────────────────────────
+# OPTIONAL VALGRIND TARGET
+# ──────────────────────────────────────────────────────────────────────────────
+
+.PHONY: leaks
 leaks:
-				@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION)  ./$(NAME)
-
-re :			fclean all
+	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION) ./$(NAME)

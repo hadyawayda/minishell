@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../core.h"
+#include "../../../lib/core.h"
 
 int	env_list_contains(t_env *env, char *key)
 {

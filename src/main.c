@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "core/core.h"
+#include "lib/core.h"
 
 int	main(int ac, char **av, char **envp)
 {
