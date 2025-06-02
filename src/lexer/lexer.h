@@ -16,39 +16,8 @@
 # define ARG_MAX
 # define WILD_UNEXPANDABLE '\x1F'
 
+# include "../../includes/minishell.h"
 # include "../core/core.h"
-# include <dirent.h>
-
-typedef enum e_tokentype
-{
-	T_WORD,
-	T_PIPE,
-	T_AND,
-	T_OR,
-	T_REDIR_IN,
-	T_REDIR_OUT,
-	T_REDIR_HERE,
-	T_REDIR_APPEND,
-	T_LPAREN,
-	T_RPAREN,
-}				t_tokentype;
-
-typedef struct s_token
-{
-	t_tokentype	type;
-	bool		is_quoted;
-	char		*value;
-	char		*heredoc;
-}				t_token;
-
-typedef struct s_tokenstate
-{
-	int			i;
-	int			j;
-	bool		had_quotes;
-	bool		skip_expansion;
-	char		*cur;
-}				t_tokenstate;
 
 int				quote_parser(t_shell *sh, const char *in, t_tokenstate *st);
 int				is_operator_char(char c);

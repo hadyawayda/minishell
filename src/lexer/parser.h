@@ -14,49 +14,6 @@
 
 #define END_TOKEN ((t_tokentype)-1)
 
-typedef enum e_node_type
-{
-	N_CMD,  /* leaf: argv[] + redirs[] */
-	N_PIPE, /* binary: left | right    */
-	N_AND,  /* binary: left && right   */
-	N_OR    /* binary: left || right   */
-}						t_node_type;
-
-typedef struct s_redir
-{
-	t_tokentype op; /* T_REDIR_IN / OUT / APPEND / HERE */
-	char *target;   /* filename or heredoc body         */
-	struct s_redir		*next;
-}						t_redir;
-
-typedef struct s_argnode
-{
-	char *value;     /* the token text, e.g. "foo" or "*.c" */
-	bool expandable; /* true ⇒ later wildcard pass may expand */
-	struct s_argnode	*next;
-}						t_argnode;
-
-typedef struct s_cmd_leaf
-{
-	char *command;   /* e.g. "echo"                             */
-	char **options;  /* NULL-terminated array of options "-l"  */
-	t_argnode *args; /* head of list of arguments + flags */
-	t_redir *redirs; /* as before                              */
-}						t_cmd_leaf;
-
-typedef struct s_ast
-{
-	t_node_type			type;
-	struct s_ast		*left;
-	struct s_ast		*right;
-	t_cmd_leaf cmd; /* only valid when type == N_CMD    */
-}						t_ast;
-typedef struct s_parser
-{
-	t_token *tokens; /* the token array */
-	int pos;         /* current index  */
-}						t_parser;
-
 char					*expand_line_heredoc(t_shell *shell, const char *line);
 char					*make_chunk(t_shell *shell, const char *line,
 							int expand, size_t *chunk_len);

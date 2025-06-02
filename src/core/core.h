@@ -15,11 +15,8 @@
 
 # include "../../includes/minishell.h"
 # include "../lexer/lexer.h"
-# include <stdlib.h>
-# include <string.h>
 
 char				*expand_variables(char *input, t_shell *shell);
-
 char				*get_env_value(t_env *env, char *key);
 
 int					env_list_contains(t_env *env, char *key);
