@@ -2,30 +2,27 @@
 # PROJECT SETTINGS
 # ──────────────────────────────────────────────────────────────────────────────
 
-NAME            := michel
-CC              := gcc
-AR              := ar rcs
-CFLAGS          := -g -O0
-OBJDIR          := includes/objs
+NAME					:= michel
+CC						:= gcc
+AR						:= ar rcs
+CFLAGS					:= -g -O0
+OBJDIR					:= includes/objs
 
 # ──────────────────────────────────────────────────────────────────────────────
-# LIBRARIES (libft, ft_printf, readline)
+# LIBRARIES (libft, readline)
 # ──────────────────────────────────────────────────────────────────────────────
 
-LIBFT_DIR       := src/lib/includes/libft
-LIBFT           := $(LIBFT_DIR)/libft.a
+LIBFT_DIR				:= src/lib/includes/libft
+LIBFT					:= $(LIBFT_DIR)/libft.a
 
-PRINTF_DIR      := src/lib/includes/ft_printf
-PRINTF          := $(PRINTF_DIR)/libftprintf.a
-
-SUPPRESSION     := src/lib/utils/ignore_readline.supp
+SUPPRESSION				:= src/lib/utils/ignore_readline.supp
 
 # ──────────────────────────────────────────────────────────────────────────────
 # DIRECTORY LAYOUT
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Root directory
-SRC_DIR			:= src
+SRC_DIR					:= src
 
 # Core directories
 CORE_DIR                := $(SRC_DIR)/core
@@ -136,64 +133,53 @@ SRCS                    := $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) 
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Pattern:  e.g.  src/core/program/loop.c   →   includes/objs/src/core/program/loop.o
-OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
+OBJS					:= $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # DEFAULT TARGET
 # ──────────────────────────────────────────────────────────────────────────────
 
-.PHONY: all
-all: $(NAME)
+.PHONY:					all
+all:					$(NAME)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # LINKING: build the final executable
 # ──────────────────────────────────────────────────────────────────────────────
 
-$(NAME): $(OBJS) $(LIBFT) $(PRINTF)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline -lm
+$(NAME):				$(OBJS) $(LIBFT)
+						@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $@ -lreadline -lm
 
 # ──────────────────────────────────────────────────────────────────────────────
-# BUILD libft and ft_printf if they don’t exist
+# BUILD libft if they don’t exist
 # ──────────────────────────────────────────────────────────────────────────────
 
 $(LIBFT):
-	@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
-
-$(PRINTF): $(LIBFT)
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR)
+						@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PATTERN RULE TO COMPILE ANY .c → .o under $(OBJDIR)
 # ──────────────────────────────────────────────────────────────────────────────
 
-# e.g.  includes/objs/src/core/env/getters/list_env.o:  src/core/env/getters/list_env.c
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJDIR)/%.o:			%.c
+						@mkdir -p $(dir $@)
+						@$(CC) $(CFLAGS) -c $< -o $@
 
 # ──────────────────────────────────────────────────────────────────────────────
 # CLEAN & FCLEAN
 # ──────────────────────────────────────────────────────────────────────────────
 
-.PHONY: clean
-clean:
-	@rm -f $(OBJS)
-	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) clean
+clean:					@rm -f $(OBJS)
+						@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 
-.PHONY: fclean
-fclean: clean
-	@rm -f $(NAME)
-	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) fclean
+fclean:					clean
+						@rm -f $(NAME)
+						@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
 
-.PHONY: re
-re: fclean all
+re:						fclean all
 
 # ──────────────────────────────────────────────────────────────────────────────
 # OPTIONAL VALGRIND TARGET
 # ──────────────────────────────────────────────────────────────────────────────
 
-.PHONY: leaks
 leaks:
-	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION) ./$(NAME)
+						@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION) ./$(NAME)
