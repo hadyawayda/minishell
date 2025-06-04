@@ -86,7 +86,7 @@ TOKENIZER_SRCS			:= dollar_parser.c helpers.c operator_parser.c quote_parser.c w
 WILDCARD_SRCS			:= wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
 
 # 7) EXECUTION sources
-EXECUTION_SRCS			:= build_argv.c build_envp.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
+EXECUTION_SRCS			:= build_argv.c build_envp.c execute_operators.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory

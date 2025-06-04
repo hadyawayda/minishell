@@ -6,34 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:17:56 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 22:27:09 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 23:10:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/execution.h"
-
-/*
-** Map a command name (string) to its t_builtin value.
-** Return BI_NONE if the name does not match any builtin.
-*/
-t_builtin	get_builtin(char *cmd)
-{
-	if (ft_strcmp(cmd, "cd") == 0)
-		return (BI_CD);
-	if (ft_strcmp(cmd, "pwd") == 0)
-		return (BI_PWD);
-	if (ft_strcmp(cmd, "echo") == 0)
-		return (BI_ECHO);
-	if (ft_strcmp(cmd, "env") == 0)
-		return (BI_ENV);
-	if (ft_strcmp(cmd, "export") == 0)
-		return (BI_EXPORT);
-	if (ft_strcmp(cmd, "unset") == 0)
-		return (BI_UNSET);
-	if (ft_strcmp(cmd, "exit") == 0)
-		return (BI_EXIT);
-	return (BI_NONE);
-}
 
 /*
 ** Iterate over each element in `paths[]`, join with `"/" + cmd"`, and
