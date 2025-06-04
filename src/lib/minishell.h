@@ -17,8 +17,7 @@
 # define ARG_MAX
 # define WILD_UNEXPANDABLE '\x1F'
 
-# include "includes/ft_printf/ft_printf.h"
-# include "includes/libft/libft.h"
+# include "libft/libft.h"
 
 # include <ctype.h>
 # include <dirent.h>

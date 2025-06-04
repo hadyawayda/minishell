@@ -1,39 +1,16 @@
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection_helpers.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/03 17:18:18 by hawayda           #+#    #+#             */
+/*   Updated: 2025/06/04 14:20:00 by hawayda          ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
+
 #include "../lib/execution.h"
-
-static int   saved_stdin;
-static int   saved_stdout;
-
-/*
-** Before applying any redir for a builtin, call this once
-** (it dups STDIN_FILENO / STDOUT_FILENO to static vars).
-*/
-void    save_fds(void)
-{
-    if (saved_stdin < 0)
-        saved_stdin = dup(STDIN_FILENO);
-    if (saved_stdout < 0)
-        saved_stdout = dup(STDOUT_FILENO);
-}
-
-/*
-** Restore the saved FDs (if they were saved). Then close the copies.
-*/
-void    restore_fds(void)
-{
-    if (saved_stdin >= 0)
-    {
-        dup2(saved_stdin, STDIN_FILENO);
-        close(saved_stdin);
-        saved_stdin = -1;
-    }
-
-    if (saved_stdout >= 0)
-    {
-        dup2(saved_stdout, STDOUT_FILENO);
-        close(saved_stdout);
-        saved_stdout = -1;
-    }
-}
 
 /*
 ** Walk the t_redir linked list. For each redirect:
@@ -41,62 +18,71 @@ void    restore_fds(void)
 **   - dup2 into STDIN or STDOUT
 **   - close the opened fd
 */
-void    apply_redirs(t_redir *redirs)
-{
-    int    fd;
 
-    while (redirs != NULL)
-    {
-        if (redirs->op == T_REDIR_IN)
-        {
-            fd = open(redirs->target, O_RDONLY);
-            if (fd < 0)
-            {
-                perror(redirs->target);
-                exit(1);
-            }
-            dup2(fd, STDIN_FILENO);
-            close(fd);
-        }
-        else if (redirs->op == T_REDIR_OUT)
-        {
-            fd = open(redirs->target,
-                      O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd < 0)
-            {
-                perror(redirs->target);
-                exit(1);
-            }
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        else if (redirs->op == T_REDIR_APPEND)
-        {
-            fd = open(redirs->target,
-                      O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd < 0)
-            {
-                perror(redirs->target);
-                exit(1);
-            }
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        else if (redirs->op == T_REDIR_HERE)
-        {
-            /* 
-            ** Assume `target` holds a temporary filename created by
-            ** collect_heredocs(). Open it read-only and dup2 into STDIN.
-            */
-            fd = open(redirs->target, O_RDONLY);
-            if (fd < 0)
-            {
-                perror(redirs->target);
-                exit(1);
-            }
-            dup2(fd, STDIN_FILENO);
-            close(fd);
-        }
-        redirs = redirs->next;
-    }
+static int	open_or_exit(char *filename, int flags, int mode)
+{
+	int	fd;
+
+	fd = open(filename, flags, mode);
+	if (fd < 0)
+	{
+		perror(filename);
+		exit(1);
+	}
+	return fd;
+}
+
+static void	redirect_in(char *target)
+{
+	int	fd;
+
+	fd = open_or_exit(target, O_RDONLY, 0);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+}
+
+static void	redirect_out(char *target)
+{
+	int	fd;
+
+	fd = open_or_exit(target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+}
+
+static void	redirect_append(char *target)
+{
+	int	fd;
+
+	fd = open_or_exit(target, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+}
+
+void	apply_redirections(t_redir *redirs)
+{
+	int	pipefd[2];
+
+	while (redirs != NULL)
+	{
+		if (redirs->op == T_REDIR_IN)
+			redirect_in(redirs->target);
+		else if (redirs->op == T_REDIR_OUT)
+			redirect_out(redirs->target);
+		else if (redirs->op == T_REDIR_APPEND)
+			redirect_append(redirs->target);
+		else if (redirs->op == T_REDIR_HERE)
+		{
+			if (pipe(pipefd) < 0)
+			{
+				perror("pipe");
+				exit(1);
+			}
+			write(pipefd[1], redirs->target, ft_strlen(redirs->target));
+			close(pipefd[1]);
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
+		}
+		redirs = redirs->next;
+	}
 }

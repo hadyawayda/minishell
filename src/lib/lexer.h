@@ -23,7 +23,6 @@ int					need_expand(const char *val);
 int					get_matches(const char *pattern, char ***matches_out);
 int					match_bracket(const char **sp, const char **pp);
 
-char				*expand_variable(const char *input);
 char				*ft_strjoin_char(char *s1, char c);
 char				*append_char(char *s1, char c);
 char				*clean_pattern(const char *pat);

@@ -1,35 +1,27 @@
 /******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   program.c                                          :+:      :+:    :+:   */
+/*   ft_is_only_whitespace.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 14:21:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/03 18:24:59 by hawayda          ###   ########.fr       */
+/*   Created: 2025/06/03 13:27:44 by hawayda           #+#    #+#             */
+/*   Updated: 2025/06/03 13:27:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
-#include "../../lib/core.h"
+#include "libft.h"
 
-void	minishell(char **envp)
+bool   ft_is_only_whitespace(char *s)
 {
-	t_shell	*shell;
+    int    i;
 
-	shell = init_shell(envp);
-	if (!shell)
-	{
-		perror("minishell: failed to initialize");
-		return ;
-	}
-	setup_signal_handlers();
-	shell_loop(shell);
-	free_shell(shell);
-	rl_clear_history();
+    i = 0;
+    while (s[i] != '\0')
+    {
+        if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+            return false;
+        i++;
+    }
+    return true;
 }
-
-// free(input);
-// free_env_list(env_cpy);
-// rl_free_line_state();
-// rl_cleanup_after_signal();
-// history_truncate_file(NULL, 0);

@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:11:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:37:33 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/03 17:58:39 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
-#include "../../../lib/lexer.h"
+# include "../../../lib/core.h"
 
 void	append_exit_status(t_shell *sh, int *i, char **cur)
 {
@@ -38,16 +38,16 @@ char	*parse_var_name(const char *in, int *i)
 	return (ft_substring(in, start, *i));
 }
 
-void	append_variable_value(char **cur, char *name)
+void	append_variable_value(t_env *env, char **cur, char *name)
 {
-	char	*env;
+	char	*env_val;
 	char	*val;
 	char	*tmp;
 
-	env = getenv(name);
+	env_val = get_env_value(env, name);
 	free(name);
-	if (env)
-		val = ft_strdup(env);
+	if (env_val)
+		val = ft_strdup(env_val);
 	else
 		val = ft_strdup("");
 	tmp = ft_strjoin(*cur, val);
@@ -80,17 +80,5 @@ void	handle_expansion(t_shell *sh, const char *in, int *i, char **cur)
 	}
 	name = parse_var_name(in, i);
 	if (name)
-		append_variable_value(cur, name);
-}
-
-char	*expand_variable(const char *var_name)
-{
-	char	*env_value;
-
-	if (!var_name)
-		return (NULL);
-	env_value = getenv(var_name);
-	if (!env_value)
-		return (ft_strdup(""));
-	return (ft_strdup(env_value));
+		append_variable_value(sh->env, cur, name);
 }

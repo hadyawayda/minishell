@@ -20,7 +20,7 @@ int	contains_unclosed_quote(const char *in, size_t pos, char q)
 			return (0);
 		pos++;
 	}
-	ft_printf("Unclosed quote detected\n");
+	printf("Unclosed quote detected\n");
 	return (1);
 }
 

@@ -9,14 +9,11 @@ CFLAGS          := -g -O0
 OBJDIR          := includes/objs
 
 # ──────────────────────────────────────────────────────────────────────────────
-# LIBRARIES (libft, ft_printf, readline)
+# LIBRARIES (libft, readline)
 # ──────────────────────────────────────────────────────────────────────────────
 
-LIBFT_DIR       := src/lib/includes/libft
+LIBFT_DIR       := src/lib/libft
 LIBFT           := $(LIBFT_DIR)/libft.a
-
-PRINTF_DIR      := src/lib/includes/ft_printf
-PRINTF          := $(PRINTF_DIR)/libftprintf.a
 
 SUPPRESSION     := src/lib/utils/ignore_readline.supp
 
@@ -70,7 +67,7 @@ PROGRAM_SRCS            := loop.c cleaner.c initializer.c program.c
 # 3) ENV sub‐components: list only the .c filenames here
 EXPANSION_SRCS          := expansion_helpers.c expansion.c
 GETTERS_SRCS            := list_env.c list_export.c merge_sort.c
-INITIALIZATION_SRCS     := cleaner.c cloners.c helpers.c initializer.c
+INITIALIZATION_SRCS     := cleaner.c cloners.c helpers.c
 SETTERS_SRCS            := helpers.c setter.c unset.c
 
 # 4) SIGNALS sources
@@ -89,7 +86,7 @@ TOKENIZER_SRCS          := dollar_parser.c helpers.c operator_parser.c quote_par
 WILDCARD_SRCS           := wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
 
 # 7) EXECUTION sources
-EXECUTION_SRCS          := build_argv.c builtin_handler.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c launch_process.c redirection_helpers.c
+EXECUTION_SRCS          := build_argv.c build_envp.c builtin_handler.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c launch_process.c redirection_helpers.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
@@ -149,18 +146,15 @@ all: $(NAME)
 # LINKING: build the final executable
 # ──────────────────────────────────────────────────────────────────────────────
 
-$(NAME): $(OBJS) $(LIBFT) $(PRINTF)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(PRINTF) -o $@ -lreadline -lm
+$(NAME): $(OBJS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $@ -lreadline -lm
 
 # ──────────────────────────────────────────────────────────────────────────────
-# BUILD libft and ft_printf if they don’t exist
+# BUILD libft if they don’t exist
 # ──────────────────────────────────────────────────────────────────────────────
 
 $(LIBFT):
 	@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
-
-$(PRINTF): $(LIBFT)
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PATTERN RULE TO COMPILE ANY .c → .o under $(OBJDIR)
@@ -179,13 +173,11 @@ $(OBJDIR)/%.o: %.c
 clean:
 	@rm -f $(OBJS)
 	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) clean
 
 .PHONY: fclean
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
-	@$(MAKE) --no-print-directory -C $(PRINTF_DIR) fclean
 
 .PHONY: re
 re: fclean all

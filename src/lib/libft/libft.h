@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:59:55 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/05/30 20:35:49 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/03 17:55:30 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef LIBFT_H
 # define LIBFT_H
@@ -16,6 +16,7 @@
 # include <ctype.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <strings.h>
 # include <unistd.h>
 
@@ -24,6 +25,8 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+bool				ft_is_only_whitespace(char *s);
 
 int					ft_putchar(char c);
 int					ft_putstr(char *s);
@@ -57,12 +60,11 @@ char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(const char *s, char c);
 char				**ft_split_charset(char *str, char *charset);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
-char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_itoa(int n);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strtok(char *str, const char *delim);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
-char				*ft_strjoin_and_free(char *s1, char *s2);
+char				*ft_strjoin(char *s1, char *s2);
 char				*ft_substring(const char *src, int start, int end);
 
 void				ft_putchar_fd(char c, int fd);

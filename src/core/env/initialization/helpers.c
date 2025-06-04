@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:20:27 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 01:08:26 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/03 18:26:37 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../../lib/core.h"
 
@@ -19,9 +19,9 @@ t_env	*create_env_node(char *key, char *value)
 	new_node = (t_env *)malloc(sizeof(t_env));
 	if (!new_node)
 		return (NULL);
-	new_node->key = strdup(key);
+	new_node->key = ft_strdup(key);
 	if (value)
-		new_node->value = strdup(value);
+		new_node->value = ft_strdup(value);
 	else
 		new_node->value = NULL;
 	new_node->next = NULL;

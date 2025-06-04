@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   loop.c                                             :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:57:01 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/13 00:22:54 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/03 18:24:57 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../lib/core.h"
 
@@ -19,16 +19,20 @@ void	process_line(t_shell *shell, char *input)
 	int			status;
 
 	status = 0;
-	tokens = input_tokenizer(shell, input);
-	if (!tokens)
+	if (input[0] == '\0' || ft_is_only_whitespace(input) == true)
 		return;
+	tokens = input_tokenizer(shell, input);
+	if (tokens == NULL)
+			return;
 	root = parser(shell, tokens);
-	if (root)
+	if (root == NULL)
 	{
-			status = execute_ast(shell, root);
-			shell->last_exit_status = status;
-			// free_ast(root);
+		free_ast(root);
+		return;
 	}
+	status = execute_ast(shell, root);
+	shell->last_exit_status = status;
+	free_ast(root);
 }
 
 void	shell_loop(t_shell *shell)
@@ -40,13 +44,13 @@ void	shell_loop(t_shell *shell)
 		input = readline("\033[0;32mMichel >\033[0m ");
 		if (!input)
 		{
-			ft_printf("exit\n");
+			printf("exit\n");
 			shell->exit_requested = 1;
 			break ;
 		}
 		if (ft_strcmp(input, "exit") == 0)
 		{
-			ft_printf("exit\n");
+			printf("exit\n");
 			free(input);
 			shell->exit_requested = 1;
 			break ;
@@ -67,12 +71,12 @@ void	shell_loop(t_shell *shell)
 // 		input = readline("\033[0;32mMinishell >\033[0m ");
 // 		if (input == NULL)
 // 		{
-// 			ft_printf("exit\n");
+// 			printf("exit\n");
 // 			break ;
 // 		}
 // 		if (strcmp(input, "exit") == 0)
 // 		{
-// 			ft_printf("exit\n");
+// 			printf("exit\n");
 // 			free(input);
 // 			break ;
 // 		}
