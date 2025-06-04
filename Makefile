@@ -12,7 +12,7 @@ OBJDIR					:= includes/objs
 # LIBRARIES (libft, readline)
 # ──────────────────────────────────────────────────────────────────────────────
 
-LIBFT_DIR				:= src/lib/includes/libft
+LIBFT_DIR				:= src/lib/libft
 LIBFT					:= $(LIBFT_DIR)/libft.a
 
 SUPPRESSION				:= src/lib/utils/ignore_readline.supp
@@ -86,7 +86,7 @@ TOKENIZER_SRCS			:= dollar_parser.c helpers.c operator_parser.c quote_parser.c w
 WILDCARD_SRCS			:= wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
 
 # 7) EXECUTION sources
-EXECUTION_SRCS			:= build_argv.c build_envp.c builtin_handler.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c launch_process.c redirection_helpers.c
+EXECUTION_SRCS			:= build_argv.c build_envp.c execute_and_or.c execute_command.c execute_pipe.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
@@ -132,14 +132,12 @@ SRCS					:= $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING) $(EX
 # OBJECT FILES: simply replace “.c” with “$(OBJDIR)/…/*.o”
 # ──────────────────────────────────────────────────────────────────────────────
 
-# Pattern:  e.g.  src/core/program/loop.c   →   includes/objs/src/core/program/loop.o
 OBJS					:= $(patsubst %.c, $(OBJDIR)/%.o, $(SRCS))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # DEFAULT TARGET
 # ──────────────────────────────────────────────────────────────────────────────
 
-.PHONY:					all
 all:					$(NAME)
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -168,7 +166,8 @@ $(OBJDIR)/%.o:			%.c
 # CLEAN & FCLEAN
 # ──────────────────────────────────────────────────────────────────────────────
 
-clean:					@rm -f $(OBJS)
+clean:					
+						@rm -f $(OBJS)
 						@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 
 fclean:					clean

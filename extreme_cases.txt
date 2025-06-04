@@ -66,3 +66,4 @@ echo a < a > b >> c -b << a || echo a < a > b >> c -b && echo a < a > b >> c -b 
 echo a < a > b >> c -b || echo a < a > b >> c -b << a && echo a < a > b >> c -b | echo a < a > b >> c -b || echo a < a > b >> c -b
 echo a < a > b >> c -b || echo a < a > b >> c -b && echo a < a > b >> c -b | echo a < a > b >> c -b << a || echo a < a > b >> c -b
 echo a < a > b >> c -b || echo a < a > b >> c -b << a && echo a < a > b >> c -b | echo a < a > b >> c -b << a || echo a < a > b >> c -b
+cat << EOF > test.txt | cat < test.txt > test2.txt | cat Makefile >> test2.txt | cat << eof >> test2.txt | ls > test3.txt | ls >> test2.txt | echo hello $HOME
