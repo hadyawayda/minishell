@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   build_argv.c                                       :+:      :+:    :+:   */
@@ -6,75 +6,95 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:17:54 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/03 17:17:55 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 22:35:01 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../lib/execution.h"
 
-char    **build_argv(t_ast *node)
+/*
+** Count how many entries in the NULL-terminated options array.
+*/
+static int	count_options(char **options)
 {
-    char        **argv;
-    t_argnode   *argnode;
-    int         nopt;
-    int         nargs;
-    int         total;
-    int         i;
+	int	n;
 
-    nopt = 0;
-    while (node->cmd.options[nopt] != NULL)
-        nopt++;
-
-    nargs = 0;
-    argnode = node->cmd.args;
-    while (argnode != NULL)
-    {
-        nargs++;
-        argnode = argnode->next;
-    }
-
-    total = 1 + nopt + nargs + 1;
-    argv = malloc(sizeof(char *) * total);
-    if (argv == NULL)
-        return NULL;
-
-    i = 0;
-    argv[i] = ft_strdup(node->cmd.command);
-    i++;
-
-    nopt = 0;
-    while (node->cmd.options[nopt] != NULL)
-    {
-        argv[i] = ft_strdup(node->cmd.options[nopt]);
-        i++;
-        nopt++;
-    }
-
-    argnode = node->cmd.args;
-    while (argnode != NULL)
-    {
-        argv[i] = ft_strdup(argnode->value);
-        i++;
-        argnode = argnode->next;
-    }
-
-    argv[i] = NULL;
-    return argv;
+	n = 0;
+	while (options[n] != NULL)
+		n++;
+	return (n);
 }
 
-/* Free a null-terminated array of strings */
-void    free_argv(char **argv)
+/*
+** Count how many t_argnode entries in the linked list.
+*/
+static int	count_args(t_argnode *args)
 {
-    int    i;
+	int	n;
 
-    i = 0;
-    if (argv == NULL)
-        return;
+	n = 0;
+	while (args != NULL)
+	{
+		n++;
+		args = args->next;
+	}
+	return (n);
+}
 
-    while (argv[i] != NULL)
-    {
-        free(argv[i]);
-        i++;
-    }
-    free(argv);
+/*
+** Copy each option string into argv at index *idx, incrementing *idx.
+*/
+static void	fill_options(char **argv, char **options, int *idx)
+{
+	int	j;
+
+	j = 0;
+	while (options[j] != NULL)
+	{
+		argv[*idx] = ft_strdup(options[j]);
+		(*idx)++;
+		j++;
+	}
+}
+
+/*
+** Copy each argument value into argv at index *idx, incrementing *idx.
+*/
+static void	fill_args(char **argv, t_argnode *args, int *idx)
+{
+	while (args != NULL)
+	{
+		argv[*idx] = ft_strdup(args->value);
+		(*idx)++;
+		args = args->next;
+	}
+}
+
+/*
+** Build a NULL-terminated char*[] from node->cmd.command,
+** node->cmd.options[], and the linked list node->cmd.args.
+*/
+char	**build_argv(t_ast *node)
+{
+	char	**argv;
+	int		nopt;
+	int		nargs;
+	int		total;
+	int		i;
+
+	if (node->cmd.command == NULL)
+		return (NULL);
+	nopt = count_options(node->cmd.options);
+	nargs = count_args(node->cmd.args);
+	total = 1 + nopt + nargs + 1;
+	argv = malloc(sizeof(char *) * total);
+	if (argv == NULL)
+		return (NULL);
+	i = 0;
+	argv[i] = ft_strdup(node->cmd.command);
+	i++;
+	fill_options(argv, node->cmd.options, &i);
+	fill_args(argv, node->cmd.args, &i);
+	argv[i] = NULL;
+	return (argv);
 }

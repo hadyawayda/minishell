@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:25:10 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 23:01:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_right_operand(t_token tokens[], int i)
 	t_token	*next;
 
 	next = &tokens[i + 1];
-	if (next->type == END_TOKEN)
+	if (next->type == ((t_tokentype)-1))
 	{
 		printf("syntax error near unexpected token `newline`\n");
 		return (-1);
@@ -44,7 +44,7 @@ int	check_operator_sequence(t_token tokens[])
 	int	i;
 
 	i = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 	{
 		if (tokens[i].type == T_AND || tokens[i].type == T_OR
 			|| tokens[i].type == T_PIPE)
@@ -68,7 +68,7 @@ int	check_dollar_paren(t_token tokens[])
 	int	i;
 
 	i = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 	{
 		if (tokens[i].type == T_WORD && strcmp(tokens[i].value, "$") == 0
 			&& tokens[i + 1].type == T_LPAREN)
@@ -83,7 +83,7 @@ int	check_dollar_paren(t_token tokens[])
 
 int	check_leading_token(t_token tokens[])
 {
-	if (tokens[0].type == END_TOKEN)
+	if (tokens[0].type == ((t_tokentype)-1))
 		return (0);
 	if (tokens[0].type != T_WORD && tokens[0].type != T_LPAREN
 		&& tokens[0].type != T_REDIR_IN && tokens[0].type != T_REDIR_OUT

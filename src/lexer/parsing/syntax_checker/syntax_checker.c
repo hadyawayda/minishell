@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/22 21:25:06 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 23:01:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_single_ampersand(t_token tokens[])
 	int	i;
 
 	i = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 	{
 		if (tokens[i].type == T_WORD && strcmp(tokens[i].value, "&") == 0)
 		{
@@ -35,7 +35,7 @@ int	check_redirection_sequence(t_token tokens[])
 	int			i;
 
 	i = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 	{
 		ty = tokens[i].type;
 		if (ty == T_REDIR_IN || ty == T_REDIR_OUT || ty == T_REDIR_APPEND
@@ -63,7 +63,7 @@ int	check_parentheses_balance(t_token tokens[])
 
 	i = 0;
 	depth = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 	{
 		if (tokens[i].type == T_LPAREN)
 			depth++;
@@ -91,7 +91,7 @@ int	check_trailing_token(t_token tokens[])
 	t_tokentype	ty;
 
 	i = 0;
-	while (tokens[i].type != END_TOKEN)
+	while (tokens[i].type != ((t_tokentype)-1))
 		i++;
 	if (i > 0)
 		i--;

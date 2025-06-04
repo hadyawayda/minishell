@@ -182,3 +182,6 @@ re:						fclean all
 
 leaks:
 						@valgrind --leak-check=full --show-leak-kinds=all --suppressions=$(SUPPRESSION) ./$(NAME)
+
+qleaks:
+						@valgrind -q --leak-check=full --suppressions=$(SUPPRESSION) ./$(NAME)

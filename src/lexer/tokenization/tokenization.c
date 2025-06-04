@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:49:44 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/27 21:01:46 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 22:51:36 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,20 @@ int	token_builder(t_shell *shell, const char *input, t_token tokens[])
 t_token	*input_tokenizer(t_shell *shell, char *input)
 {
 	t_token	*tokens;
+	int		i;
 
 	tokens = malloc(sizeof(t_token) * ARG_MAX);
 	if (!tokens)
 		return (NULL);
+	i = 0;
+	while (i < ARG_MAX)
+	{
+		tokens[i].type = (t_tokentype) - 1;
+		tokens[i].value = NULL;
+		tokens[i].is_quoted = false;
+		tokens[i].heredoc = NULL;
+		i++;
+	}
 	if (token_builder(shell, input, tokens) == -1)
 	{
 		free(tokens);

@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
@@ -6,71 +6,94 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/03 17:18:05 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 22:16:25 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../lib/execution.h"
 
 /*
-** For a PIPE node, we:
-**   1. Create pipefd[2].
-**   2. Fork left child:
-**       - dup2(pipefd[1], STDOUT), close both ends, exit(execute_ast(left)).
-**   3. Fork right child:
-**       - dup2(pipefd[0], STDIN), close both ends, exit(execute_ast(right)).
-**   4. Parent closes both ends, waits for both, returns right’s status.
+** Fork and run the LEFT subtree of a PIPE:
+**   • In child: redirect stdout → pipefd[1], then exit(execute_ast(left)).
+**   • In parent: return child pid, or -1 on fork error.
 */
-int    execute_pipe(t_shell *shell, t_ast *node)
+static pid_t	fork_and_exec_left(t_shell *shell, t_ast *left, int pipefd[])
 {
-    int     pipefd[2];
-    pid_t   left_pid;
-    pid_t   right_pid;
-    int     left_stat;
-    int     right_stat;
+	pid_t	pid;
 
-    if (pipe(pipefd) < 0)
-    {
-        perror("pipe");
-        return 1;
-    }
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+		exit(execute_ast(shell, left));
+	}
+	return (pid);
+}
 
-    left_pid = fork();
-    if (left_pid < 0)
-    {
-        perror("fork");
-        return 1;
-    }
-    else if (left_pid == 0)
-    {
-        close(pipefd[0]);
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
-        exit(execute_ast(shell, node->left));
-    }
+/*
+** Fork and run the RIGHT subtree of a PIPE:
+**   • In child: redirect stdin ← pipefd[0], then exit(execute_ast(right)).
+**   • In parent: return child pid, or -1 on fork error.
+*/
+static pid_t	fork_and_exec_right(t_shell *shell, t_ast *right, int pipefd[])
+{
+	pid_t	pid;
 
-    right_pid = fork();
-    if (right_pid < 0)
-    {
-        perror("fork");
-        return 1;
-    }
-    else if (right_pid == 0)
-    {
-        close(pipefd[1]);
-        dup2(pipefd[0], STDIN_FILENO);
-        close(pipefd[0]);
-        exit(execute_ast(shell, node->right));
-    }
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		exit(execute_ast(shell, right));
+	}
+	return (pid);
+}
 
-    close(pipefd[0]);
-    close(pipefd[1]);
+/*
+** For a PIPE node:
+**   1) Create pipefd[2].
+**   2) Fork left child via fork_and_exec_left().
+**   3) Fork right child via fork_and_exec_right().
+**   4) Parent closes both ends, waits for both children,
+**      and returns the right child’s exit status.
+*/
+int	execute_pipe(t_shell *shell, t_ast *node)
+{
+	int		pipefd[2];
+	pid_t	left_pid;
+	pid_t	right_pid;
+	int		left_stat;
+	int		right_stat;
 
-    waitpid(left_pid, &left_stat, 0);
-    waitpid(right_pid, &right_stat, 0);
-
-    if (WIFEXITED(right_stat))
-        return WEXITSTATUS(right_stat);
-
-    return 1;
+	if (pipe(pipefd) < 0)
+	{
+		perror("pipe");
+		return (1);
+	}
+	left_pid = fork_and_exec_left(shell, node->left, pipefd);
+	if (left_pid < 0)
+		return (1);
+	right_pid = fork_and_exec_right(shell, node->right, pipefd);
+	if (right_pid < 0)
+		return (1);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(left_pid, &left_stat, 0);
+	waitpid(right_pid, &right_stat, 0);
+	if (WIFEXITED(right_stat))
+		return (WEXITSTATUS(right_stat));
+	return (1);
 }

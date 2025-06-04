@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 02:43:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/23 00:01:20 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 22:53:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,3 @@ t_ast	*build_ast(t_token *tokens)
 	parser.pos = 0;
 	return (parse_expression(&parser));
 }
-
