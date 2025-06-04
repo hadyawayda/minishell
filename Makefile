@@ -78,7 +78,7 @@ PARSER_TOP_SRCS			:= parser.c
 HEREDOC_SRCS			:= heredoc.c heredoc_helpers.c
 PARSER_SRCS				:= parser_helpers.c parser_utils.c
 SYNTAX_CHECKER_SRCS		:= syntax_checker.c syntax_checker_helpers.c
-TREE_SRCS				:= ast_builder.c ast_traverser.c parse_command_helpers.c parse_command.c tree_visualizer.c
+TREE_SRCS				:= ast_builder.c parse_command_helpers.c parse_command.c tree_cleaner.c tree_visualizer.c
 
 # 6) TOKENIZATION sources
 TOKENIZATION_TOP_SRCS	:= tokenization.c

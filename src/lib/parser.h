@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/30 21:35:33 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 20:16:03 by hawayda          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef PARSER_H
 # define PARSER_H
@@ -26,7 +26,6 @@ int						check_dollar_paren(t_token tokens[]);
 int						is_redir(t_tokentype t);
 int						check_leading_token(t_token tokens[]);
 
-void					traverse_ast(t_ast *n);
 void					visualize_tree(t_ast *root);
 void					free_tokens(t_token *tokens);
 void					visualize_heredoc_tokens(t_token tokens[]);
