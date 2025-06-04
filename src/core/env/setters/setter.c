@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 23:08:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/14 01:59:56 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/04 23:45:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,21 @@ void	add_or_update_env_variable(t_env **env, char *key, char *value)
 {
 	t_env	*current;
 
-	current = *env;
 	if (!is_valid_varname(key))
 	{
 		printf("minishell: export: `%s': not a valid identifier\n", key);
 		return ;
 	}
+	current = *env;
 	while (current)
 	{
 		if (ft_strcmp(current->key, key) == 0)
 		{
 			free(current->value);
-			current->value = ft_strdup(value);
+			if (value != NULL)
+				current->value = ft_strdup(value);
+			else
+				current->value = NULL;
 			return ;
 		}
 		current = current->next;

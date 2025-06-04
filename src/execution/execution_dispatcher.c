@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:21:58 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/05 00:38:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 int	handle_builtin(t_shell *sh, char **argv)
 {
-	// int	status;
+	int	status;
 
 	// if (ft_strcmp(argv[0], "cd") == 0)
 	// 	status = builtin_cd(sh, argv);
@@ -26,17 +26,11 @@ int	handle_builtin(t_shell *sh, char **argv)
 	// 	status = builtin_pwd(sh, argv);
 	// else if (ft_strcmp(argv[0], "echo") == 0)
 	// 	status = builtin_echo(sh, argv);
-	// else if (ft_strcmp(argv[0], "env") == 0)
-	// 	status = builtin_env(sh, argv);
-	// else if (ft_strcmp(argv[0], "export") == 0)
-	// 	status = builtin_export(sh, argv);
-	// else if (ft_strcmp(argv[0], "unset") == 0)
-	// 	status = builtin_unset(sh, argv);
 	// else if (ft_strcmp(argv[0], "exit") == 0)
 	// 	status = builtin_exit(sh, argv);
 	// else
 	// 	return (-1);
-	// return (status);
+	return (status);
 }
 
 /*
@@ -73,14 +67,44 @@ void	exec_cmd_in_child(t_shell *sh, t_ast *node)
 }
 
 /*
+** If argv[0] is "export", "unset", or "cd", run that builtin in the parent.
+** Return its exit status. Otherwise, return
+	-1 to signal “not a parent-side builtin.”
+*/
+int	run_parent_builtin(t_shell *shell, char **argv)
+{
+	int	status;
+
+	if (ft_strcmp(argv[0], "env") == 0)
+		status = builtin_env(shell, argv);
+	else if (ft_strcmp(argv[0], "export") == 0)
+		status = builtin_export(shell, argv);
+	else if (ft_strcmp(argv[0], "unset") == 0)
+		status = builtin_unset(shell, argv);
+	else
+		return (-1);
+	return (status);
+}
+
+/*
 ** For a single N_CMD node when NOT in a pipeline, we still fork once
 ** so that builtins and execve happen in the child. The parent only waits.
 */
 int	execute_cmd(t_shell *shell, t_ast *node)
 {
+	char	**argv;
 	pid_t	pid;
 	int		wstatus;
 
+	argv = build_argv(node);
+	if (argv == NULL)
+		return (1);
+	wstatus = run_parent_builtin(shell, argv);
+	if (wstatus >= 0)
+	{
+		free_argv(argv);
+		return (wstatus);
+	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -91,7 +115,7 @@ int	execute_cmd(t_shell *shell, t_ast *node)
 		exec_cmd_in_child(shell, node);
 	waitpid(pid, &wstatus, 0);
 	if (WIFEXITED(wstatus))
-		return (WEXITSTATUS(wstatus));
+		return (free_argv(argv), WEXITSTATUS(wstatus));
 	return (1);
 }
 

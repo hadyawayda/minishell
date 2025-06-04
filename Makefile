@@ -53,6 +53,7 @@ WILDCARD_DIR			:= $(TOKENIZATION_DIR)/wildcard
 
 # Execution directories
 EXECUTION_DIR			:= $(SRC_DIR)/execution
+BUILTINS_DIR			:= $(EXECUTION_DIR)/builtins
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SOURCE FILES (relative to the project root)
@@ -87,6 +88,7 @@ WILDCARD_SRCS			:= wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matc
 
 # 7) EXECUTION sources
 EXECUTION_SRCS			:= build_argv.c build_envp.c execute_operators.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
+BUILTINS_SRCS			:= environment_builtins.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
@@ -120,7 +122,9 @@ WILDCARD				:= $(addprefix $(WILDCARD_DIR)/,$(WILDCARD_SRCS))
 TOKENIZATION			:= $(TOKENIZATION_TOP) $(TOKENIZER) $(WILDCARD)
 
 # EXECUTION
-EXECUTION				:= $(addprefix $(EXECUTION_DIR)/,$(EXECUTION_SRCS))
+EXECUTION_TOP			:= $(addprefix $(EXECUTION_DIR)/,$(EXECUTION_SRCS))
+BUILTINS				:= $(addprefix $(BUILTINS_DIR)/,$(BUILTINS_SRCS))
+EXECUTION				:= $(EXECUTION_TOP) $(BUILTINS)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ALL SOURCE FILES COMBINED
