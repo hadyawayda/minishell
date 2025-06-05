@@ -2,7 +2,7 @@
 # PROJECT SETTINGS
 # ──────────────────────────────────────────────────────────────────────────────
 
-NAME					:= michel
+NAME					:= minishell
 CC						:= gcc
 AR						:= ar rcs
 CFLAGS					:= -g -O0
