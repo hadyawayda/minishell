@@ -1,0 +1,38 @@
+export
+
+export FOO=bar
+env | grep ^FOO=
+
+export BAZ=
+env | grep ^BAZ=
+
+export A=1 B=2 C
+env | grep -E '^(A|B|C)='
+
+export Q1="hello world"
+export Q2='foo:bar'
+env | grep ^Q[12]=
+
+export DUP=first
+export DUP=second
+env | grep ^DUP=
+
+export 1START=foo
+export -BAD=bar
+export NO$PE=xyz
+export =novar
+
+export MULTI=one=two=three
+env | grep ^MULTI=
+
+export GOOD=ok 1BAD=bad OTHER
+env | grep -E '^(GOOD|OTHER)='
+
+export XTODEL=foo
+unset XTODEL
+env | grep ^XTODEL=
+
+unset 1NOTVALID
+
+export Z1=alpha Y2=beta X3=gamma
+export
