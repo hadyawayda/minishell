@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 03:41:53 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:45:44 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/11 23:43:41 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	update_env_variable(t_env **env, char *key, char *value)
 		if (ft_strcmp(current->key, key) == 0)
 		{
 			free(current->value);
-			current->value = ft_strdup(value);
+			if (value != NULL)
+				current->value = ft_strdup(value);
+			else
+				current->value = NULL;
 			return ;
 		}
 		current = current->next;

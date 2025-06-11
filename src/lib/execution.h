@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:47:37 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/11 23:48:13 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,19 @@ int		launch_external(t_shell *sh, char **argv, t_redir *redirs);
 int		builtin_env(t_shell *sh, char **argv);
 int		builtin_export(t_shell *sh, char **argv);
 int		builtin_unset(t_shell *sh, char **argv);
+int		process_cd(char **args, char **envp);
+int		process_pwd(char **args);
+int		process_exit(char **args, char **envp);
+int		process_env(char **args, char **envp);
+int		process_export(char **args, char **envp);
+int		cmp_key(const char *a, const char *b);
+int		cd_env_error(char *var);
+int		set_target_from_env(char **target, char *var, int *dash, t_env *env);
+int		print_getcwd_error(const char *cmd);
+int		builtin_cd(char **args, t_env *env);
 
 void	free_argv(char **argv);
 void	apply_redirections(t_redir *redirs);
+void	process_echo(char **args);
 
 #endif

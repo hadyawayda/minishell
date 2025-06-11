@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 23:09:17 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/06/04 23:13:05 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/11 23:52:48 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,13 @@ typedef struct s_parser
 	t_token				*tokens;
 	int					pos;
 }						t_parser;
+
+typedef struct s_cd_ctx
+{
+	char				*target;
+	char				*prev_pwd;
+	int					dash;
+	int					dbl_sl;
+}						t_cd_ctx;
 
 #endif

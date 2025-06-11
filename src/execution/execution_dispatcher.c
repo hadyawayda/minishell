@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/05 00:38:51 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 00:39:20 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_builtin(t_shell *sh, char **argv)
 	int	status;
 
 	// if (ft_strcmp(argv[0], "cd") == 0)
-	// 	status = builtin_cd(sh, argv);
+	// 	status = builtin_cd(argv, sh->env);
 	// else if (ft_strcmp(argv[0], "pwd") == 0)
 	// 	status = builtin_pwd(sh, argv);
 	// else if (ft_strcmp(argv[0], "echo") == 0)
@@ -51,15 +51,15 @@ void	exec_cmd_in_child(t_shell *sh, t_ast *node)
 	if (argv == NULL)
 		exit(1);
 	apply_redirections(node->cmd.redirs);
-	// status = handle_builtin(sh, argv);
-	// if (status >= 0)
-	// 	exit(status);
+	status = handle_builtin(sh, argv);
+	if (status >= 0)
+		exit(status);
 	envp = build_envp(sh->env);
 	exec_path = find_executable(sh, argv[0]);
 	execve(exec_path, argv, envp);
 	free(exec_path);
-	ft_putstr_fd(argv[0], STDERR_FILENO);
-	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+	printf("minishell: %s: ", argv[0]);
+	printf("%s", ": command not found\n");
 	if (envp)
 		free_argv(envp);
 	free_argv(argv);
@@ -81,6 +81,8 @@ int	run_parent_builtin(t_shell *shell, char **argv)
 		status = builtin_export(shell, argv);
 	else if (ft_strcmp(argv[0], "unset") == 0)
 		status = builtin_unset(shell, argv);
+	else if (ft_strcmp(argv[0], "cd") == 0)
+		status = builtin_cd(argv, shell->env);
 	else
 		return (-1);
 	return (status);

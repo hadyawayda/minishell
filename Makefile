@@ -88,7 +88,7 @@ WILDCARD_SRCS			:= wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matc
 
 # 7) EXECUTION sources
 EXECUTION_SRCS			:= build_argv.c build_envp.c execute_operators.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
-BUILTINS_SRCS			:= environment_builtins.c
+BUILTINS_SRCS			:= environment_builtins.c cd.c cd_helpers.c echo_builtin.c exit_builtin.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
