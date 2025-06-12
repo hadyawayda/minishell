@@ -1,28 +1,31 @@
 # ──────────────────────────────────────────────────────────────────────────────
+# PROJECT DIRECTORIES
+# ──────────────────────────────────────────────────────────────────────────────
+
+SRC_DIR					:= src
+LIB_DIR					:= lib
+LIBFT_DIR				:= $(LIB_DIR)/libft
+
+# ──────────────────────────────────────────────────────────────────────────────
 # PROJECT SETTINGS
 # ──────────────────────────────────────────────────────────────────────────────
 
 NAME					:= minishell
 CC						:= gcc
 AR						:= ar rcs
-CFLAGS					:= -g -O0
-OBJDIR					:= includes/objs
+CFLAGS					:= -g -O0 -I $(LIB_DIR)
+OBJDIR					:= objs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # LIBRARIES (libft, readline)
 # ──────────────────────────────────────────────────────────────────────────────
 
-LIBFT_DIR				:= src/lib/libft
 LIBFT					:= $(LIBFT_DIR)/libft.a
-
-SUPPRESSION				:= src/lib/utils/ignore_readline.supp
+SUPPRESSION				:= $(LIB_DIR)/utils/ignore_readline.supp
 
 # ──────────────────────────────────────────────────────────────────────────────
 # DIRECTORY LAYOUT
 # ──────────────────────────────────────────────────────────────────────────────
-
-# Root directory
-SRC_DIR					:= src
 
 # Core directories
 CORE_DIR				:= $(SRC_DIR)/core
@@ -37,9 +40,8 @@ INITIALIZATION_DIR		:= $(ENV_DIR)/initialization
 SETTERS_DIR				:= $(ENV_DIR)/setters
 
 # Lexer directories
-LEXER_DIR				:= $(SRC_DIR)/lexer
-TOKENIZATION_DIR		:= $(LEXER_DIR)/tokenization
-PARSING_DIR				:= $(LEXER_DIR)/parsing
+TOKENIZATION_DIR		:= $(SRC_DIR)/tokenization
+PARSING_DIR				:= $(SRC_DIR)/parsing
 
 # Parsing directories:
 HEREDOC_DIR				:= $(PARSING_DIR)/heredoc
@@ -77,9 +79,9 @@ SIGNALS_SRCS			:= signals.c
 # 5) PARSING sources
 PARSER_TOP_SRCS			:= parser.c
 HEREDOC_SRCS			:= heredoc.c heredoc_helpers.c
-PARSER_SRCS				:= parser_helpers.c parser_utils.c
+PARSER_SRCS				:= parser_helpers.c
 SYNTAX_CHECKER_SRCS		:= syntax_checker.c syntax_checker_helpers.c
-TREE_SRCS				:= ast_builder.c parse_command_helpers.c parse_command.c tree_cleaner.c tree_visualizer.c
+TREE_SRCS				:= ast_builder.c parse_command_helpers.c parse_command.c tree_cleaner.c
 
 # 6) TOKENIZATION sources
 TOKENIZATION_TOP_SRCS	:= tokenization.c
@@ -172,6 +174,7 @@ $(OBJDIR)/%.o:			%.c
 
 clean:					
 						@rm -f $(OBJS)
+						@rm -rf $(OBJDIR)
 						@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 
 fclean:					clean

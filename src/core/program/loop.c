@@ -6,29 +6,29 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:55:50 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/05 17:55:50 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/core.h"
+#include "core.h"
 
 void	process_line(t_shell *shell, char *input)
 {
 	t_token	*tokens;
-	t_ast		*root;
-	int			status;
+	t_ast	*root;
+	int		status;
 
 	status = 0;
 	if (input[0] == '\0' || ft_is_only_whitespace(input) == true)
-		return;
+		return ;
 	tokens = input_tokenizer(shell, input);
 	if (tokens == NULL)
-			return;
+		return ;
 	root = parser(shell, tokens);
 	if (root == NULL)
 	{
 		free_ast(root);
-		return;
+		return ;
 	}
 	status = execute_ast(shell, root);
 	shell->last_exit_status = status;

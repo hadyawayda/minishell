@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 01:09:55 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 04:00:02 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:55:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/core.h"
+#include "core.h"
 
 void	unset_env_variable(t_env **env, char *key)
 {

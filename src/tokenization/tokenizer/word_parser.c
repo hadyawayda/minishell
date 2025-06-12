@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   program.c                                          :+:      :+:    :+:   */
+/*   word_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/05 17:56:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
+/*   Created: 2025/02/19 02:56:06 by hawayda           #+#    #+#             */
+/*   Updated: 2025/06/12 23:00:20 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "core.h"
+#include "lexer.h"
 
-void	minishell(char **envp)
+void	word_parser(const char *in, t_tokenstate *st)
 {
-	t_shell	*shell;
-
-	shell = init_shell(envp);
-	if (!shell)
+	while (in[st->i] && !ft_isdelimiter(in[st->i])
+		&& !is_operator_char(in[st->i]) && in[st->i] != '\'' && in[st->i] != '"'
+		&& in[st->i] != '$')
 	{
-		perror("minishell: failed to initialize");
-		return ;
+		append_char_inplace(&st->cur, in[st->i], &st->i);
 	}
-	setup_signal_handlers();
-	shell_loop(shell);
-	free_shell(shell);
-	rl_clear_history();
 }
-
-// free(input);
-// free_env_list(env_cpy);
-// rl_free_line_state();
-// rl_cleanup_after_signal();
-// history_truncate_file(NULL, 0);

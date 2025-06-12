@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:17:56 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:10:42 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/execution.h"
+#include "execution.h"
 
 /*
 ** Iterate over each element in `paths[]`, join with `"/" + cmd"`, and

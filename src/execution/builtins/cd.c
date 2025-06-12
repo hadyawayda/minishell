@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/12 22:15:23 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 23:25:29 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/execution.h"
+#include "execution.h"
 
 #define PATH_MAX_LEN 1024
 

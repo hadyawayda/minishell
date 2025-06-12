@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 23:08:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:45:54 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:55:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/core.h"
+#include "core.h"
 
 int	is_valid_varname(char *name)
 {

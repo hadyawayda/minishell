@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 02:38:42 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/11 18:21:32 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:46:55 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lib/core.h"
+#include "core.h"
 
 int	main(int ac, char **av, char **envp)
 {

@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   program.c                                          :+:      :+:    :+:   */
+/*   parser_helpers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/05 17:56:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
+/*   Created: 2025/05/05 20:22:15 by hawayda           #+#    #+#             */
+/*   Updated: 2025/06/12 23:33:26 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "core.h"
+#include "parser.h"
 
-void	minishell(char **envp)
+t_token	*peek(t_parser *p)
 {
-	t_shell	*shell;
-
-	shell = init_shell(envp);
-	if (!shell)
-	{
-		perror("minishell: failed to initialize");
-		return ;
-	}
-	setup_signal_handlers();
-	shell_loop(shell);
-	free_shell(shell);
-	rl_clear_history();
+	return (&p->tokens[p->pos]);
 }
 
-// free(input);
-// free_env_list(env_cpy);
-// rl_free_line_state();
-// rl_cleanup_after_signal();
-// history_truncate_file(NULL, 0);
+t_token	*next(t_parser *p)
+{
+	return (&p->tokens[p->pos++]);
+}
+
+void	free_tokens(t_token *tokens)
+{
+	int		i;
+
+	i = 0;
+	while (tokens[i].type != (t_tokentype)-1)
+	{
+		free(tokens[i].value);
+		free(tokens[i].heredoc);
+		i++;
+	}
+	free(tokens);
+}

@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   program.c                                          :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/05 17:56:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
+/*   Created: 2025/06/03 13:27:30 by hawayda           #+#    #+#             */
+/*   Updated: 2025/06/12 23:00:42 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "core.h"
+#include "parser.h"
 
-void	minishell(char **envp)
+t_ast	*parser(t_shell *shell, t_token *tokens)
 {
-	t_shell	*shell;
+	t_ast	*root;
 
-	shell = init_shell(envp);
-	if (!shell)
+	if (!tokens)
+		return (NULL);
+	if (check_syntax(tokens) < 0)
 	{
-		perror("minishell: failed to initialize");
-		return ;
+		free_tokens(tokens);
+		return (NULL);
 	}
-	setup_signal_handlers();
-	shell_loop(shell);
-	free_shell(shell);
-	rl_clear_history();
+	collect_heredocs(shell, tokens);
+	root = build_ast(tokens);
+	free_tokens(tokens);
+	return (root);
 }
 
-// free(input);
-// free_env_list(env_cpy);
-// rl_free_line_state();
-// rl_cleanup_after_signal();
-// history_truncate_file(NULL, 0);
+// debugging helper functions that can be called:
+// print_tokens(tokens);
+// visualize_heredoc_tokens(tokens);
+// visualize_tree(root);

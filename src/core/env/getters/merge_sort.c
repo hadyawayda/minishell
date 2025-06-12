@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:03:15 by hawayda           #+#    #+#             */
-/*   Updated: 2025/05/30 20:37:06 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:55:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/core.h"
+#include "core.h"
 
 t_env	*merge_sorted_env(t_env *left, t_env *right)
 {

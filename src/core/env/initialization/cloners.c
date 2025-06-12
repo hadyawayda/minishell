@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:31:32 by hawayda           #+#    #+#             */
-/*   Updated: 2025/02/13 01:43:47 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 23:25:12 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/core.h"
+#include "core.h"
 
 t_env	*clone_env(char **envp)
 {
@@ -44,19 +44,12 @@ t_env	*clone_env_list(t_env *env)
 	t_env	*last;
 
 	new_head = NULL;
-	new_node = NULL;
 	last = NULL;
 	while (env)
 	{
-		new_node = (t_env *)malloc(sizeof(t_env));
+		new_node = create_env_node(env->key, env->value);
 		if (!new_node)
 			return (NULL);
-		new_node->key = ft_strdup(env->key);
-		if (env->value)
-			new_node->value = ft_strdup(env->value);
-		else
-			new_node->value = NULL;
-		new_node->next = NULL;
 		if (!new_head)
 			new_head = new_node;
 		else

@@ -6,16 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:53:10 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/12 22:15:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 23:25:48 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/execution.h"
-
-// #include <unistd.h>
-// #include <stdlib.h>
-// #include <errno.h>
-// #include <sys/stat.h>
+#include "execution.h"
 
 /* ---------- "$VAR not set" error ---------------------------- */
 int	cd_env_error(char *var)

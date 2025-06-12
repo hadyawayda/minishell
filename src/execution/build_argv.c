@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:17:54 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:16:21 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/execution.h"
+#include "execution.h"
 
 /*
 ** Count how many entries in the NULL-terminated options array.

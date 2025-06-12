@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_pipe.c                                     :+:      :+:    :+:   */
+/*   execute_operators.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 23:20:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/execution.h"
+#include "execution.h"
 
 /*
 ** For N_AND: if left returns 0, run right; else return left’s status.

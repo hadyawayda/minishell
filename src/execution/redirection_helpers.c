@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:18 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 21:59:52 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/execution.h"
+#include "execution.h"
 
 /*
 ** Walk the t_redir linked list. For each redirect:

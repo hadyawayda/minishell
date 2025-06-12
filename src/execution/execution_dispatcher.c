@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:15:28 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 23:25:25 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/execution.h"
+#include "execution.h"
 
 /*
 ** Child‐side builtins: printing commands handled here.

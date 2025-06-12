@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 23:45:32 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/11 22:17:26 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:57:46 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/execution.h"
+#include "execution.h"
 
 /*
 ** `env` builtin: list all environment variables (skip NULL values).

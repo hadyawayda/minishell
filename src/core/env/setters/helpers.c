@@ -6,11 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 03:41:53 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/11 23:43:41 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:55:54 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/core.h"
+#include "core.h"
 
 int	env_list_contains(t_env *env, char *key)
 {
