@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/12 23:25:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/13 00:24:18 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ static int	change_directory(char *target)
 {
 	struct stat	st;
 
-	// forbidden function S_ISDIR
-	if (stat(target, &st) != 0 || !S_ISDIR(st.st_mode))
+	if (stat(target, &st) != 0 || (st.st_mode & 0170000) != 0040000)
 	{
 		printf("%s", "minishell: cd: ");
 		printf("%s", target);

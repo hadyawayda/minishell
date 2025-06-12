@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/11 23:48:13 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/13 01:00:50 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ int		cd_env_error(char *var);
 int		set_target_from_env(char **target, char *var, int *dash, t_env *env);
 int		print_getcwd_error(const char *cmd);
 int		builtin_cd(char **args, t_env *env);
+int		builtin_exit(char **args);
+int		builtin_pwd(char **args);
+int		builtin_echo(t_ast *node, char **args);
 
 void	free_argv(char **argv);
 void	apply_redirections(t_redir *redirs);
