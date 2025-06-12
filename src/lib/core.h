@@ -22,18 +22,18 @@ char	*get_env_value(t_env *env, char *key);
 
 int		env_list_contains(t_env *env, char *key);
 int		is_valid_varname(char *var);
+int     add_or_update_env_variable(t_env **env, char *key, char *value);
+int     add_env_variable(t_env **env, char *key, char *value);
 
 void	free_env(t_env *env);
 void	minishell(char **env);
 void	shell_loop(t_shell *shell);
 void	free_shell(t_shell *shell);
 void	list_export(t_env *env);
-void	list_env(t_env *env);
 void	sort_env_list(t_env **env);
 void	unset_env_variable(t_env **env, char *key);
-void	add_env_variable(t_env **env, char *key, char *value);
 void	update_env_variable(t_env **env, char *key, char *value);
-void	add_or_update_env_variable(t_env **env, char *key, char *value);
+
 void	setup_signal_handlers(void);
 void	non_interactive_minishell(char **av, char **envp);
 

@@ -15,10 +15,14 @@
 /*
 ** `env` builtin: list all environment variables (skip NULL values).
 */
-int	builtin_env(t_shell *sh, char **argv)
+int	builtin_env(t_shell *sh)
 {
-	(void)argv;
-	list_env(sh->env);
+	while (sh->env)
+	{
+		if (sh->env->value)
+			printf("%s=%s\n", sh->env->key, sh->env->value);
+		sh->env = sh->env->next;
+	}
 	return (0);
 }
 
@@ -34,6 +38,7 @@ static int	process_export_args(t_shell *sh, char **argv)
 	char	*eq;
 	char	*key;
 	char	*value;
+	int		status;
 
 	i = 1;
 	while (argv[i] != NULL)
@@ -44,14 +49,14 @@ static int	process_export_args(t_shell *sh, char **argv)
 			*eq = '\0';
 			key = argv[i];
 			value = eq + 1;
-			add_or_update_env_variable(&sh->env, key, value);
+			status = add_or_update_env_variable(&sh->env, key, value);
 			*eq = '=';
 		}
 		else
-			add_or_update_env_variable(&sh->env, argv[i], "");
+			status = add_or_update_env_variable(&sh->env, argv[i], "");
 		i++;
 	}
-	return (0);
+	return (status);
 }
 
 /*
@@ -82,7 +87,10 @@ int	builtin_unset(t_shell *sh, char **argv)
 		if (is_valid_varname(argv[i]))
 			unset_env_variable(&sh->env, argv[i]);
 		else
+		{
 			printf("minishell: unset: `%s': not a valid identifier\n", argv[i]);
+			return (1);
+		}
 		i++;
 	}
 	return (0);

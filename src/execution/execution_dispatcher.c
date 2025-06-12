@@ -13,47 +13,43 @@
 #include "../lib/execution.h"
 
 /*
-** If argv[0] is a recognized builtin, run it and return its exit status.
-** Otherwise, return −1 to signal “not a builtin.”
+** Child‐side builtins: printing commands handled here.
+** Return >=0 if handled, else –1 so we’ll execve().
 */
-int	handle_builtin(t_shell *sh, char **argv)
+int handle_child_builtin(t_shell *shell, char **argv)
 {
-	int	status;
-
-	// if (ft_strcmp(argv[0], "cd") == 0)
-	// 	status = builtin_cd(argv, sh->env);
-	// else if (ft_strcmp(argv[0], "pwd") == 0)
-	// 	status = builtin_pwd(sh, argv);
-	// else if (ft_strcmp(argv[0], "echo") == 0)
-	// 	status = builtin_echo(sh, argv);
-	// else if (ft_strcmp(argv[0], "exit") == 0)
-	// 	status = builtin_exit(sh, argv);
-	// else
-	// 	return (-1);
-	return (status);
+    if (ft_strcmp(argv[0], "env") == 0)
+        return builtin_env(shell);
+    // if (ft_strcmp(argv[0], "pwd") == 0)
+    //     return builtin_pwd(shell, argv);
+    // if (ft_strcmp(argv[0], "echo") == 0)
+    //     return builtin_echo(shell, argv);
+    if (ft_strcmp(argv[0], "export") == 0 && argv[1] == NULL)
+        return builtin_export(shell, argv);
+    return -1;
 }
 
 /*
 ** Called only inside a forked child.
 **   - First apply ANY redirections for this node (">", "<", ">>", "<<").
 **   - Then either run a builtin in‐process, or do execve()/exit.
-** Note: sys-builtins (like /bin/echo) are covered by execve;
-** your “custom builtins” get integrated here.
 */
-void	exec_cmd_in_child(t_shell *sh, t_ast *node)
+void	execute_child_command(t_shell *sh, t_ast *node)
 {
 	char	**argv;
 	char	**envp;
-	int		status;
 	char	*exec_path;
 
 	argv = build_argv(node);
 	if (argv == NULL)
 		exit(1);
 	apply_redirections(node->cmd.redirs);
-	status = handle_builtin(sh, argv);
-	if (status >= 0)
-		exit(status);
+	int cb = handle_child_builtin(sh, argv);
+    if (cb >= 0)
+    {
+        free_argv(argv);
+        exit(cb);
+    }
 	envp = build_envp(sh->env);
 	exec_path = find_executable(sh, argv[0]);
 	execve(exec_path, argv, envp);
@@ -66,26 +62,24 @@ void	exec_cmd_in_child(t_shell *sh, t_ast *node)
 	exit(127);
 }
 
-/*
-** If argv[0] is "export", "unset", or "cd", run that builtin in the parent.
-** Return its exit status. Otherwise, return
-	-1 to signal “not a parent-side builtin.”
-*/
-int	run_parent_builtin(t_shell *shell, char **argv)
+int	execute_parent_command(t_shell *sh, t_ast *node)
 {
-	int	status;
+	char	**argv;
+	int		status;
 
-	if (ft_strcmp(argv[0], "env") == 0)
-		status = builtin_env(shell, argv);
-	else if (ft_strcmp(argv[0], "export") == 0)
-		status = builtin_export(shell, argv);
-	else if (ft_strcmp(argv[0], "unset") == 0)
-		status = builtin_unset(shell, argv);
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		status = builtin_cd(argv, shell->env);
-	else
-		return (-1);
-	return (status);
+	argv = build_argv(node);
+	if (argv == NULL)
+		return (1);
+	if (ft_strcmp(argv[0], "cd") == 0)
+        return builtin_cd(argv, sh->env);
+    // if (ft_strcmp(argv[0], "exit") == 0)
+    //     return builtin_exit(sh, argv);
+    if (ft_strcmp(argv[0], "unset") == 0)
+        return builtin_unset(sh, argv);
+    if (ft_strcmp(argv[0], "export") == 0 && argv[1] != NULL)
+        return builtin_export(sh, argv);
+	free_argv(argv);
+	return (-1);
 }
 
 /*
@@ -94,19 +88,12 @@ int	run_parent_builtin(t_shell *shell, char **argv)
 */
 int	execute_cmd(t_shell *shell, t_ast *node)
 {
-	char	**argv;
 	pid_t	pid;
 	int		wstatus;
 
-	argv = build_argv(node);
-	if (argv == NULL)
-		return (1);
-	wstatus = run_parent_builtin(shell, argv);
+	wstatus = execute_parent_command(shell, node);
 	if (wstatus >= 0)
-	{
-		free_argv(argv);
 		return (wstatus);
-	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -114,10 +101,10 @@ int	execute_cmd(t_shell *shell, t_ast *node)
 		return (1);
 	}
 	else if (pid == 0)
-		exec_cmd_in_child(shell, node);
+		execute_child_command(shell, node);
 	waitpid(pid, &wstatus, 0);
 	if (WIFEXITED(wstatus))
-		return (free_argv(argv), WEXITSTATUS(wstatus));
+		return (WEXITSTATUS(wstatus));
 	return (1);
 }
 

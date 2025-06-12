@@ -67,7 +67,7 @@ PROGRAM_SRCS			:= loop.c cleaner.c initializer.c program.c
 
 # 3) ENV sub‐components: list only the .c filenames here
 EXPANSION_SRCS			:= expansion_helpers.c expansion.c
-GETTERS_SRCS			:= list_env.c list_export.c merge_sort.c
+GETTERS_SRCS			:= list_export.c merge_sort.c
 INITIALIZATION_SRCS		:= cleaner.c cloners.c helpers.c
 SETTERS_SRCS			:= helpers.c setter.c unset.c
 

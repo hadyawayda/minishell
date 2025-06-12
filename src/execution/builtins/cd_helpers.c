@@ -20,9 +20,9 @@
 /* ---------- "$VAR not set" error ---------------------------- */
 int	cd_env_error(char *var)
 {
-	ft_putstr_fd("minishell: cd: ", 2);
-	ft_putstr_fd(var, 2);
-	ft_putstr_fd(" not set\n", 2);
+	printf("%s", "minishell: cd: ");
+	printf("%s", var);
+	printf("%s", " not set\n");
 	return (1);
 }
 

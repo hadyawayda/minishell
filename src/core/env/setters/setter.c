@@ -30,14 +30,14 @@ int	is_valid_varname(char *name)
 	return (1);
 }
 
-void	add_or_update_env_variable(t_env **env, char *key, char *value)
+int	add_or_update_env_variable(t_env **env, char *key, char *value)
 {
 	t_env	*current;
 
 	if (!is_valid_varname(key))
 	{
 		printf("minishell: export: `%s': not a valid identifier\n", key);
-		return ;
+		return (1);
 	}
 	current = *env;
 	while (current)
@@ -49,9 +49,9 @@ void	add_or_update_env_variable(t_env **env, char *key, char *value)
 				current->value = ft_strdup(value);
 			else
 				current->value = NULL;
-			return ;
+			return (0);
 		}
 		current = current->next;
 	}
-	add_env_variable(env, key, value);
+	return (add_env_variable(env, key, value));
 }

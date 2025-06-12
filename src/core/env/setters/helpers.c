@@ -25,15 +25,16 @@ int	env_list_contains(t_env *env, char *key)
 	return (0);
 }
 
-void	add_env_variable(t_env **env, char *key, char *value)
+int	add_env_variable(t_env **env, char *key, char *value)
 {
 	t_env	*new_node;
 
 	new_node = create_env_node(key, value);
 	if (!new_node)
-		return ;
+		return (1);
 	new_node->next = *env;
 	*env = new_node;
+	return (0);
 }
 
 void	update_env_variable(t_env **env, char *key, char *value)

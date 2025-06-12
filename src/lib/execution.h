@@ -25,7 +25,7 @@ int		execute_cmd(t_shell *shell, t_ast *node);
 int		execute_pipe(t_shell *shell, t_ast *node);
 int		execute_ast(t_shell *shell, t_ast *node);
 int		launch_external(t_shell *sh, char **argv, t_redir *redirs);
-int		builtin_env(t_shell *sh, char **argv);
+int		builtin_env(t_shell *sh);
 int		builtin_export(t_shell *sh, char **argv);
 int		builtin_unset(t_shell *sh, char **argv);
 int		process_cd(char **args, char **envp);
