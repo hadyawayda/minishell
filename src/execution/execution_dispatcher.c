@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 00:39:20 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:15:28 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 ** Child‐side builtins: printing commands handled here.
 ** Return >=0 if handled, else –1 so we’ll execve().
 */
-int handle_child_builtin(t_shell *shell, char **argv)
+int	handle_child_builtin(t_shell *shell, char **argv)
 {
-    if (ft_strcmp(argv[0], "env") == 0)
-        return builtin_env(shell);
-    // if (ft_strcmp(argv[0], "pwd") == 0)
-    //     return builtin_pwd(shell, argv);
-    // if (ft_strcmp(argv[0], "echo") == 0)
-    //     return builtin_echo(shell, argv);
-    if (ft_strcmp(argv[0], "export") == 0 && argv[1] == NULL)
-        return builtin_export(shell, argv);
-    return -1;
+	if (ft_strcmp(argv[0], "env") == 0)
+		return (builtin_env(shell));
+	// if (ft_strcmp(argv[0], "pwd") == 0)
+	//     return (builtin_pwd(shell, argv));
+	// if (ft_strcmp(argv[0], "echo") == 0)
+	//     return (builtin_echo(shell, argv));
+	if (ft_strcmp(argv[0], "export") == 0 && argv[1] == NULL)
+		return (builtin_export(shell, argv));
+	return (-1);
 }
 
 /*
@@ -39,17 +39,18 @@ void	execute_child_command(t_shell *sh, t_ast *node)
 	char	**argv;
 	char	**envp;
 	char	*exec_path;
+	int		cb;
 
 	argv = build_argv(node);
 	if (argv == NULL)
 		exit(1);
 	apply_redirections(node->cmd.redirs);
-	int cb = handle_child_builtin(sh, argv);
-    if (cb >= 0)
-    {
-        free_argv(argv);
-        exit(cb);
-    }
+	cb = handle_child_builtin(sh, argv);
+	if (cb >= 0)
+	{
+		free_argv(argv);
+		exit(cb);
+	}
 	envp = build_envp(sh->env);
 	exec_path = find_executable(sh, argv[0]);
 	execve(exec_path, argv, envp);
@@ -71,13 +72,13 @@ int	execute_parent_command(t_shell *sh, t_ast *node)
 	if (argv == NULL)
 		return (1);
 	if (ft_strcmp(argv[0], "cd") == 0)
-        return builtin_cd(argv, sh->env);
-    // if (ft_strcmp(argv[0], "exit") == 0)
-    //     return builtin_exit(sh, argv);
-    if (ft_strcmp(argv[0], "unset") == 0)
-        return builtin_unset(sh, argv);
-    if (ft_strcmp(argv[0], "export") == 0 && argv[1] != NULL)
-        return builtin_export(sh, argv);
+		return (builtin_cd(argv, sh->env));
+	// if (ft_strcmp(argv[0], "exit") == 0)
+	//     return (builtin_exit(sh, argv));
+	if (ft_strcmp(argv[0], "unset") == 0)
+		return (builtin_unset(sh, argv));
+	if (ft_strcmp(argv[0], "export") == 0 && argv[1] != NULL)
+		return (builtin_export(sh, argv));
 	free_argv(argv);
 	return (-1);
 }

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:53:10 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/11 23:47:52 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:15:12 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	print_getcwd_error(const char *cmd)
 	const char	*msg2;
 
 	msg1 = ": error retrieving current directory: getcwd: cannot "
-			"access parent directories: ";
+		"access parent directories: ";
 	msg2 = "No such file or directory\n";
 	write(2, cmd, ft_strlen(cmd));
 	write(2, msg1, ft_strlen(msg1));
