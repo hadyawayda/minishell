@@ -48,7 +48,7 @@ int	builtin_echo(t_ast *node, char **args)
 	i = 1;
 	print_nl = true;
 	options = node->cmd.options;
-	printf("fix echo multiple options not being parsed: %s", options[0]);
+	(void)options;
 	while (is_n_flag(args[i]))
 	{
 		print_nl = false;

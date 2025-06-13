@@ -12,6 +12,24 @@
 
 #include "core.h"
 
+char	*get_env_value(t_env *env, char *key)
+{
+	if (!key || !env)
+		return ("");
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+		{
+			if (env->value)
+				return (env->value);
+			else
+				return ("");
+		}
+		env = env->next;
+	}
+	return ("");
+}
+
 void	append_exit_status(t_shell *sh, int *i, char **cur)
 {
 	char	*nbr;

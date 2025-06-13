@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/* src/lexer/parser/tree_visualizer.c */
-#include "execution.h"
+#include "parser.h"
 #include <math.h>
 
 void	print_tokens(t_token *tokens)
@@ -254,7 +253,7 @@ static void	render_rec(t_ast *n, char **canvas, int row, int left, int right)
 	int		rw;
 	int		cur;
 
-	longest = 0, cur;
+	longest = 0, cur = 0;
 	if (!n)
 		return ;
 	/* ---- prepare the multi-line label ---- */
