@@ -36,18 +36,8 @@ static int	get_target(char **args, t_cd_ctx *ctx, t_env *env)
 }
 
 /* ---------------- perform chdir & checks -------------------- */
-static int	change_directory(char *target)
+static int change_directory(char *target)
 {
-	struct stat	st;
-
-	if (stat(target, &st) != 0 || (st.st_mode & 0170000) != 0040000)
-	{
-		printf("%s", "minishell: cd: ");
-		printf("%s", target);
-		printf("%s", ": No such directory\n");
-		free(target);
-		return (1);
-	}
 	if (chdir(target) != 0)
 	{
 		perror("minishell: cd");
