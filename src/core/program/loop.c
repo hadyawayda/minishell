@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:55:50 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 01:52:49 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,20 @@ void	process_line(t_shell *shell, char *input)
 
 void	shell_loop(t_shell *shell)
 {
-	char	*input;
+	char		*input;
+	char		prompt[64];
+	const char	*color;
 
 	while (!shell->exit_requested)
 	{
-		input = readline("\033[0;32mMichel >\033[0m ");
+		if (shell->last_exit_status == 0)
+			color = "\033[0;32m";
+		else
+			color = "\033[0;31m";
+		ft_strlcpy(prompt, color, sizeof(prompt));
+		ft_strlcat(prompt, "Michel >", sizeof(prompt));
+		ft_strlcat(prompt, "\033[0m ", sizeof(prompt));
+		input = readline(prompt);
 		if (!input)
 		{
 			printf("exit\n");
@@ -56,36 +65,14 @@ void	shell_loop(t_shell *shell)
 			break ;
 		}
 		add_history(input);
+		if (g_last_signal != 0)
+		{
+			shell->last_exit_status = 128 + g_last_signal;
+			g_last_signal = 0;
+			free(input);
+			continue ;
+		}
 		process_line(shell, input);
 		free(input);
 	}
 }
-
-// void	shell_loop(char **env)
-// {
-// 	char *input;
-
-// 	input = NULL;
-// 	while (1)
-// 	{
-// 		input = readline("\033[0;32mMinishell >\033[0m ");
-// 		if (input == NULL)
-// 		{
-// 			printf("exit\n");
-// 			break ;
-// 		}
-// 		if (strcmp(input, "exit") == 0)
-// 		{
-// 			printf("exit\n");
-// 			free(input);
-// 			break ;
-// 		}
-// 		// if (g_last_signal != 0)
-// 		// {
-// 		// 	env_cpy->last_exit_status = 128 + g_last_signal;
-// 		// 	g_last_signal = 0;
-// 		// }
-// 		// check(input, env_cpy);
-// 		free(input);
-// 	}
-// }

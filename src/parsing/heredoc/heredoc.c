@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 01:05:30 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,34 @@
 /*–– main heredoc reader ––*/
 char	*read_heredoc(char *delim, int expand, t_shell *shell)
 {
-	char	*buf;
-	size_t	len;
-	char	*line;
-	char	*chunk;
-	size_t	chunk_len;
+	char				*buf;
+	size_t				len;
+	char				*line;
+	char				*chunk;
+	size_t				chunk_len;
+	struct sigaction	old_quit;
+	struct sigaction	old_int;
 
 	buf = ft_strdup("");
 	len = 0;
+	setup_heredoc_signals(&old_int, &old_quit);
 	while (1)
 	{
-		line = readline("> ");
+		line = readline("heredoc> ");
+		if (g_last_signal == SIGINT)
+		{
+			free(line);
+			break ;
+		}
+		if (line == NULL)
+		{
+			write(2,
+				"-bash: warning: here-document delimited by end-of-file (wanted `",
+				58);
+			write(2, delim, ft_strlen(delim));
+			write(2, "')\n", 3);
+			break ;
+		}
 		if (ft_strcmp(line, delim) == 0)
 		{
 			free(line);
@@ -37,6 +54,8 @@ char	*read_heredoc(char *delim, int expand, t_shell *shell)
 		len += chunk_len;
 		free(chunk);
 	}
+	restore_heredoc_signals(&old_int, &old_quit);
+	g_last_signal = 0;
 	return (buf);
 }
 

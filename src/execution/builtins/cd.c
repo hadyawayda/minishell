@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/13 00:24:18 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/16 21:29:21 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	get_target(char **args, t_cd_ctx *ctx, t_env *env)
 }
 
 /* ---------------- perform chdir & checks -------------------- */
-static int change_directory(char *target)
+static int	change_directory(char *target)
 {
 	if (chdir(target) != 0)
 	{

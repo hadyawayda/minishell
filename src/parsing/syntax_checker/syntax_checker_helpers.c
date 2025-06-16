@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/16 21:29:02 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	check_right_operand(t_token tokens[], int i)
 		printf("syntax error near unexpected token `newline`\n");
 		return (-1);
 	}
-	if (next->type != T_WORD && next->type != T_LPAREN)
+	if (next->type != T_WORD && next->type != T_LPAREN && !is_redir(next->type))
 	{
 		printf("syntax error near unexpected token `%s`\n", next->value);
 		return (-1);

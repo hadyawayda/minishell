@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/13 01:00:50 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/16 23:38:05 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ int		builtin_cd(char **args, t_env *env);
 int		builtin_exit(char **args);
 int		builtin_pwd(char **args);
 int		builtin_echo(t_ast *node, char **args);
+int		handle_child_builtin(t_shell *shell, t_ast *node, char **argv);
 
 void	free_argv(char **argv);
 void	apply_redirections(t_redir *redirs);
 void	process_echo(char **args);
+void	exec_error_and_exit(char *exec_path, char **argv, char **envp);
 
 #endif

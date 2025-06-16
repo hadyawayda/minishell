@@ -184,3 +184,6 @@ leaks:
 
 qleaks:
 						@valgrind -q --leak-check=full --suppressions=$(SUPPRESSION) ./$(NAME)
+
+norm:
+						@norminette src | grep Error || true

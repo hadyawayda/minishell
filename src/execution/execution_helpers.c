@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:17:56 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/16 23:40:31 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,39 @@ char	*find_executable(t_shell *sh, char *cmd)
 	if (found != NULL)
 		return (found);
 	return (ft_strdup(cmd));
+}
+
+/*
+** Child‐side builtins: printing commands handled here.
+** Return >=0 if handled, else –1 so we’ll execve().
+*/
+int	handle_child_builtin(t_shell *shell, t_ast *node, char **argv)
+{
+	if (ft_strcmp(argv[0], "env") == 0)
+		return (builtin_env(shell));
+	if (ft_strcmp(argv[0], "pwd") == 0)
+		return (builtin_pwd(argv));
+	if (ft_strcmp(argv[0], "echo") == 0)
+		return (builtin_echo(node, argv));
+	if (ft_strcmp(argv[0], "export") == 0 && argv[1] == NULL)
+		return (builtin_export(shell, argv));
+	return (-1);
+}
+
+/*–– after execve() fails, print error, free, and exit ––*/
+void	exec_error_and_exit(char *exec_path, char **argv, char **envp)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(argv[0], 2);
+	ft_putstr_fd(": ", 2);
+	if (ft_strchr(argv[0], '/'))
+		ft_putstr_fd(strerror(errno), 2);
+	else
+		ft_putstr_fd("command not found", 2);
+	ft_putstr_fd("\n", 2);
+	free(exec_path);
+	if (envp)
+		free_argv(envp);
+	free_argv(argv);
+	exit(127);
 }

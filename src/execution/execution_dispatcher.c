@@ -6,28 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/13 01:05:27 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/16 23:37:46 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-/*
-** Child‐side builtins: printing commands handled here.
-** Return >=0 if handled, else –1 so we’ll execve().
-*/
-int	handle_child_builtin(t_shell *shell, t_ast *node, char **argv)
-{
-	if (ft_strcmp(argv[0], "env") == 0)
-		return (builtin_env(shell));
-	if (ft_strcmp(argv[0], "pwd") == 0)
-		return (builtin_pwd(argv));
-	if (ft_strcmp(argv[0], "echo") == 0)
-		return (builtin_echo(node, argv));
-	if (ft_strcmp(argv[0], "export") == 0 && argv[1] == NULL)
-		return (builtin_export(shell, argv));
-	return (-1);
-}
 
 /*
 ** Called only inside a forked child.
@@ -54,12 +37,7 @@ void	execute_child_command(t_shell *sh, t_ast *node)
 	envp = build_envp(sh->env);
 	exec_path = find_executable(sh, argv[0]);
 	execve(exec_path, argv, envp);
-	free(exec_path);
-	printf("minishell: %s: command not found\n", argv[0]);
-	if (envp)
-		free_argv(envp);
-	free_argv(argv);
-	exit(127);
+	exec_error_and_exit(exec_path, argv, envp);
 }
 
 int	execute_parent_command(t_shell *sh, t_ast *node)
@@ -84,24 +62,52 @@ int	execute_parent_command(t_shell *sh, t_ast *node)
 }
 
 /*
-** For a single N_CMD node when NOT in a pipeline, we still fork once
-** so that builtins and execve happen in the child. The parent only waits.
-*/
+ * If this node has *only* redirections (no actual command),
+ * fork/apply them and return their exit status (0 on success).
+ * Otherwise return –1 to signal “not a pure-redir node.”
+ */
+static int	handle_redir_only(t_ast *node)
+{
+	pid_t	pid;
+	int		st;
+
+	if (node->cmd.command != NULL)
+		return (-1);
+	pid = fork();
+	if (pid < 0)
+		return (perror("fork"), 1);
+	if (pid == 0)
+	{
+		apply_redirections(node->cmd.redirs);
+		exit(0);
+	}
+	waitpid(pid, &st, 0);
+	if (WIFEXITED(st))
+		return (WEXITSTATUS(st));
+	return (1);
+}
+
+/*
+ * The main dispatcher for a simple command:
+ * 1) Try pure-redirs (>,<,>>,<< with no command).
+ * 2) Run any parent-side builtin.
+ * 3) Fork & run the child-side builtin or external.
+ */
 int	execute_cmd(t_shell *shell, t_ast *node)
 {
 	pid_t	pid;
 	int		wstatus;
 
+	wstatus = handle_redir_only(node);
+	if (wstatus >= 0)
+		return (wstatus);
 	wstatus = execute_parent_command(shell, node);
 	if (wstatus >= 0)
 		return (wstatus);
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("fork");
-		return (1);
-	}
-	else if (pid == 0)
+		return (perror("fork"), 1);
+	if (pid == 0)
 		execute_child_command(shell, node);
 	waitpid(pid, &wstatus, 0);
 	if (WIFEXITED(wstatus))
