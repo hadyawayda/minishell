@@ -12,84 +12,61 @@
 
 #include "parser.h"
 
-int	process_hd_line(t_hd_state *st, char *line)
+void	heredoc_child(int fd[2], char *delim, int expand, t_shell *sh)
 {
-	size_t	chunk_len;
-	char	*chunk;
+	char	*txt;
+	size_t	len;
 
-	if (line == NULL)
-	{
-		if (g_last_signal == SIGINT)
-		{
-			free(st->buf);
-			return (-1);
-		}
-		printf("-minishell: warning: here-document delimited "
-			"by end-of-file (wanted `eof')\n");
-		return (0);
-	}
-	if (ft_strcmp(line, st->delim) == 0)
-		return (0);
-	chunk = make_chunk(st->shell, line, st->expand, &chunk_len);
-	st->buf = append_buf(st->buf, st->len, chunk, chunk_len);
-	st->len += chunk_len;
-	free(chunk);
-	return (1);
+	close(fd[0]);
+	txt = read_heredoc(delim, expand, sh);
+	if (!txt)
+		_exit(1);
+	len = ft_strlen(txt);
+	write(fd[1], txt, len);
+	free(txt);
+	close(fd[1]);
+	_exit(0);
 }
 
-char	*read_heredoc(char *delim, int expand, t_shell *shell)
+char	*heredoc_parent(int fd[2], pid_t pid)
 {
-	t_hd_state	st;
-	char		*line;
-	int			code;
+	char	tmp[4096];
+	char	*buf;
+	ssize_t	n;
+	size_t	tot;
 
-	st.delim = delim;
-	st.expand = expand;
-	st.shell = shell;
-	st.buf = ft_strdup("");
-	st.len = 0;
-	while (1)
-	{
-		line = readline("heredoc> ");
-		code = process_hd_line(&st, line);
-		free(line);
-		if (code > 0)
-			continue ;
-		if (code < 0)
-			return (NULL);
-		break ;
-	}
-	return (st.buf);
+	buf = NULL;
+	tot = 0;
+	close(fd[1]);
+	while ((n = read(fd[0], tmp, sizeof(tmp))) > 0)
+		buf = append_chunk(&buf, &tot, tmp, n);
+	close(fd[0]);
+	waitpid(pid, NULL, 0);
+	if (buf)
+		buf[tot] = '\0';
+	return (buf);
 }
 
-void	shift_left(t_token tokens[], int idx)
+int	process_heredoc_token(t_shell *shell, t_token tok[], int i)
 {
-	while (tokens[idx].type != (t_tokentype)-1)
-	{
-		tokens[idx] = tokens[idx + 1];
-		idx++;
-	}
-}
+	int	pfd[2];
+	pid_t	pid;
+	char	*buf;
 
-int	process_heredoc_token(t_shell *shell, t_token tokens[], int i)
-{
-	char	*delim;
-	int		expand;
-
-	if (tokens[i + 1].type != T_WORD)
-	{
-		if (tokens[i + 1].value)
-			printf("syntax error near unexpected token `%s`\n", tokens[i
-				+ 1].value);
-		else
-			printf("syntax error near unexpected token `newline`\n");
+	if (tok[i + 1].type != T_WORD || pipe(pfd) < 0)
 		return (-1);
-	}
-	delim = tokens[i + 1].value;
-	expand = !tokens[i + 1].is_quoted;
-	tokens[i].heredoc = read_heredoc(delim, expand, shell);
-	shift_left(tokens, i + 1);
-	free(delim);
+	pid = fork();
+	if (pid < 0)
+		return (close_fds(pfd));
+	if (pid == 0)
+		heredoc_child(pfd, tok[i + 1].value,
+			!tok[i + 1].is_quoted, shell);
+	buf = heredoc_parent(pfd, pid);
+	if (!buf)
+		return (-1);
+	tok[i].heredoc = buf;
+	free(tok[i + 1].value);
+	shift_left(tok, i + 1);
 	return (i);
 }
 

@@ -18,7 +18,7 @@ t_env	*create_default_env(void)
 
 	head = create_env_node("SHLVL", "1");
 	head = create_env_node("PWD", "1");
-	head = create_env_node("PATH", "1");
+	head = create_env_node("OLDPWD", "1");
 	if (!head)
 		return (NULL);
 	return (head);

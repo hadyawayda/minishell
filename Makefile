@@ -70,7 +70,7 @@ SIGNALS_SRCS			:= signals.c
 
 # 5) PARSING sources
 PARSER_TOP_SRCS			:= parser.c
-HEREDOC_SRCS			:= heredoc.c heredoc_helpers.c
+HEREDOC_SRCS			:= heredoc.c heredoc_helpers.c heredoc_processor.c
 SYNTAX_CHECKER_SRCS		:= syntax_checker.c syntax_checker_helpers.c
 TREE_SRCS				:= ast_builder.c parse_command_helpers.c parse_command.c parser_helpers.c tree_cleaner.c
 

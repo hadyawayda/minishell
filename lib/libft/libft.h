@@ -81,6 +81,7 @@ void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 void				ft_lstadd_front(t_list **lst, t_list *new);
 void				ft_strcpy(char *dest, char *src);
 void				ft_strcat(char *dest, char *source);
+void				*ft_realloc(void *ptr, size_t size);
 
 size_t				ft_strlen(const char *s);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
