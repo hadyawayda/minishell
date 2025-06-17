@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 05:58:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/18 02:10:21 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/18 02:32:50 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static void	handle_sigint(int sig)
 {
 	g_last_signal = sig;
 	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -44,6 +44,6 @@ void	restore_signals(void)
 void	hd_sigint(int sig)
 {
 	(void)sig;
-	write(STDOUT_FILENO, "^C\n", 3);
+	write(STDOUT_FILENO, "\n", 1);
 	_exit(1);
 }
