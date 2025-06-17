@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:25:40 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 18:25:40 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 22:54:31 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	*ft_realloc(void *ptr, size_t size)
 	size_t	old;
 	size_t	i;
 
-	old = ptr ? ft_strlen(ptr) : 0;
+	if (ptr)
+		old = ft_strlen(ptr);
+	else
+		old = 0;
 	new = malloc(size);
 	if (!new)
 		return (NULL);

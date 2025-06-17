@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:56:00 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 22:53:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,26 @@
 
 t_env	*create_default_env(void)
 {
-	t_env	*head;
+	t_env	*env;
+	char	*pwd;
+	char	*path;
 
-	head = create_env_node("SHLVL", "1");
-	head = create_env_node("PWD", "1");
-	head = create_env_node("OLDPWD", "1");
-	if (!head)
+	env = NULL;
+	pwd = getcwd(NULL, 0);
+	path = getenv("PATH");
+	if (!pwd)
+		pwd = ft_strdup("/");
+	if (!path)
+		path = "/usr/local/bin:/usr/bin:/bin";
+	if (add_env_variable(&env, "SHLVL", "2") || add_env_variable(&env, "PWD",
+			pwd) || add_env_variable(&env, "PATH", path))
+	{
+		free(pwd);
+		free_env(env);
 		return (NULL);
-	return (head);
+	}
+	free(pwd);
+	return (env);
 }
 
 void	set_shell_shlvl(t_env **env)

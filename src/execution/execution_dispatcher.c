@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:00 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/16 23:37:46 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:44:07 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute_child_command(t_shell *sh, t_ast *node)
 	char	*exec_path;
 	int		cb;
 
-	//restore default bash SIGINT SIGQUIT
+	restore_signals();
 	argv = build_argv(node);
 	if (argv == NULL)
 		exit(1);
@@ -110,9 +110,9 @@ int	execute_cmd(t_shell *shell, t_ast *node)
 		return (perror("fork"), 1);
 	if (pid == 0)
 		execute_child_command(shell, node);
-	// ignore SIGINT & SIGQUIT
+	ignore_signals();
 	waitpid(pid, &wstatus, 0);
-	//restore the minishell default signals
+	setup_signals();
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
 	return (1);

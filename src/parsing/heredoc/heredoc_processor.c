@@ -6,18 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:31:34 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 18:31:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/18 02:11:06 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-int	close_fds(int fd[2])
-{
-	close(fd[0]);
-	close(fd[1]);
-	return (-1);
-}
 
 char	*append_chunk(char **buf, size_t *tot, char *tmp, ssize_t n)
 {
@@ -53,13 +46,9 @@ int	process_hd_line(t_hd_state *st, char *line)
 
 	if (line == NULL)
 	{
-		if (g_last_signal == SIGINT)
-		{
-			free(st->buf);
-			return (-1);
-		}
 		printf("-minishell: warning: here-document delimited "
-			"by end-of-file (wanted `eof')\n");
+			"by end-of-file (wanted `%s')\n",
+			st->delim);
 		return (0);
 	}
 	if (ft_strcmp(line, st->delim) == 0)
@@ -94,4 +83,24 @@ char	*read_heredoc(char *delim, int expand, t_shell *shell)
 		break ;
 	}
 	return (st.buf);
+}
+
+void	heredoc_child(int fd[2], char *delim, int expand, t_shell *sh)
+{
+	char			*txt;
+	struct termios	tio;
+
+	tcgetattr(STDIN_FILENO, &tio);
+	tio.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &tio);
+	signal(SIGINT, hd_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	close(fd[0]);
+	txt = read_heredoc(delim, expand, sh);
+	if (!txt)
+		_exit(1);
+	write(fd[1], txt, ft_strlen(txt));
+	free(txt);
+	close(fd[1]);
+	_exit(0);
 }

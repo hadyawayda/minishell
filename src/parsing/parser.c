@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:27:30 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:42 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:55:39 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,11 @@ t_ast	*parser(t_shell *shell, t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	if (check_syntax(tokens) < 0)
+	if ((check_syntax(tokens) < 0) || (collect_heredocs(shell, tokens) < 0))
 	{
 		free_tokens(tokens);
 		return (NULL);
 	}
-	collect_heredocs(shell, tokens);
 	root = build_ast(tokens);
 	free_tokens(tokens);
 	return (root);

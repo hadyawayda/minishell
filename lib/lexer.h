@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 04:48:14 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 22:56:42 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:54:04 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		check_syntax(t_token tokens[]);
 int		need_expand(const char *val);
 int		get_matches(const char *pattern, char ***matches_out);
 int		match_bracket(const char **sp, const char **pp);
+int		collect_heredocs(t_shell *shell, t_token tokens[]);
 
 char	*ft_strjoin_char(char *s1, char c);
 char	*append_char(char *s1, char c);
@@ -36,7 +37,6 @@ void	flush_current(t_token tokens[], t_tokenstate *st);
 void	append_literal_dollars(const char *in, int *i, char **cur);
 void	skip_whitespaces_and_flush(const char *input, t_tokenstate *st,
 			t_token tokens[]);
-void	collect_heredocs(t_shell *shell, t_token tokens[]);
 void	expand_wildcards(t_token tokens[]);
 void	strip_unexpandable(char *val);
 

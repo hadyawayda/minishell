@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 03:04:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:29:52 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	minishell(char **envp)
 		perror("minishell: failed to initialize");
 		return ;
 	}
-	init_main_signals();
+	setup_signals();
 	shell_loop(shell);
 	free_shell(shell);
 	rl_clear_history();

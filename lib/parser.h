@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:13:59 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/04 22:55:02 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/18 02:04:03 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ char	*make_chunk(t_shell *shell, const char *line, int expand,
 			size_t *chunk_len);
 char	*append_buf(char *buf, size_t len, const char *chunk, size_t chunk_len);
 char	*append_chunk(char **buf, size_t *tot, char *tmp, ssize_t n);
-char	*read_heredoc(char *delim, int expand, t_shell *shell);
+void	heredoc_child(int fd[2], char *delim, int expand, t_shell *sh);
 
 int		check_operator_sequence(t_token tokens[]);
 int		check_dollar_paren(t_token tokens[]);
 int		is_redir(t_tokentype t);
 int		check_leading_token(t_token tokens[]);
-int		close_fds(int fd[2]);
 
 void	visualize_tree(t_ast *root);
 void	free_tokens(t_token *tokens);

@@ -6,33 +6,44 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 05:58:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 03:05:03 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/18 02:10:21 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "core.h"
 
-volatile sig_atomic_t	g_last_signal = 0;
+sig_atomic_t	g_last_signal = 0;
 
-static void	sigint_prompt(int sig)
+static void	handle_sigint(int sig)
 {
-	(void)sig;
-	g_last_signal = SIGINT;
+	g_last_signal = sig;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-void	init_main_signals(void)
+void	setup_signals(void)
 {
-	struct sigaction	sa;
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+}
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sa.sa_handler = sigint_prompt;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_flags = 0;
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
+void	ignore_signals(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	restore_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
+void	hd_sigint(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "^C\n", 3);
+	_exit(1);
 }
