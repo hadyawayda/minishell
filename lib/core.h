@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 00:00:58 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 00:56:04 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 03:04:58 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,7 @@ void	list_export(t_env *env);
 void	sort_env_list(t_env **env);
 void	unset_env_variable(t_env **env, char *key);
 void	update_env_variable(t_env **env, char *key, char *value);
-
-void	setup_signal_handlers(void);
-void	non_interactive_minishell(char **av, char **envp);
-void	setup_heredoc_signals(struct sigaction *old_int,
-			struct sigaction *old_quit);
-void	restore_heredoc_signals(struct sigaction *old_int,
-			struct sigaction *old_quit);
+void	init_main_signals(void);
 
 t_env	*clone_env(char **envp);
 t_env	*create_env_node(char *key, char *value);

@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:55:50 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 01:52:49 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 03:27:08 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,44 +35,49 @@ void	process_line(t_shell *shell, char *input)
 	free_ast(root);
 }
 
+char	*get_shell_input(t_shell *shell)
+{
+	char	*input;
+
+	input = readline("\033[0;32mMichel > \033[0m");
+	if (!input)
+	{
+		printf("exit\n");
+		shell->exit_requested = 1;
+		return (NULL);
+	}
+	if (strcmp(input, "exit") == 0)
+	{
+		printf("exit\n");
+		free(input);
+		shell->exit_requested = 1;
+		return (NULL);
+	}
+	return (input);
+}
+
+void	execute_shell_input(t_shell *shell, char *input)
+{
+	add_history(input);
+	if (g_last_signal != 0)
+	{
+		shell->last_exit_status = 128 + g_last_signal;
+		g_last_signal = 0;
+		return ;
+	}
+	process_line(shell, input);
+}
+
 void	shell_loop(t_shell *shell)
 {
-	char		*input;
-	char		prompt[64];
-	const char	*color;
+	char	*input;
 
 	while (!shell->exit_requested)
 	{
-		if (shell->last_exit_status == 0)
-			color = "\033[0;32m";
-		else
-			color = "\033[0;31m";
-		ft_strlcpy(prompt, color, sizeof(prompt));
-		ft_strlcat(prompt, "Michel >", sizeof(prompt));
-		ft_strlcat(prompt, "\033[0m ", sizeof(prompt));
-		input = readline(prompt);
+		input = get_shell_input(shell);
 		if (!input)
-		{
-			printf("exit\n");
-			shell->exit_requested = 1;
 			break ;
-		}
-		if (ft_strcmp(input, "exit") == 0)
-		{
-			printf("exit\n");
-			free(input);
-			shell->exit_requested = 1;
-			break ;
-		}
-		add_history(input);
-		if (g_last_signal != 0)
-		{
-			shell->last_exit_status = 128 + g_last_signal;
-			g_last_signal = 0;
-			free(input);
-			continue ;
-		}
-		process_line(shell, input);
+		execute_shell_input(shell, input);
 		free(input);
 	}
 }

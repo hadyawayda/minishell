@@ -6,57 +6,60 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 01:05:30 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 03:24:01 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-/*–– main heredoc reader ––*/
+int	process_hd_line(t_hd_state *st, char *line)
+{
+	size_t	chunk_len;
+	char	*chunk;
+
+	if (line == NULL)
+	{
+		if (g_last_signal == SIGINT)
+		{
+			free(st->buf);
+			return (-1);
+		}
+		printf("-minishell: warning: here-document delimited "
+			"by end-of-file (wanted `eof')\n");
+		return (0);
+	}
+	if (ft_strcmp(line, st->delim) == 0)
+		return (0);
+	chunk = make_chunk(st->shell, line, st->expand, &chunk_len);
+	st->buf = append_buf(st->buf, st->len, chunk, chunk_len);
+	st->len += chunk_len;
+	free(chunk);
+	return (1);
+}
+
 char	*read_heredoc(char *delim, int expand, t_shell *shell)
 {
-	char				*buf;
-	size_t				len;
-	char				*line;
-	char				*chunk;
-	size_t				chunk_len;
-	struct sigaction	old_quit;
-	struct sigaction	old_int;
+	t_hd_state	st;
+	char		*line;
+	int			code;
 
-	buf = ft_strdup("");
-	len = 0;
-	setup_heredoc_signals(&old_int, &old_quit);
+	st.delim = delim;
+	st.expand = expand;
+	st.shell = shell;
+	st.buf = ft_strdup("");
+	st.len = 0;
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (g_last_signal == SIGINT)
-		{
-			free(line);
-			break ;
-		}
-		if (line == NULL)
-		{
-			write(2,
-				"-bash: warning: here-document delimited by end-of-file (wanted `",
-				58);
-			write(2, delim, ft_strlen(delim));
-			write(2, "')\n", 3);
-			break ;
-		}
-		if (ft_strcmp(line, delim) == 0)
-		{
-			free(line);
-			break ;
-		}
-		chunk = make_chunk(shell, line, expand, &chunk_len);
+		code = process_hd_line(&st, line);
 		free(line);
-		buf = append_buf(buf, len, chunk, chunk_len);
-		len += chunk_len;
-		free(chunk);
+		if (code > 0)
+			continue ;
+		if (code < 0)
+			return (NULL);
+		break ;
 	}
-	restore_heredoc_signals(&old_int, &old_quit);
-	g_last_signal = 0;
-	return (buf);
+	return (st.buf);
 }
 
 void	shift_left(t_token tokens[], int idx)

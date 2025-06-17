@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 23:09:17 by fel-ghaz          #+#    #+#             */
-/*   Updated: 2025/06/17 01:49:31 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/17 03:23:26 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,5 +134,14 @@ typedef struct s_cd_ctx
 	int							dash;
 	int							dbl_sl;
 }								t_cd_ctx;
+
+typedef struct s_hd_state
+{
+	char						*delim;
+	int							expand;
+	t_shell						*shell;
+	char						*buf;
+	size_t						len;
+}								t_hd_state;
 
 #endif
