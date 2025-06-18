@@ -63,7 +63,6 @@ void	execute_shell_input(t_shell *shell, char *input)
 	{
 		shell->last_exit_status = 128 + g_last_signal;
 		g_last_signal = 0;
-		return ;
 	}
 	process_line(shell, input);
 }
