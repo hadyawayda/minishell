@@ -43,7 +43,7 @@ void	restore_signals(void)
 
 void	hd_sigint(int sig)
 {
-	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
-	_exit(1);
+	signal(sig, SIG_DFL);
+	kill(getpid(), sig);
 }
