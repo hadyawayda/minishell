@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:51:45 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/16 21:29:21 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 00:11:12 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,26 @@
 
 #define PATH_MAX_LEN 1024
 
-/* ------------------------- argv → ctx->target ------------------------------ */
-static int get_target(char **args, t_cd_ctx *ctx, t_env *env)
+static int	get_target(char **args, t_cd_ctx *ctx, t_env *env)
 {
-    char *home;
+	char	*home;
 
-    ctx->dbl_sl = (args[1] && ft_strcmp(args[1], "//") == 0);
-    if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "--"))
-        return (set_target_from_env(&ctx->target, "HOME", NULL, env));
-    if (args[1] && !ft_strcmp(args[1], "-"))
-        return (set_target_from_env(&ctx->target, "OLDPWD", &ctx->dash, env));
-    if (args[1] && (!ft_strncmp(args[1], "~/", 2) || !ft_strcmp(args[1], "~/")))
-    {
-        home = get_env_value(env, "HOME");
-        if (!home || *home == '\0')
-            return (cd_env_error("HOME"));
-        ctx->target = ft_strjoin(home, args[1] + 1);
-        return (ctx->target == NULL);
-    }
-    if (args[1])
-        ctx->target = ft_strdup(args[1]);
-    return (ctx->target == NULL);
+	ctx->dbl_sl = (args[1] && ft_strcmp(args[1], "//") == 0);
+	if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "--"))
+		return (set_target_from_env(&ctx->target, "HOME", NULL, env));
+	if (args[1] && !ft_strcmp(args[1], "-"))
+		return (set_target_from_env(&ctx->target, "OLDPWD", &ctx->dash, env));
+	if (args[1] && (!ft_strncmp(args[1], "~/", 2) || !ft_strcmp(args[1], "~/")))
+	{
+		home = get_env_value(env, "HOME");
+		if (!home || *home == '\0')
+			return (cd_env_error("HOME"));
+		ctx->target = ft_strjoin(home, args[1] + 1);
+		return (ctx->target == NULL);
+	}
+	if (args[1])
+		ctx->target = ft_strdup(args[1]);
+	return (ctx->target == NULL);
 }
 
 /* ---------------- perform chdir & checks -------------------- */
@@ -118,6 +117,6 @@ int	builtin_cd(char **args, t_env *env)
 	if (change_directory(ctx.target))
 		return (free(ctx.prev_pwd), 1);
 	update_pwd(env, &ctx);
-	free(ctx.prev_pwd); 
+	free(ctx.prev_pwd);
 	return (0);
 }

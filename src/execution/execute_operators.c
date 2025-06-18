@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:18:04 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 00:12:19 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,7 @@ int	execute_pipe(t_shell *shell, t_ast *node)
 	int		right_stat;
 
 	if (pipe(pipefd) < 0)
-	{
-		perror("pipe");
-		return (1);
-	}
+		return (perror("pipe"), 1);
 	left_pid = fork_and_exec_left(shell, node->left, pipefd);
 	if (left_pid < 0)
 		return (1);

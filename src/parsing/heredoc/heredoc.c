@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 23:16:33 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/18 02:03:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 00:11:47 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,7 @@ char	*heredoc_parent(int fd[2], pid_t pid)
 		return ((char *)-1);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-	{
-		free(buf);
-		return ((char *)-1);
-	}
+		return (free(buf), (char *)-1);
 	if (buf)
 		buf[tot] = '\0';
 	else

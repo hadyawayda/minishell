@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/17 22:53:11 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 00:10:25 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ t_env	*create_default_env(void)
 	if (!path)
 		path = "/usr/local/bin:/usr/bin:/bin";
 	if (add_env_variable(&env, "SHLVL", "2") || add_env_variable(&env, "PWD",
-			pwd) || add_env_variable(&env, "OLDPWD", pwd) || add_env_variable(&env, "PATH", path))
+			pwd) || add_env_variable(&env, "OLDPWD", pwd)
+		|| add_env_variable(&env, "PATH", path))
 	{
 		free(pwd);
 		free_env(env);

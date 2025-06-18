@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:31:34 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/18 02:11:06 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 00:11:57 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ int	process_hd_line(t_hd_state *st, char *line)
 	if (line == NULL)
 	{
 		if (g_last_signal == SIGINT)
-        {
-            free(st->buf);
-            return (-1);
-        }
+		{
+			free(st->buf);
+			return (-1);
+		}
 		printf("-minishell: warning: here-document delimited "
 			"by end-of-file (wanted `%s')\n",
 			st->delim);
