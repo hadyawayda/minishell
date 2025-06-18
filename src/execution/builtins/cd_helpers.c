@@ -41,9 +41,9 @@ int	set_target_from_env(char **target, char *var, int *dash, t_env *env)
 {
 	char	*val;
 
-	val = get_env_value(env, var);
-	if (!val)
-		return (cd_env_error(var));
+	val = get_env_value(env, (char *)var);
+	if (!val || val[0] == '\0')
+		return (cd_env_error((char *)var));
 	if (dash)
 		*dash = 1;
 	*target = ft_strdup(val);

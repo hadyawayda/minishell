@@ -14,25 +14,27 @@
 
 #define PATH_MAX_LEN 1024
 
-static int	get_target(char **args, t_cd_ctx *ctx, t_env *env)
+/* ------------------------- argv → ctx->target ------------------------------ */
+static int get_target(char **args, t_cd_ctx *ctx, t_env *env)
 {
-	char	*home;
+    char *home;
 
-	ctx->dbl_sl = (args[1] && ft_strcmp(args[1], "//") == 0);
-	if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "--"))
-		return (set_target_from_env(&ctx->target, "HOME", NULL, env));
-	if (!ft_strcmp(args[1], "-"))
-		return (set_target_from_env(&ctx->target, "OLDPWD", &ctx->dash, env));
-	if (!ft_strncmp(args[1], "~/", 2) || !ft_strcmp(args[1], "~/"))
-	{
-		home = get_env_value(env, "HOME");
-		if (!home || *home == '\0')
-			return (cd_env_error("HOME"));
-		ctx->target = ft_strjoin(home, args[1] + 1);
-		return (ctx->target == NULL);
-	}
-	ctx->target = ft_strdup(args[1]);
-	return (ctx->target == NULL);
+    ctx->dbl_sl = (args[1] && ft_strcmp(args[1], "//") == 0);
+    if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "--"))
+        return (set_target_from_env(&ctx->target, "HOME", NULL, env));
+    if (args[1] && !ft_strcmp(args[1], "-"))
+        return (set_target_from_env(&ctx->target, "OLDPWD", &ctx->dash, env));
+    if (args[1] && (!ft_strncmp(args[1], "~/", 2) || !ft_strcmp(args[1], "~/")))
+    {
+        home = get_env_value(env, "HOME");
+        if (!home || *home == '\0')
+            return (cd_env_error("HOME"));
+        ctx->target = ft_strjoin(home, args[1] + 1);
+        return (ctx->target == NULL);
+    }
+    if (args[1])
+        ctx->target = ft_strdup(args[1]);
+    return (ctx->target == NULL);
 }
 
 /* ---------------- perform chdir & checks -------------------- */
@@ -108,13 +110,14 @@ int	builtin_cd(char **args, t_env *env)
 		return (printf("%s", "minishell: cd: too many arguments\n"), 1);
 	if (args[1] && ft_strchr(args[1], '*'))
 		return (printf("%s", "minishell: cd: too many arguments\n"), 1);
-	ctx.prev_pwd = get_env_value(env, "PWD");
+	ctx.prev_pwd = ft_strdup(get_env_value(env, "PWD"));
 	ctx.dash = 0;
 	ctx.dbl_sl = 0;
 	if (get_target(args, &ctx, env))
-		return (1);
+		return (free(ctx.prev_pwd), 1);
 	if (change_directory(ctx.target))
-		return (1);
+		return (free(ctx.prev_pwd), 1);
 	update_pwd(env, &ctx);
+	free(ctx.prev_pwd); 
 	return (0);
 }
