@@ -98,8 +98,7 @@ void	heredoc_child(int fd[2], char *delim, int expand, t_shell *sh)
 	tcgetattr(STDIN_FILENO, &tio);
 	tio.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &tio);
-	signal(SIGINT, hd_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	heredoc_signals();
 	close(fd[0]);
 	txt = read_heredoc(delim, expand, sh);
 	if (!txt)

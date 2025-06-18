@@ -35,15 +35,15 @@ void	ignore_signals(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	restore_signals(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
 void	hd_sigint(int sig)
 {
 	write(STDOUT_FILENO, "\n", 1);
 	signal(sig, SIG_DFL);
 	kill(getpid(), sig);
+}
+
+void	heredoc_signals(void)
+{
+	signal(SIGINT, hd_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

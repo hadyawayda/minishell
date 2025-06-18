@@ -24,7 +24,8 @@ void	execute_child_command(t_shell *sh, t_ast *node)
 	char	*exec_path;
 	int		cb;
 
-	restore_signals();
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	argv = build_argv(node);
 	if (argv == NULL)
 		exit(1);

@@ -35,8 +35,7 @@ void	unset_env_variable(t_env **env, char *key);
 void	update_env_variable(t_env **env, char *key, char *value);
 void	setup_signals(void);
 void	ignore_signals(void);
-void	restore_signals(void);
-void	hd_sigint(int sig);
+void	heredoc_signals(void);
 
 t_env	*clone_env(char **envp);
 t_env	*create_env_node(char *key, char *value);
