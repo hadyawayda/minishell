@@ -46,6 +46,11 @@ int	process_hd_line(t_hd_state *st, char *line)
 
 	if (line == NULL)
 	{
+		if (g_last_signal == SIGINT)
+        {
+            free(st->buf);
+            return (-1);
+        }
 		printf("-minishell: warning: here-document delimited "
 			"by end-of-file (wanted `%s')\n",
 			st->delim);

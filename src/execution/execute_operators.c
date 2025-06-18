@@ -123,5 +123,7 @@ int	execute_pipe(t_shell *shell, t_ast *node)
 	setup_signals();
 	if (WIFEXITED(right_stat))
 		return (WEXITSTATUS(right_stat));
+	if (WIFSIGNALED(right_stat))
+		return (128 + WTERMSIG(right_stat));
 	return (1);
 }

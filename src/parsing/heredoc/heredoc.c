@@ -42,8 +42,13 @@ char	*heredoc_parent(int fd[2], pid_t pid)
 	ignore_signals();
 	waitpid(pid, &status, 0);
 	setup_signals();
-	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		|| (WIFEXITED(status) && WEXITSTATUS(status) != 0))
+	if (WIFSIGNALED(status))
+	{
+		g_last_signal = WTERMSIG(status);
+		free(buf);
+		return ((char *)-1);
+	}
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 	{
 		free(buf);
 		return ((char *)-1);

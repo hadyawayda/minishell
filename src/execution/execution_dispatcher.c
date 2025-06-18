@@ -85,6 +85,8 @@ static int	handle_redir_only(t_ast *node)
 	waitpid(pid, &st, 0);
 	if (WIFEXITED(st))
 		return (WEXITSTATUS(st));
+	if (WIFSIGNALED(st))
+		return (128 + WTERMSIG(st));
 	return (1);
 }
 
@@ -115,6 +117,8 @@ int	execute_cmd(t_shell *shell, t_ast *node)
 	setup_signals();
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
+	if (WIFSIGNALED(wstatus))
+		return (128 + WTERMSIG(wstatus));
 	return (1);
 }
 
