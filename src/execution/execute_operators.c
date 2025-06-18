@@ -117,8 +117,10 @@ int	execute_pipe(t_shell *shell, t_ast *node)
 		return (1);
 	close(pipefd[0]);
 	close(pipefd[1]);
+	ignore_signals();
 	waitpid(left_pid, &left_stat, 0);
 	waitpid(right_pid, &right_stat, 0);
+	setup_signals();
 	if (WIFEXITED(right_stat))
 		return (WEXITSTATUS(right_stat));
 	return (1);

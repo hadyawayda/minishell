@@ -111,7 +111,9 @@ int	collect_heredocs(t_shell *shell, t_token tok[])
 	idx = find_next_heredoc(tok);
 	while (idx >= 0)
 	{
+		ignore_signals();
 		idx = process_heredoc_token(shell, tok, idx);
+		setup_signals();
 		if (idx < 0)
 			return (-1);
 		idx = find_next_heredoc(tok);
