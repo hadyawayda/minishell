@@ -84,11 +84,15 @@ int	builtin_unset(t_shell *sh, char **argv)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (is_valid_varname(argv[i]))
+		if (argv[i][0] == '\0')
+			return (0);
+		else if (is_valid_varname(argv[i]))
 			unset_env_variable(&sh->env, argv[i]);
 		else
 		{
-			printf("minishell: unset: `%s': not a valid identifier\n", argv[i]);
+			ft_putstr_fd("minishell: unset: `", 2);
+			ft_putstr_fd(argv[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
 			return (1);
 		}
 		i++;

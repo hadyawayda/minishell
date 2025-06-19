@@ -36,7 +36,9 @@ int	add_or_update_env_variable(t_env **env, char *key, char *value)
 
 	if (!is_valid_varname(key))
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", key);
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(key, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
 		return (1);
 	}
 	current = *env;

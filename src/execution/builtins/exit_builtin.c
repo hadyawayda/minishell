@@ -12,40 +12,64 @@
 
 #include "execution.h"
 
-static int	accumulate_number(const char *s, int *i, unsigned long long *num)
+/* initialize index, sign, and overflow limit */
+static int	init_conv(const char *s, int *i, int *sign,
+                     unsigned long long *limit)
 {
-	unsigned long long	d;
-
-	while (ft_isdigit(s[*i]))
-	{
-		d = (unsigned long long)(s[(*i)++] - '0');
-		if (*num > (ULLONG_MAX - d) / 10ULL)
-			return (0);
-		*num = *num * 10ULL + d;
-	}
-	return (1);
+    *i    = 0;
+    *sign = 1;
+    if ((s[*i] == '+' || s[*i] == '-') && s[*i + 1] != '\0')
+    {
+        if (s[*i] == '-')
+            *sign = -1;
+        (*i)++;
+    }
+    if (*sign > 0)
+        *limit = LLONG_MAX;
+    else
+        *limit = (unsigned long long)LLONG_MAX + 1ULL;
+    return (1);
 }
 
+/* accumulate digits into *val without exceeding limit */
+static int	accumulate_with_limit(const char *s, int *i,
+                                unsigned long long *val,
+                                unsigned long long limit)
+{
+    unsigned long long d;
+
+    while (ft_isdigit(s[*i]))
+    {
+        d = (unsigned long long)(s[(*i)] - '0');
+        if (*val > limit / 10ULL
+         || (*val == limit / 10ULL && d > limit % 10ULL))
+            return (0);
+        *val = *val * 10ULL + d;
+        (*i)++;
+    }
+    return (1);
+}
+
+/* convert s to signed long long in *out; returns 1 on valid range */
 static int	convert_to_ll(const char *s, long long *out)
 {
-	int					i;
-	int					sign;
-	unsigned long long	num;
+	int                  i;
+	int                  sign;
+	unsigned long long   val;
+	unsigned long long   limit;
 
-	i = 0;
-	sign = 1;
-	num = 0;
-	if ((s[i] == '+' || s[i] == '-') && s[i + 1])
-	{
-		if (s[i] == '-')
-			sign = -1;
-		i++;
-	}
-	if (!s[i] || !ft_isdigit(s[i]))
+	init_conv(s, &i, &sign, &limit);
+	if (!ft_isdigit(s[i]))
 		return (0);
-	if (!accumulate_number(s, &i, &num))
+	val = 0ULL;
+	if (!accumulate_with_limit(s, &i, &val, limit))
 		return (0);
-	*out = (long long)(sign * (long long)num);
+	if (s[i] != '\0')
+		return (0);
+	if (sign > 0)
+		*out = (long long)val;
+	else
+		*out = -(long long)val;
 	return (1);
 }
 
@@ -56,6 +80,7 @@ static int	print_exit_error(char *arg, int code)
 		write(2, "bash: exit: ", 12);
 		write(2, arg, ft_strlen(arg));
 		write(2, ": numeric argument required\n", 29);
+		return (2);
 	}
 	else
 		write(2, "bash: exit: too many arguments\n", 31);
