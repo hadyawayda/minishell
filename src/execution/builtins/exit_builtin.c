@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 09:28:01 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/13 00:26:56 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:31:29 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,48 @@
 
 /* initialize index, sign, and overflow limit */
 static int	init_conv(const char *s, int *i, int *sign,
-                     unsigned long long *limit)
+		unsigned long long *limit)
 {
-    *i    = 0;
-    *sign = 1;
-    if ((s[*i] == '+' || s[*i] == '-') && s[*i + 1] != '\0')
-    {
-        if (s[*i] == '-')
-            *sign = -1;
-        (*i)++;
-    }
-    if (*sign > 0)
-        *limit = LLONG_MAX;
-    else
-        *limit = (unsigned long long)LLONG_MAX + 1ULL;
-    return (1);
+	*i = 0;
+	*sign = 1;
+	if ((s[*i] == '+' || s[*i] == '-') && s[*i + 1] != '\0')
+	{
+		if (s[*i] == '-')
+			*sign = -1;
+		(*i)++;
+	}
+	if (*sign > 0)
+		*limit = LLONG_MAX;
+	else
+		*limit = (unsigned long long)LLONG_MAX + 1ULL;
+	return (1);
 }
 
 /* accumulate digits into *val without exceeding limit */
 static int	accumulate_with_limit(const char *s, int *i,
-                                unsigned long long *val,
-                                unsigned long long limit)
+		unsigned long long *val, unsigned long long limit)
 {
-    unsigned long long d;
+	unsigned long long	d;
 
-    while (ft_isdigit(s[*i]))
-    {
-        d = (unsigned long long)(s[(*i)] - '0');
-        if (*val > limit / 10ULL
-         || (*val == limit / 10ULL && d > limit % 10ULL))
-            return (0);
-        *val = *val * 10ULL + d;
-        (*i)++;
-    }
-    return (1);
+	while (ft_isdigit(s[*i]))
+	{
+		d = (unsigned long long)(s[(*i)] - '0');
+		if (*val > limit / 10ULL || (*val == limit / 10ULL && d > limit
+				% 10ULL))
+			return (0);
+		*val = *val * 10ULL + d;
+		(*i)++;
+	}
+	return (1);
 }
 
 /* convert s to signed long long in *out; returns 1 on valid range */
 static int	convert_to_ll(const char *s, long long *out)
 {
-	int                  i;
-	int                  sign;
-	unsigned long long   val;
-	unsigned long long   limit;
+	int					i;
+	int					sign;
+	unsigned long long	val;
+	unsigned long long	limit;
 
 	init_conv(s, &i, &sign, &limit);
 	if (!ft_isdigit(s[i]))

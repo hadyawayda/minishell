@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 23:45:32 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:57:46 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:43:24 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 */
 int	builtin_env(t_shell *sh)
 {
-	while (sh->env)
+	t_env	*env;
+
+	env = sh->env;
+	while (env)
 	{
-		if (sh->env->value)
-			printf("%s=%s\n", sh->env->key, sh->env->value);
-		sh->env = sh->env->next;
+		if (env->value)
+			printf("%s=%s\n", env->key, env->value);
+		env = env->next;
 	}
 	return (0);
 }

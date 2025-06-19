@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 15:31:32 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:25:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:33:04 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ t_env	*clone_env(char **envp)
 	{
 		new_node = parse_env_entry(envp[i]);
 		if (!new_node)
+		{
+			free_env(head);
 			return (NULL);
+		}
 		if (!head)
 			head = new_node;
 		else
@@ -49,7 +52,10 @@ t_env	*clone_env_list(t_env *env)
 	{
 		new_node = create_env_node(env->key, env->value);
 		if (!new_node)
+		{
+			free_env(new_head);
 			return (NULL);
+		}
 		if (!new_head)
 			new_head = new_node;
 		else

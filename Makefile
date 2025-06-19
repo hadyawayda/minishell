@@ -63,7 +63,7 @@ MAIN					:= $(SRC_DIR)/main.c
 PROGRAM_SRCS			:= loop.c cleaner.c initializer.c program.c
 
 # 3) ENV sub‐components: list only the .c filenames here
-ENV_SRCS				:= cleaner.c cloners.c expansion.c helpers.c list_export.c merge_sort.c setter.c unset.c
+ENV_SRCS				:= cloners.c expansion.c helpers.c list_export.c merge_sort.c setter.c unset.c
 
 # 4) SIGNALS sources
 SIGNALS_SRCS			:= signals.c
