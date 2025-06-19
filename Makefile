@@ -60,10 +60,10 @@ BUILTINS_DIR			:= $(EXECUTION_DIR)/builtins
 MAIN					:= $(SRC_DIR)/main.c
 
 # 2) PROGRAM sources (just filenames; will be prefixed later)
-PROGRAM_SRCS			:= loop.c cleaner.c initializer.c program.c
+PROGRAM_SRCS			:= initializer.c program.c
 
 # 3) ENV sub‐components: list only the .c filenames here
-ENV_SRCS				:= cloners.c expansion.c helpers.c list_export.c merge_sort.c setter.c unset.c
+ENV_SRCS				:= expansion.c helpers.c merge_sort.c setters.c
 
 # 4) SIGNALS sources
 SIGNALS_SRCS			:= signals.c
