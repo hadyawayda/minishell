@@ -47,5 +47,6 @@ void	free_argv(char **argv);
 void	apply_redirections(t_redir *redirs);
 void	process_echo(char **args);
 void	exec_error_and_exit(char *exec_path, char **argv, char **envp);
+void	check_directory_and_exit(char *exec_path, char **argv, char **envp);
 
 #endif

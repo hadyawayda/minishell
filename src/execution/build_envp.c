@@ -71,3 +71,26 @@ char	**build_envp(t_env *env)
 	envp[i] = NULL;
 	return (envp);
 }
+
+/*
+ * If exec_path is a directory, print “<cmd>: Is a directory” and exit(126).
+ * Otherwise return to the caller to go ahead and execve().
+ */
+void	check_directory_and_exit(char *exec_path, char **argv, char **envp)
+{
+	struct stat	st;
+
+	if (ft_strchr(exec_path, '/')
+	 && stat(exec_path, &st) == 0
+	 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd(argv[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		free(exec_path);
+		if (envp)
+			free_argv(envp);
+		if (argv)
+			free_argv(argv);
+		exit(126);
+	}
+}

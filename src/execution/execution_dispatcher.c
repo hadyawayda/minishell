@@ -38,6 +38,7 @@ void	execute_child_command(t_shell *sh, t_ast *node)
 	}
 	envp = build_envp(sh->env);
 	exec_path = find_executable(sh, argv[0]);
+	check_directory_and_exit(exec_path, argv, envp);
 	execve(exec_path, argv, envp);
 	exec_error_and_exit(exec_path, argv, envp);
 }
