@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/16 23:38:05 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 20:51:35 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		process_export(char **args, char **envp);
 int		cmp_key(const char *a, const char *b);
 int		cd_env_error(char *var);
 int		set_target_from_env(char **target, char *var, int *dash, t_env *env);
-int		print_getcwd_error(const char *cmd);
+int		print_getcwd_error(char *cmd);
 int		builtin_cd(char **args, t_env *env);
 int		builtin_exit(char **args);
 int		builtin_pwd(char **args);

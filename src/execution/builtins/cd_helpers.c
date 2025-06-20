@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:53:10 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/13 00:54:53 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 20:50:58 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ int	cd_env_error(char *var)
 }
 
 /* ---------- generic getcwd() failure reporter --------------- */
-int	print_getcwd_error(const char *cmd)
+int	print_getcwd_error(char *cmd)
 {
-	const char	*msg1;
-	const char	*msg2;
+	char	*msg1;
+	char	*msg2;
 
 	msg1 = ": error retrieving current directory: getcwd: cannot "
 		"access parent directories: ";
 	msg2 = "No such file or directory\n";
-	write(2, cmd, ft_strlen(cmd));
-	write(2, msg1, ft_strlen(msg1));
-	write(2, msg2, ft_strlen(msg2));
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(msg1, 2);
+	ft_putstr_fd(msg2, 2);
 	return (1);
 }
 

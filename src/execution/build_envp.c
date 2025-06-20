@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:21:22 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 22:57:51 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 20:48:19 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,8 @@ void	check_directory_and_exit(char *exec_path, char **argv, char **envp)
 {
 	struct stat	st;
 
-	if (ft_strchr(exec_path, '/')
-	 && stat(exec_path, &st) == 0
-	 && S_ISDIR(st.st_mode))
+	if (ft_strchr(exec_path, '/') && stat(exec_path, &st) == 0
+		&& S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd(argv[0], 2);
 		ft_putstr_fd(": Is a directory\n", 2);

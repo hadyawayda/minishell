@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:09:20 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/13 00:43:21 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 20:51:45 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 #define PATH_MAX_LEN 1024
 
-static int	invalid_opt(const char *s)
+static int	invalid_opt(char *s)
 {
 	if (!s || s[0] != '-' || !s[1])
 		return (0);
 	if (s[1] == '-')
-		write(2, "pwd: --: invalid option\n", 24);
+		ft_putstr_fd("pwd: --: invalid option\n", 2);
 	else
 	{
-		write(2, "pwd: ", 5);
-		write(2, s, ft_strlen(s));
-		write(2, ": invalid option\n", 18);
+		ft_putstr_fd("pwd: ", 2);
+		ft_putstr_fd(s, 2);
+		ft_putstr_fd(": invalid option\n", 2);
 	}
 	return (1);
 }
@@ -40,9 +40,9 @@ int	builtin_pwd(char **args)
 		return (print_getcwd_error("pwd"));
 	pwd = getenv("PWD");
 	if (pwd && pwd[0] == '/' && pwd[1] == '/')
-		write(1, pwd, ft_strlen(pwd));
+		ft_putstr_fd(pwd, 1);
 	else
-		write(1, buf, ft_strlen(buf));
+		ft_putstr_fd(buf, 1);
 	write(1, "\n", 1);
 	return (0);
 }

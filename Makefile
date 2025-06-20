@@ -84,7 +84,7 @@ EXECUTION_SRCS			:= build_argv.c build_envp.c execute_operators.c execution_disp
 BUILTINS_SRCS			:= environment_builtins.c cd.c cd_helpers.c echo_builtin.c exit_builtin.c pwd_builtin.c
 
 # 7) HELPER sources
-HELPER_SRCS				:= helpers.c
+# HELPER_SRCS				:= helpers.c
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PREFIX each group of filenames with its directory
@@ -118,13 +118,13 @@ BUILTINS				:= $(addprefix $(BUILTINS_DIR)/,$(BUILTINS_SRCS))
 EXECUTION				:= $(EXECUTION_TOP) $(BUILTINS)
 
 # HELPERS
-HELPERS					:= $(addprefix $(UTILS_DIR)/,$(HELPER_SRCS))
+# HELPERS					:= $(addprefix $(UTILS_DIR)/,$(HELPER_SRCS))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ALL SOURCE FILES COMBINED
 # ──────────────────────────────────────────────────────────────────────────────
 
-SRCS					:= $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING) $(EXECUTION) $(HELPERS)
+SRCS					:= $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING) $(EXECUTION) # $(HELPERS)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # OBJECT FILES: simply replace “.c” with “$(OBJDIR)/…/*.o”
