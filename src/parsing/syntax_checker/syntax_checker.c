@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 18:34:35 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:37:46 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_single_ampersand(t_token tokens[])
 	i = 0;
 	while (tokens[i].type != ((t_tokentype)-1))
 	{
-		if (tokens[i].type == T_WORD && strcmp(tokens[i].value, "&") == 0)
+		if (tokens[i].type == T_WORD && ft_strcmp(tokens[i].value, "&") == 0)
 		{
 			printf("syntax error: single '&' not allowed\n");
 			return (-1);

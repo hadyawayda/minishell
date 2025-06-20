@@ -60,26 +60,23 @@ BUILTINS_DIR			:= $(EXECUTION_DIR)/builtins
 MAIN					:= $(SRC_DIR)/main.c
 
 # 2) PROGRAM sources (just filenames; will be prefixed later)
-PROGRAM_SRCS			:= loop.c cleaner.c initializer.c program.c
+PROGRAM_SRCS			:= initializer.c program.c signals.c
 
 # 3) ENV sub‐components: list only the .c filenames here
-ENV_SRCS				:= cleaner.c cloners.c expansion.c helpers.c list_export.c merge_sort.c setter.c unset.c
+ENV_SRCS				:= expansion.c helpers.c list_export.c setters.c
 
-# 4) SIGNALS sources
-SIGNALS_SRCS			:= signals.c
-
-# 5) PARSING sources
+# 4) PARSING sources
 PARSER_TOP_SRCS			:= parser.c
 HEREDOC_SRCS			:= heredoc.c heredoc_helpers.c heredoc_processor.c
 SYNTAX_CHECKER_SRCS		:= syntax_checker.c syntax_checker_helpers.c
 TREE_SRCS				:= ast_builder.c parse_command_helpers.c parse_command.c parser_helpers.c tree_cleaner.c
 
-# 6) TOKENIZATION sources
+# 5) TOKENIZATION sources
 TOKENIZATION_TOP_SRCS	:= tokenization.c
 TOKENIZER_SRCS			:= dollar_parser.c helpers.c operator_parser.c quote_parser.c word_parser.c
 WILDCARD_SRCS			:= wildcard_expansion.c wildcard_matcher_helpers.c wildcard_matcher.c
 
-# 7) EXECUTION sources
+# 6) EXECUTION sources
 EXECUTION_SRCS			:= build_argv.c build_envp.c execute_operators.c execution_dispatcher.c execution_helpers.c redirection_helpers.c
 BUILTINS_SRCS			:= environment_builtins.c cd.c cd_helpers.c echo_builtin.c exit_builtin.c pwd_builtin.c
 
@@ -95,9 +92,6 @@ PROGRAM					:= $(addprefix $(PROGRAM_DIR)/,$(PROGRAM_SRCS))
 
 # ENV: break into sub‐directories, then combine
 ENV						:= $(addprefix $(ENV_DIR)/,$(ENV_SRCS))
-
-# SIGNALS
-SIGNALS					:= $(addprefix $(SIGNALS_DIR)/,$(SIGNALS_SRCS))
 
 # PARSING: one top‐level parser.c, plus subdirectories
 PARSER_TOP				:= $(addprefix $(PARSING_DIR)/,$(PARSER_TOP_SRCS))
@@ -124,7 +118,7 @@ EXECUTION				:= $(EXECUTION_TOP) $(BUILTINS)
 # ALL SOURCE FILES COMBINED
 # ──────────────────────────────────────────────────────────────────────────────
 
-SRCS					:= $(MAIN) $(PROGRAM) $(ENV) $(SIGNALS) $(TOKENIZATION) $(PARSING) $(EXECUTION) # $(HELPERS)
+SRCS					:= $(MAIN) $(PROGRAM) $(ENV) $(TOKENIZATION) $(PARSING) $(EXECUTION) # $(HELPERS)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # OBJECT FILES: simply replace “.c” with “$(OBJDIR)/…/*.o”
@@ -186,4 +180,4 @@ qleaks:
 						@valgrind -q --leak-check=full --suppressions=$(SUPPRESSION) ./$(NAME)
 
 norm:
-						@norminette src | grep Error || true
+						@norminette | grep Error || true

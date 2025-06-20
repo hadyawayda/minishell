@@ -6,13 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:09:20 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/20 20:51:45 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:29:11 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-#define PATH_MAX_LEN 1024
 
 static int	invalid_opt(char *s)
 {

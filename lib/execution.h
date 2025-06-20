@@ -6,12 +6,14 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/20 20:51:35 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:29:05 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
+
+# define PATH_MAX_LEN 1024
 
 # include "core.h"
 
@@ -48,5 +50,7 @@ void	apply_redirections(t_redir *redirs);
 void	process_echo(char **args);
 void	exec_error_and_exit(char *exec_path, char **argv, char **envp);
 void	check_directory_and_exit(char *exec_path, char **argv, char **envp);
+
+pid_t	get_pid(void);
 
 #endif

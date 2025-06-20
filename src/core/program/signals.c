@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 05:58:57 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/18 02:32:50 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:26:23 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	hd_sigint(int sig)
 {
 	write(STDOUT_FILENO, "\n", 1);
 	signal(sig, SIG_DFL);
-	kill(getpid(), sig);
+	kill(get_pid(), sig);
 }
 
 void	heredoc_signals(void)

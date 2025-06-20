@@ -6,11 +6,45 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/19 00:10:25 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:25:38 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "core.h"
+
+void	free_shell(t_shell *shell)
+{
+	if (shell)
+	{
+		free_env(shell->env);
+		free(shell);
+	}
+}
+
+t_env	*clone_env(char **envp)
+{
+	int		i;
+	t_env	*head;
+	t_env	*current;
+	t_env	*new_node;
+
+	head = NULL;
+	current = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		new_node = parse_env_entry(envp[i]);
+		if (!new_node)
+			return (NULL);
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		i++;
+	}
+	return (head);
+}
 
 t_env	*create_default_env(void)
 {
@@ -45,7 +79,7 @@ void	set_shell_shlvl(t_env **env)
 
 	shlvl_value = get_env_value(*env, "SHLVL");
 	if (shlvl_value && shlvl_value[0] != '\0')
-		shlvl = atoi(shlvl_value) + 1;
+		shlvl = ft_atoi(shlvl_value) + 1;
 	else
 		shlvl = 1;
 	new_shlvl = ft_itoa(shlvl);

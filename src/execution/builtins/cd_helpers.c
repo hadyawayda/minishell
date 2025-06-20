@@ -6,11 +6,48 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 12:53:10 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/20 20:50:58 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:26:02 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
+static void	fill_ptr(char **ptr, char *buf, pid_t *pid)
+{
+	*ptr = buf;
+	while (**ptr != ' ' && **ptr != '\0')
+		(*ptr)++;
+	**ptr = '\0';
+	*pid = ft_atoi(buf);
+}
+
+pid_t	get_pid(void)
+{
+	pid_t	pid;
+	int		fd;
+	char	buf[1024];
+	char	*ptr;
+	ssize_t	bytes_read;
+
+	pid = -1;
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd < 0)
+	{
+		perror("open");
+		return (pid);
+	}
+	bytes_read = read(fd, buf, sizeof(buf) - 1);
+	close(fd);
+	if (bytes_read < 0)
+	{
+		perror("read");
+		return (pid);
+	}
+	buf[bytes_read] = '\0';
+	fill_ptr(&ptr, buf, &pid);
+	pid = ft_atoi(ptr);
+	return (pid);
+}
 
 /* ---------- "$VAR not set" error ---------------------------- */
 int	cd_env_error(char *var)
