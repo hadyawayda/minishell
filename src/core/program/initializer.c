@@ -3,33 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   initializer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:41 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/19 22:45:08 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:04:38 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "core.h"
 
-void	free_env(t_env *env)
+void	free_shell(t_shell *shell)
 {
-	t_env	*next;
-
-	while (env)
+	if (shell)
 	{
-		next = env->next;
-		free(env->key);
-		free(env->value);
-		free(env);
-		env = next;
+		free_env(shell->env);
+		free(shell);
 	}
 }
 
-void	free_shell(t_shell *shell)
+t_env	*clone_env(char **envp)
 {
-	free_env(shell->env);
-	free(shell);
+	int		i;
+	t_env	*head;
+	t_env	*current;
+	t_env	*new_node;
+
+	head = NULL;
+	current = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		new_node = parse_env_entry(envp[i]);
+		if (!new_node)
+			return (NULL);
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		i++;
+	}
+	return (head);
 }
 
 t_env	*create_default_env(void)
@@ -65,7 +79,7 @@ void	set_shell_shlvl(t_env **env)
 
 	shlvl_value = get_env_value(*env, "SHLVL");
 	if (shlvl_value && shlvl_value[0] != '\0')
-		shlvl = atoi(shlvl_value) + 1;
+		shlvl = ft_atoi(shlvl_value) + 1;
 	else
 		shlvl = 1;
 	new_shlvl = ft_itoa(shlvl);

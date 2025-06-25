@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_envp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:21:22 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/19 20:31:22 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:04:41 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,18 @@ void	check_directory_and_exit(char *exec_path, char **argv, char **envp)
 {
 	struct stat	st;
 
-	if (ft_strchr(exec_path, '/') && stat(exec_path, &st) == 0
-		&& S_ISDIR(st.st_mode))
+	if (ft_strchr(exec_path, '/') && stat(exec_path, &st) == 0)
 	{
-		ft_putstr_fd(argv[0], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-		free(exec_path);
-		if (envp)
-			free_argv(envp);
-		if (argv)
-			free_argv(argv);
-		exit(126);
+		if ((st.st_mode & 0xF000) == 0x4000)
+		{
+			ft_putstr_fd(argv[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			free(exec_path);
+			if (envp)
+				free_argv(envp);
+			if (argv)
+				free_argv(argv);
+			exit(126);
+		}
 	}
 }

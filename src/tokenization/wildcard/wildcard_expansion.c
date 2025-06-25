@@ -6,38 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:01:06 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:02 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:40:44 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-
-/*
-**  Prints every token.value, showing any WILD_UNEXPANDABLE bytes
-**  as “\x1F” so you can see them in your terminal.
-*/
-// void	debug_print_tokens(t_token tokens[])
-// {
-// 	int		i;
-// 	char	*val;
-
-// 	i = 0;
-// 	while (tokens[i].type != (t_tokentype)-1)
-// 	{
-// 		val = tokens[i].value;
-// 		printf("token[%d]: '", i);
-// 		while (val && *val)
-// 		{
-// 			if (*val == WILD_UNEXPANDABLE)
-// 				printf("\\x%02x", (unsigned char)*val);
-// 			else
-// 				putchar(*val);
-// 			val++;
-// 		}
-// 		printf("'\n");
-// 		i++;
-// 	}
-// }
 
 /*
 **  Build an env‐style linked list from matches[0..count-1].

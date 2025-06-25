@@ -6,7 +6,11 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:31 by hawayda           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/06/19 22:43:39 by hawayda          ###   ########.fr       */
+=======
+/*   Updated: 2025/06/20 21:12:08 by hawayda          ###   ########.fr       */
+>>>>>>> dev
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +37,7 @@ t_env	*parse_env_entry(char *env_entry)
 	char	*delimiter;
 	t_env	*node;
 
-	delimiter = strchr(env_entry, '=');
+	delimiter = ft_strchr(env_entry, '=');
 	if (!delimiter)
 		return (NULL);
 	*delimiter = '\0';

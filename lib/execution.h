@@ -6,12 +6,14 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 17:27:48 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/16 23:38:05 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:29:05 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
+
+# define PATH_MAX_LEN 1024
 
 # include "core.h"
 
@@ -36,7 +38,7 @@ int		process_export(char **args, char **envp);
 int		cmp_key(const char *a, const char *b);
 int		cd_env_error(char *var);
 int		set_target_from_env(char **target, char *var, int *dash, t_env *env);
-int		print_getcwd_error(const char *cmd);
+int		print_getcwd_error(char *cmd);
 int		builtin_cd(char **args, t_env *env);
 int		builtin_exit(char **args);
 int		builtin_pwd(char **args);
@@ -48,5 +50,7 @@ void	apply_redirections(t_redir *redirs);
 void	process_echo(char **args);
 void	exec_error_and_exit(char *exec_path, char **argv, char **envp);
 void	check_directory_and_exit(char *exec_path, char **argv, char **envp);
+
+pid_t	get_pid(void);
 
 #endif

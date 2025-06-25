@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   program.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:46 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/19 22:44:07 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:04:39 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*get_shell_input(t_shell *shell)
 		shell->exit_requested = 1;
 		return (NULL);
 	}
-	if (strcmp(input, "exit") == 0)
+	if (ft_strcmp(input, "exit") == 0)
 	{
 		printf("exit\n");
 		free(input);

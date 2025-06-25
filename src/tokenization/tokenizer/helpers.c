@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:25:45 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:12 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:41:22 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	flush_current(t_token tokens[], t_tokenstate *st)
 void	skip_whitespaces_and_flush(const char *input, t_tokenstate *st,
 		t_token tokens[])
 {
-	while (input[st->i] && isspace((unsigned char)input[st->i]))
+	while (input[st->i] && ft_isspace((unsigned char)input[st->i]))
 	{
 		flush_current(tokens, st);
 		st->i++;

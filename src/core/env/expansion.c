@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 17:56:37 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/19 23:39:58 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:04:30 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,22 +80,18 @@ void	handle_expansion(t_shell *sh, const char *in, int *i, char **cur)
 
 	if (in[*i] != '$')
 		return ;
+	if (in[*i + 1] == '*')
+	{
+		*i += 2;
+		return ;
+	}
 	if (in[*i + 1] == '?')
-	{
-		append_exit_status(sh, i, cur);
-		return ;
-	}
+		return (append_exit_status(sh, i, cur));
 	if (in[*i + 1] == '$')
-	{
-		append_literal_dollars(in, i, cur);
-		return ;
-	}
+		return (append_literal_dollars(in, i, cur));
 	if (!(ft_isalpha(in[*i + 1]) || in[*i + 1] == '_' || ft_isdigit(in[*i
 					+ 1])))
-	{
-		append_char_inplace(cur, '$', i);
-		return ;
-	}
+		return (append_char_inplace(cur, '$', i));
 	name = parse_var_name(in, i);
 	if (name)
 		append_variable_value(sh->env, cur, name);

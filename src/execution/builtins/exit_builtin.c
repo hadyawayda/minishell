@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nabbas <nabbas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 09:28:01 by nabbas            #+#    #+#             */
-/*   Updated: 2025/06/19 20:31:29 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:04:31 by nabbas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ static int	print_exit_error(char *arg, int code)
 {
 	if (code == 1)
 	{
-		write(2, "bash: exit: ", 12);
-		write(2, arg, ft_strlen(arg));
-		write(2, ": numeric argument required\n", 29);
-		return (2);
+		ft_putstr_fd("exit\nminishell: exit: ", 1);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		exit(2);
 	}
 	else
-		write(2, "bash: exit: too many arguments\n", 31);
+		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
 	return (1);
 }
 

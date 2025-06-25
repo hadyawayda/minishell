@@ -6,7 +6,7 @@
 /*   By: hawayda <hawayda@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:37:55 by hawayda           #+#    #+#             */
-/*   Updated: 2025/06/12 23:00:34 by hawayda          ###   ########.fr       */
+/*   Updated: 2025/06/20 21:53:38 by hawayda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	handle_word_token(t_ast *node, t_token *tok, t_argnode **args_head,
 		return ;
 	if (node->cmd.command == NULL)
 		node->cmd.command = ft_strdup(tok->value);
-	else if (tok->value[0] == '-' && !tok->is_quoted)
+	else if (*args_head == NULL && tok->value[0] == '-' && !tok->is_quoted)
 		add_option(node, tok->value);
 	else
 	{
